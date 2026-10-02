@@ -1,0 +1,84 @@
+/* Project SEENta Animations & Accessibility Overrides */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(24px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-24px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-right {
+  animation: slideInFromRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-left {
+  animation: slideInFromLeft 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-shake {
+  animation: shake 0.35s ease-in-out;
+}
+
+/* High Contrast Mode for Accessibility (NFR-SEEN-0001) */
+html.high-contrast {
+  filter: contrast(125%);
+}
+
+html.high-contrast body {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+html.high-contrast .bg-white {
+  background-color: #121212 !important;
+  color: #ffffff !important;
+  border-color: #facc15 !important;
+}
+
+html.high-contrast .bg-slate-50,
+html.high-contrast .bg-slate-100 {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+}
+
+html.high-contrast input {
+  background-color: #000000 !important;
+  color: #facc15 !important;
+  border-color: #facc15 !important;
+}
