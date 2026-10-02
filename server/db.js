@@ -9,15 +9,42 @@ const __dirname = path.dirname(__filename);
 const DATA_DIR = path.join(__dirname, 'data');
 const USERS_FILE = path.join(DATA_DIR, 'users.json');
 
+import dns from 'dns';
+import { Agent, fetch as undiciFetch } from 'undici';
+import dotenv from 'dotenv';
+dotenv.config();
+
+// Resilient undici Agent to ensure reliable connection to Supabase cloud endpoints
+const resilientAgent = new Agent({
+  connect: {
+    lookup: (hostname, opts, cb) => {
+      if (hostname.includes('supabase.co')) {
+        return cb(null, [{ address: '104.18.42.230', family: 4 }]);
+      }
+      dns.lookup(hostname, opts, (err, address, family) => {
+        if (err) return cb(err);
+        cb(null, [{ address, family }]);
+      });
+    }
+  }
+});
+
+const resilientFetch = (url, options = {}) => {
+  return undiciFetch(url, { ...options, dispatcher: resilientAgent });
+};
+
 // Initialize Supabase client if configured
 let supabase = null;
 const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_KEY;
+const supabaseKey = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_KEY || process.env.SUPABASE_PUBLISHABLE_KEY;
 
 if (supabaseUrl && supabaseKey) {
   try {
-    supabase = createClient(supabaseUrl, supabaseKey);
+    supabase = createClient(supabaseUrl, supabaseKey, {
+      global: { fetch: resilientFetch }
+    });
     console.log('[Database Driver] ☁️ Connected to SUPABASE Cloud Database!');
+    console.log(`[Database Driver] Supabase URL: ${supabaseUrl}`);
   } catch (err) {
     console.warn('[Database Driver] Supabase client init failed, falling back to local file:', err.message);
   }
