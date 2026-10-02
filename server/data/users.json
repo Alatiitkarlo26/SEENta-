@@ -56,18 +56,18 @@
     "createdAt": "2026-10-02T06:09:12.089Z"
   },
   {
-    "id": "usr_1790921481505",
-    "fullName": "Redondo, Kurt",
+    "id": "usr_1790926814852",
+    "fullName": "Redondo, Kurt Paolo",
     "firstName": "",
     "lastName": "",
     "email": "kurtpaolodredondo@iskolarngbayan.pup.edu.ph",
     "studentId": "2024-00069-BN-0",
-    "contactNumber": "09123455671",
-    "password": "kurtgay",
+    "contactNumber": "09123456789",
+    "password": "password123",
     "role": "student",
     "roleTitle": "PUP Student",
     "isVerified": true,
-    "createdAt": "2026-10-02T06:11:21.505Z"
+    "createdAt": "2026-10-02T07:40:14.852Z"
   },
   {
     "id": "usr_1790922387584",
@@ -77,7 +77,7 @@
     "email": "armi.aviles@iskolarngbayan.pup.edu.ph",
     "studentId": "2024-08811",
     "contactNumber": "09181112244",
-    "password": "6a229c91e31bd9d6546c1e36ffb693df:1344711107ca3c17dfedb9745c18d8b5ec926a9c66a4ca9f6079c0bfd5e026b458ed5631d3833bb4ea785ded6a38ab5e2c66c8d5c3fbeef5434fa0cfc2b170e5",
+    "password": "password123",
     "role": "student",
     "roleTitle": "PUP Student",
     "isVerified": true,

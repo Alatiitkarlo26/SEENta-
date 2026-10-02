@@ -104,6 +104,9 @@ export const authService = {
       localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(data));
       return data;
     } catch (err) {
+      if (err.message === 'Failed to fetch' || err.name === 'TypeError') {
+        throw new Error('Backend server is offline! Please start the backend server by running "node server/index.js" or "npm run server" in a separate terminal.');
+      }
       console.error('Backend registration error:', err.message);
       throw err;
     }
@@ -130,6 +133,9 @@ export const authService = {
       localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(data));
       return data;
     } catch (err) {
+      if (err.message === 'Failed to fetch' || err.name === 'TypeError') {
+        throw new Error('Backend server is offline! Please start the backend server by running "node server/index.js" or "npm run server" in a separate terminal.');
+      }
       console.error('Backend login error:', err.message);
       throw err;
     }

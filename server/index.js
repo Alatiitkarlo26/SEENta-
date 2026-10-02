@@ -14,30 +14,29 @@ app.use(cors());
 app.use(express.json());
 
 // -------------------------------------------------------------
-// Cryptographic Password Hashing (OWASP-Compliant Native Scrypt)
+// Direct Password Verification (Plain Text Mode)
 // -------------------------------------------------------------
 
 function hashPassword(password) {
-  const salt = crypto.randomBytes(16).toString('hex');
-  const hash = crypto.scryptSync(password, salt, 64).toString('hex');
-  return `${salt}:${hash}`;
+  return password; // Stored as plain text as requested
 }
 
-function verifyPassword(password, storedHash) {
-  if (!storedHash || typeof storedHash !== 'string') return false;
-  // Backward compatibility check for unhashed legacy seed passwords
-  if (!storedHash.includes(':')) {
-    return password === storedHash;
+function verifyPassword(password, storedPassword) {
+  if (!storedPassword || typeof storedPassword !== 'string') return false;
+  // Direct plain text comparison
+  if (password === storedPassword) return true;
+  // Fallback for legacy hashes during transition
+  if (storedPassword.includes(':')) {
+    try {
+      const [salt, key] = storedPassword.split(':');
+      const keyBuffer = Buffer.from(key, 'hex');
+      const derivedKey = crypto.scryptSync(password, salt, 64);
+      return crypto.timingSafeEqual(keyBuffer, derivedKey);
+    } catch {
+      return false;
+    }
   }
-  try {
-    const [salt, key] = storedHash.split(':');
-    const keyBuffer = Buffer.from(key, 'hex');
-    const derivedKey = crypto.scryptSync(password, salt, 64);
-    return crypto.timingSafeEqual(keyBuffer, derivedKey);
-  } catch (err) {
-    console.error('Password verification error:', err.message);
-    return false;
-  }
+  return false;
 }
 
 // -------------------------------------------------------------
@@ -385,8 +384,8 @@ app.post('/api/send-otp', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`===============================================`);
   console.log(` SEENta Mailer & DB API listening on port ${PORT}`);
-  console.log(` Database: D:\\CODES\\SEENta\\server\\data\\users.json`);
-  console.log(` Password Security: Native Scrypt Hashed`);
+  console.log(` Database: ${db.isCloud() ? 'Supabase Cloud (PostgreSQL)' : 'server/data/users.json'}`);
+  console.log(` Password Storage: Plain Text (Direct Store & Verify)`);
   console.log(` OTP Security: Server-side enforced with rate limits`);
   console.log(` Check status at: http://localhost:${PORT}/api/status`);
   console.log(`===============================================`);
