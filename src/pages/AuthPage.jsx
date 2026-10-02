@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../services/authService';
 import { otpService } from '../services/otpService';
-import PUPLogo from '../components/PUPLogo';
+import pupLogoAndText from '../assets/PUP-Logo-and-Text.png';
 import OTPModal from '../components/OTPModal';
 import campusBg from '../assets/pup-binan-campus.jpg';
 import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
@@ -43,8 +43,8 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
     setRegError('');
   };
 
-  // Handle Login
-  const handleLoginSubmit = async (e) => {
+  // Handle Login / Step 1 -> Transition to Information Step
+  const handleLoginSubmit = (e) => {
     e.preventDefault();
     setLoginError('');
 
@@ -53,22 +53,29 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
       return;
     }
 
+    const domainCheck = authService.validateUniversityDomain(loginEmail.trim());
+    if (!domainCheck.isValid) {
+      setLoginError('Please use your official PUP email (@iskolarngbayan.pup.edu.ph or @pup.edu.ph).');
+      return;
+    }
+
+    if (loginPassword.length < 6) {
+      setLoginError('Password must be at least 6 characters.');
+      return;
+    }
+
     if (!loginAgreeTerms) {
       setLoginError('Please agree to the Terms, Privacy Policy and Conditions.');
       return;
     }
 
-    setIsLoggingIn(true);
-    try {
-      const loggedUser = await login(loginEmail, loginPassword);
-      setIsLoggingIn(false);
-      if (onAuthSuccess) {
-        onAuthSuccess(loggedUser);
-      }
-    } catch (err) {
-      setIsLoggingIn(false);
-      setLoginError(err.message || 'Invalid credentials.');
-    }
+    // Carry over email & password, then transition smoothly to information view
+    setRegData((prev) => ({
+      ...prev,
+      email: loginEmail.trim().toLowerCase(),
+      password: loginPassword
+    }));
+    switchView('register');
   };
 
   // Handle Registration
@@ -91,22 +98,6 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
       setRegError('Please enter your contact phone number.');
       return false;
     }
-    if (!regData.email.trim()) {
-      setRegError('Please enter your official PUP webmail.');
-      return false;
-    }
-
-    const domainCheck = authService.validateUniversityDomain(regData.email);
-    if (!domainCheck.isValid) {
-      setRegError('Please use your official PUP email (@iskolarngbayan.pup.edu.ph or @pup.edu.ph).');
-      return false;
-    }
-
-    if (!regData.password || regData.password.length < 6) {
-      setRegError('Password must be at least 6 characters.');
-      return false;
-    }
-
     return true;
   };
 
@@ -149,49 +140,44 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center overflow-x-hidden bg-slate-900 font-sans selection:bg-[#800000] selection:text-white">
-      {/* High-Quality Campus Background with Photographic Color Tuning */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="relative h-screen max-h-screen w-full flex items-center justify-end overflow-hidden bg-white font-sans selection:bg-[#800000] selection:text-white p-3 sm:p-4 lg:p-5">
+      {/* High-Quality Campus Background on White Canvas with 50% Opacity */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none bg-white">
         <img
           src={campusBg}
           alt="PUP Biñan Campus"
-          className="w-full h-full object-cover object-center filter contrast-[1.08] saturate-[1.12] brightness-[0.92] scale-[1.01]"
+          className="w-full h-full object-cover object-center opacity-50 filter contrast-[1.05] saturate-[1.1] scale-[1.01]"
         />
-        {/* Soft Vignette Overlay to Enhance Contrast & Readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-black/40" />
-        <div className="absolute inset-0 bg-slate-900/20 backdrop-blur-[0.5px]" />
+        {/* Soft Light Vignette */}
+        <div className="absolute inset-0 bg-gradient-to-t from-white/60 via-transparent to-white/40" />
       </div>
 
-      {/* Top Left Floating PUP Header Brand */}
-      <div className="absolute top-5 left-5 sm:top-8 sm:left-8 z-20 flex items-center gap-3 select-none bg-white/85 backdrop-blur-md px-3.5 py-2 rounded-2xl shadow-md border border-white/60">
-        <PUPLogo className="w-10 h-10 sm:w-11 sm:h-11 shrink-0 drop-shadow-xs" />
-        <div className="flex flex-col">
-          <span className="text-[12px] sm:text-[13px] font-extrabold text-[#800000] tracking-wide leading-tight">
-            POLYTECHNIC UNIVERSITY OF THE PHILIPPINES
-          </span>
-          <span className="text-[9px] sm:text-[10px] font-semibold text-slate-600 tracking-wider">
-            THE COUNTRY&apos;S 1ST POLYTECHNICU
-          </span>
-        </div>
+      {/* Top Left PUP Header Brand */}
+      <div className="absolute top-5 left-5 sm:top-7 sm:left-8 z-20 select-none">
+        <img
+          src={pupLogoAndText}
+          alt="Polytechnic University of the Philippines"
+          className="h-10 sm:h-12 w-auto object-contain"
+        />
       </div>
 
-      {/* Centered Main Form Container */}
-      <div className="relative z-10 w-full max-w-[480px] sm:max-w-[510px] p-4 sm:p-6 my-auto pt-24 sm:pt-6">
+      {/* Right Side Main Form Container (Almost as tall as website height, non-scrollable) */}
+      <div className="relative z-10 w-full lg:w-[53%] xl:w-[50%] max-w-[650px] h-full max-h-[calc(100vh-1.5rem)] sm:max-h-[calc(100vh-2rem)] my-auto flex flex-col mr-2 sm:mr-3 lg:mr-5">
         <div
           key={view}
-          className={`w-full bg-white/95 backdrop-blur-xl rounded-[38px] sm:rounded-[44px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.45)] border border-white/80 p-7 sm:p-10 lg:p-11 transition-all ${
+          className={`w-full h-full bg-white rounded-[36px] sm:rounded-[48px] shadow-[0_15px_50px_-15px_rgba(0,0,0,0.18)] border border-neutral-100 p-6 sm:p-10 lg:p-14 flex flex-col justify-center overflow-hidden transition-all ${
             direction === 'right' ? 'animate-slide-right' : 'animate-slide-left'
           }`}
         >
           {view === 'login' ? (
-            /* ================= LOGIN VIEW (Exact Figma Mockup) ================= */
-            <div>
+            /* ================= LOGIN VIEW (Exact Minimal Design) ================= */
+            <div className="w-full max-w-[450px] sm:max-w-[460px] mx-auto">
               {/* Header */}
-              <div className="text-center mb-7">
-                <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              <div className="text-center mb-6 sm:mb-8">
+                <h1 className="text-2xl sm:text-[32px] font-bold text-black tracking-tight leading-snug">
                   Welcome to SEENta
                 </h1>
-                <p className="mt-2 text-xs sm:text-sm text-slate-500 max-w-xs mx-auto leading-relaxed">
+                <p className="mt-1.5 text-xs sm:text-[13px] text-neutral-500 max-w-xs mx-auto leading-relaxed">
                   Enter your PUP webmail to begin your search. SEENta&apos;s got your back.
                 </p>
               </div>
@@ -206,7 +192,7 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
 
                 {/* Email Field */}
                 <div>
-                  <label className="block text-xs font-semibold text-slate-800 mb-1.5 ml-1">
+                  <label className="block text-xs sm:text-[13px] font-semibold text-black mb-1.5 ml-1">
                     Email
                   </label>
                   <input
@@ -214,13 +200,13 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                     value={loginEmail}
                     onChange={(e) => setLoginEmail(e.target.value)}
                     placeholder="name@iskolarngbayan.pup.edu.ph"
-                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-black focus:ring-2 focus:ring-black/5 transition shadow-xs"
+                    className="w-full px-5 py-3 sm:py-3.5 bg-white border border-neutral-300 rounded-full text-xs sm:text-sm text-black placeholder:text-neutral-300 focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition shadow-2xs"
                   />
                 </div>
 
                 {/* Password Field with Eye Toggle */}
                 <div>
-                  <label className="block text-xs font-semibold text-slate-800 mb-1.5 ml-1">
+                  <label className="block text-xs sm:text-[13px] font-semibold text-black mb-1.5 ml-1">
                     Password
                   </label>
                   <div className="relative">
@@ -229,12 +215,12 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                       value={loginPassword}
                       onChange={(e) => setLoginPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full pl-4 pr-11 py-3 bg-white border border-slate-200 rounded-2xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-black focus:ring-2 focus:ring-black/5 transition shadow-xs"
+                      className="w-full pl-5 pr-12 py-3 sm:py-3.5 bg-white border border-neutral-300 rounded-full text-xs sm:text-sm text-black placeholder:text-neutral-300 focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition shadow-2xs"
                     />
                     <button
                       type="button"
                       onClick={() => setShowLoginPassword(!showLoginPassword)}
-                      className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-700 transition cursor-pointer"
+                      className="absolute inset-y-0 right-0 pr-4 flex items-center text-neutral-400 hover:text-black transition cursor-pointer"
                       title={showLoginPassword ? 'Hide password' : 'Show password'}
                     >
                       {showLoginPassword ? (
@@ -247,17 +233,17 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                 </div>
 
                 {/* Terms and Conditions Checkbox */}
-                <div className="flex items-center gap-2.5 pt-1 ml-1">
+                <div className="flex items-center gap-2 pt-0.5 ml-1">
                   <input
                     type="checkbox"
                     id="loginAgreeTerms"
                     checked={loginAgreeTerms}
                     onChange={(e) => setLoginAgreeTerms(e.target.checked)}
-                    className="w-4 h-4 rounded border-slate-300 text-black focus:ring-black cursor-pointer accent-black"
+                    className="w-3.5 h-3.5 rounded-xs border-neutral-300 text-black focus:ring-black cursor-pointer accent-black"
                   />
                   <label
                     htmlFor="loginAgreeTerms"
-                    className="text-[11px] sm:text-xs text-slate-600 cursor-pointer select-none"
+                    className="text-[11px] sm:text-xs text-black cursor-pointer select-none"
                   >
                     I agree to all Terms, Privacy Policy and Conditions
                   </label>
@@ -267,59 +253,49 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                 <button
                   type="submit"
                   disabled={isLoggingIn}
-                  className="w-full py-3.5 px-6 bg-black hover:bg-neutral-800 text-white font-semibold rounded-full text-sm transition shadow-md hover:shadow-lg disabled:opacity-60 cursor-pointer mt-2 active:scale-[0.99]"
+                  className="w-full py-3 sm:py-3.5 px-6 bg-black hover:bg-neutral-900 text-white font-semibold rounded-full text-xs sm:text-sm transition shadow-md disabled:opacity-60 cursor-pointer mt-2 active:scale-[0.99]"
                 >
                   {isLoggingIn ? 'Signing In...' : 'Sign In'}
                 </button>
               </form>
 
-              {/* Bottom Inquiries & Sign Up Links */}
-              <div className="mt-6 text-center space-y-2">
-                <p className="text-[11px] sm:text-xs text-slate-500">
+              {/* Bottom Inquiries Link */}
+              <div className="mt-5 sm:mt-6 text-center">
+                <p className="text-[11px] sm:text-xs text-black">
                   Have concerns with your account?{' '}
-                  <a href="#" className="text-sky-600 hover:underline font-medium">
+                  <a href="#" className="text-[#088395] hover:underline font-semibold ml-0.5">
                     Create Inquiry
                   </a>
-                </p>
-                <p className="text-[11px] sm:text-xs text-slate-600">
-                  Don&apos;t have an account yet?{' '}
-                  <button
-                    type="button"
-                    onClick={() => switchView('register')}
-                    className="text-black hover:underline font-bold ml-1 cursor-pointer"
-                  >
-                    Sign Up
-                  </button>
                 </p>
               </div>
             </div>
           ) : (
-            /* ================= REGISTER VIEW ("Let's get started!") ================= */
-            <div>
-              {/* Back Navigation Button */}
-              <div>
+            /* ================= INFORMATION VIEW ("Let's get started!") ================= */
+            <div className="w-full max-w-[450px] sm:max-w-[460px] mx-auto">
+              {/* Back Navigation Button - Positioned Higher by ~20px */}
+              <div className="-mt-8 sm:-mt-11 mb-4 sm:mb-5">
                 <button
                   type="button"
                   onClick={() => switchView('login')}
-                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-900 hover:text-slate-600 transition cursor-pointer"
+                  className="inline-flex items-center gap-2 text-xs sm:text-[13px] font-semibold text-black hover:text-neutral-600 transition cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
                   <span>Back</span>
                 </button>
               </div>
 
-              {/* Heading */}
-              <div className="mt-3 mb-5">
-                <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              {/* Heading - Bigger & Moved Upward */}
+              <div className="mb-5 sm:mb-6">
+                <h1 className="text-3xl sm:text-[36px] font-bold text-black tracking-tight leading-tight">
                   Let&apos;s get started!
                 </h1>
-                <p className="mt-1.5 text-xs sm:text-sm text-slate-500 leading-relaxed">
+                <p className="mt-2 text-xs sm:text-[13px] text-neutral-500 max-w-sm leading-relaxed">
                   The smarter way for PUP Binan students, faculty, and security to report, track, and recover lost items.
                 </p>
               </div>
 
-              {/* Form */}
-              <form onSubmit={handleRegSubmit} className="space-y-3.5">
+              {/* Information Form */}
+              <form onSubmit={handleRegSubmit} className="space-y-4 sm:space-y-4.5">
                 {regError && (
                   <div className="p-3 bg-rose-50 border border-rose-200 rounded-2xl text-xs text-rose-600 font-medium text-center animate-shake">
                     {regError}
@@ -327,9 +303,9 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                 )}
 
                 {/* Row 1: First Name & Last Name */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-3 sm:gap-3.5">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-800 mb-1 ml-1">
+                    <label className="block text-xs sm:text-[13px] font-semibold text-black mb-1.5 ml-1">
                       First Name
                     </label>
                     <input
@@ -337,13 +313,13 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                       name="firstName"
                       value={regData.firstName}
                       onChange={handleRegChange}
-                      placeholder=""
-                      className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-2xl text-sm text-slate-900 focus:outline-none focus:border-black focus:ring-2 focus:ring-black/5 transition shadow-xs"
+                      placeholder="First Name"
+                      className="w-full px-4 sm:px-5 py-3 sm:py-3.5 bg-white border border-neutral-300 rounded-full text-xs sm:text-sm text-black placeholder:text-neutral-300 focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition shadow-2xs"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-800 mb-1 ml-1">
+                    <label className="block text-xs sm:text-[13px] font-semibold text-black mb-1.5 ml-1">
                       Last Name
                     </label>
                     <input
@@ -351,15 +327,15 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                       name="lastName"
                       value={regData.lastName}
                       onChange={handleRegChange}
-                      placeholder=""
-                      className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-2xl text-sm text-slate-900 focus:outline-none focus:border-black focus:ring-2 focus:ring-black/5 transition shadow-xs"
+                      placeholder="Last Name"
+                      className="w-full px-4 sm:px-5 py-3 sm:py-3.5 bg-white border border-neutral-300 rounded-full text-xs sm:text-sm text-black placeholder:text-neutral-300 focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition shadow-2xs"
                     />
                   </div>
                 </div>
 
                 {/* Row 2: Student Number */}
                 <div>
-                  <label className="block text-xs font-semibold text-slate-800 mb-1 ml-1">
+                  <label className="block text-xs sm:text-[13px] font-semibold text-black mb-1.5 ml-1">
                     Student Number
                   </label>
                   <input
@@ -368,13 +344,13 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                     value={regData.studentId}
                     onChange={handleRegChange}
                     placeholder="2024-XXXX"
-                    className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-black focus:ring-2 focus:ring-black/5 transition font-mono shadow-xs"
+                    className="w-full px-5 py-3 sm:py-3.5 bg-white border border-neutral-300 rounded-full text-xs sm:text-sm text-black placeholder:text-neutral-300 focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition font-mono shadow-2xs"
                   />
                 </div>
 
                 {/* Row 3: Phone Number */}
                 <div>
-                  <label className="block text-xs font-semibold text-slate-800 mb-1 ml-1">
+                  <label className="block text-xs sm:text-[13px] font-semibold text-black mb-1.5 ml-1">
                     Phone Number
                   </label>
                   <input
@@ -383,77 +359,19 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                     value={regData.contactNumber}
                     onChange={handleRegChange}
                     placeholder="09XXXXXXXXX"
-                    className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-black focus:ring-2 focus:ring-black/5 transition font-mono shadow-xs"
+                    className="w-full px-5 py-3 sm:py-3.5 bg-white border border-neutral-300 rounded-full text-xs sm:text-sm text-black placeholder:text-neutral-300 focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition font-mono shadow-2xs"
                   />
-                </div>
-
-                {/* Row 4: Official PUP Webmail */}
-                <div>
-                  <label className="block text-xs font-semibold text-slate-800 mb-1 ml-1">
-                    PUP Webmail (Outlook)
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={regData.email}
-                    onChange={handleRegChange}
-                    placeholder="name@iskolarngbayan.pup.edu.ph"
-                    className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-black focus:ring-2 focus:ring-black/5 transition font-mono shadow-xs"
-                  />
-                </div>
-
-                {/* Row 5: Password with Eye Toggle */}
-                <div>
-                  <label className="block text-xs font-semibold text-slate-800 mb-1 ml-1">
-                    Password
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={showRegisterPassword ? 'text' : 'password'}
-                      name="password"
-                      value={regData.password}
-                      onChange={handleRegChange}
-                      placeholder="••••••••"
-                      className="w-full pl-4 pr-11 py-2.5 bg-white border border-slate-200 rounded-2xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-black focus:ring-2 focus:ring-black/5 transition shadow-xs"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowRegisterPassword(!showRegisterPassword)}
-                      className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-700 transition cursor-pointer"
-                      title={showRegisterPassword ? 'Hide password' : 'Show password'}
-                    >
-                      {showRegisterPassword ? (
-                        <EyeOff className="w-4 h-4" />
-                      ) : (
-                        <Eye className="w-4 h-4" />
-                      )}
-                    </button>
-                  </div>
                 </div>
 
                 {/* Complete Registration Button */}
                 <button
                   type="submit"
                   disabled={isSubmittingReg}
-                  className="w-full py-3.5 px-6 bg-black hover:bg-neutral-800 text-white font-semibold rounded-full text-sm transition shadow-md hover:shadow-lg disabled:opacity-60 cursor-pointer mt-3 active:scale-[0.99]"
+                  className="w-full py-3.5 sm:py-4 px-6 bg-black hover:bg-neutral-900 text-white font-semibold rounded-full text-xs sm:text-sm transition shadow-md disabled:opacity-60 cursor-pointer mt-4 active:scale-[0.99]"
                 >
                   {isSubmittingReg ? 'Sending Verification Code...' : 'Complete Registration'}
                 </button>
               </form>
-
-              {/* Return to Sign in link */}
-              <div className="mt-4 text-center">
-                <span className="text-[11px] sm:text-xs text-slate-500">
-                  Already have an account?{' '}
-                  <button
-                    type="button"
-                    onClick={() => switchView('login')}
-                    className="text-black hover:underline font-bold ml-1 cursor-pointer"
-                  >
-                    Sign In
-                  </button>
-                </span>
-              </div>
             </div>
           )}
         </div>
