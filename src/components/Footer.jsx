@@ -10,7 +10,7 @@ export default function Footer() {
           <div className="space-y-3">
             <div className="flex items-center gap-2.5">
               <PUPLogo className="w-8 h-8 shrink-0" />
-              <span className="text-white font-extrabold text-base tracking-tight">Project SEEN<span className="text-[#800000]">ta</span></span>
+              <span className="text-white font-extrabold text-base tracking-tight">Project SEEN<span className="text-theme">ta</span></span>
             </div>
             <p className="text-slate-400 leading-relaxed text-xs">
               A centralized digital lost and found management platform built specifically for the students, faculty, and campus security of PUP Biñan.

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import AuthPage from './pages/AuthPage';
@@ -13,10 +14,10 @@ function MainContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-900">
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 transition-colors">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 border-4 border-[#800000] border-t-transparent rounded-full animate-spin"></div>
-          <span className="text-xs font-semibold text-slate-300">Loading SEENta System...</span>
+          <div className="w-10 h-10 border-4 border-theme border-t-transparent rounded-full animate-spin"></div>
+          <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">Loading SEENta System...</span>
         </div>
       </div>
     );
@@ -38,7 +39,7 @@ function MainContent() {
   const currentTab = role === 'admin' ? 'admin-dashboard' : activeTab;
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-[#800000] selection:text-white">
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-theme selection:text-white transition-colors duration-200">
       <Navbar activeTab={currentTab} setActiveTab={setActiveTab} />
 
       <main className="flex-1">
@@ -59,7 +60,9 @@ function MainContent() {
 export default function App() {
   return (
     <AuthProvider>
-      <MainContent />
+      <ThemeProvider>
+        <MainContent />
+      </ThemeProvider>
     </AuthProvider>
   );
 }

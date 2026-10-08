@@ -1,47 +1,5 @@
 [
   {
-    "id": "usr_student_01",
-    "fullName": "Dela Cruz, Juan M.",
-    "firstName": "Juan",
-    "lastName": "Dela Cruz",
-    "email": "juan.delacruz@iskolarngbayan.pup.edu.ph",
-    "studentId": "2024-01452",
-    "contactNumber": "09171234567",
-    "password": "password123",
-    "role": "student",
-    "roleTitle": "PUP Student",
-    "isVerified": true,
-    "createdAt": "2026-09-01T08:00:00.000Z"
-  },
-  {
-    "id": "usr_faculty_01",
-    "fullName": "Santos, Maria C.",
-    "firstName": "Maria",
-    "lastName": "Santos",
-    "email": "maria.santos@pup.edu.ph",
-    "studentId": "FAC-2018-091",
-    "contactNumber": "09189876543",
-    "password": "password123",
-    "role": "faculty",
-    "roleTitle": "Faculty / Professor",
-    "isVerified": true,
-    "createdAt": "2026-09-05T09:30:00.000Z"
-  },
-  {
-    "id": "usr_admin_01",
-    "fullName": "Bautista, Renato D.",
-    "firstName": "Renato",
-    "lastName": "Bautista",
-    "email": "security.binan@pup.edu.ph",
-    "studentId": "SEC-2020-004",
-    "contactNumber": "09195551234",
-    "password": "admin123",
-    "role": "admin",
-    "roleTitle": "Campus Security Staff",
-    "isVerified": true,
-    "createdAt": "2026-08-15T07:00:00.000Z"
-  },
-  {
     "id": "usr_1790921352089",
     "fullName": "Ubaldo, Neilven Ryan",
     "firstName": "Neilven Ryan",
@@ -58,8 +16,8 @@
   {
     "id": "usr_1790926814852",
     "fullName": "Redondo, Kurt Paolo",
-    "firstName": "",
-    "lastName": "",
+    "firstName": "Kurt Paolo",
+    "lastName": "Redondo",
     "email": "kurtpaolodredondo@iskolarngbayan.pup.edu.ph",
     "studentId": "2024-00069-BN-0",
     "contactNumber": "09123456789",

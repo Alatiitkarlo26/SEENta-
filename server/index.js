@@ -177,9 +177,19 @@ app.post('/api/auth/login', async (req, res) => {
       return res.status(400).json({ error: 'Email and password are required.' });
     }
 
-    const user = await db.findUserByEmail(email);
-    if (!user || !verifyPassword(password, user.password)) {
-      return res.status(401).json({ error: 'Invalid university email or password.' });
+    const cleanEmail = email.trim().toLowerCase();
+    const user = await db.findUserByEmail(cleanEmail);
+    if (!user) {
+      return res.status(404).json({
+        error: 'No account registered with this university email.',
+        notRegistered: true
+      });
+    }
+
+    if (!verifyPassword(password, user.password)) {
+      return res.status(401).json({
+        error: 'Incorrect password for this university email.'
+      });
     }
 
     console.log(`[Database] User authenticated: ${user.email} (${user.role})`);
@@ -189,6 +199,22 @@ app.post('/api/auth/login', async (req, res) => {
   } catch (err) {
     console.error('Login error:', err.message);
     res.status(500).json({ error: 'Server authentication error.' });
+  }
+});
+
+// 3b. Check if an email is registered in the database
+app.get('/api/auth/check-email', async (req, res) => {
+  try {
+    const email = req.query.email;
+    if (!email) {
+      return res.status(400).json({ error: 'Email query parameter is required.' });
+    }
+    const cleanEmail = email.trim().toLowerCase();
+    const user = await db.findUserByEmail(cleanEmail);
+    res.json({ exists: !!user, role: user?.role || null });
+  } catch (err) {
+    console.error('Check email error:', err.message);
+    res.status(500).json({ error: 'Failed to verify email existence.' });
   }
 });
 

@@ -55,9 +55,40 @@
   animation: shake 0.35s ease-in-out;
 }
 
+/* Theme Dynamic Utilities */
+.bg-theme {
+  background-color: var(--theme-primary) !important;
+}
+
+.bg-theme-hover:hover {
+  background-color: var(--theme-primary-hover) !important;
+}
+
+.bg-theme-light {
+  background-color: var(--theme-primary-light) !important;
+}
+
+.text-theme {
+  color: var(--theme-primary) !important;
+}
+
+.border-theme {
+  border-color: var(--theme-primary) !important;
+}
+
+.border-theme-light {
+  border-color: var(--theme-primary-border) !important;
+}
+
+.ring-theme:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 3px var(--theme-glow) !important;
+  border-color: var(--theme-primary) !important;
+}
+
 /* High Contrast Mode for Accessibility (NFR-SEEN-0001) */
 html.high-contrast {
-  filter: contrast(125%);
+  filter: contrast(135%);
 }
 
 html.high-contrast body {
@@ -65,8 +96,10 @@ html.high-contrast body {
   color: #ffffff !important;
 }
 
-html.high-contrast .bg-white {
-  background-color: #121212 !important;
+html.high-contrast .bg-white,
+html.high-contrast .dark .bg-slate-800,
+html.high-contrast .dark .bg-slate-900 {
+  background-color: #0d0d0d !important;
   color: #ffffff !important;
   border-color: #facc15 !important;
 }
@@ -75,10 +108,18 @@ html.high-contrast .bg-slate-50,
 html.high-contrast .bg-slate-100 {
   background-color: #1a1a1a !important;
   color: #ffffff !important;
+  border-color: #facc15 !important;
 }
 
-html.high-contrast input {
+html.high-contrast input,
+html.high-contrast select,
+html.high-contrast textarea {
   background-color: #000000 !important;
   color: #facc15 !important;
   border-color: #facc15 !important;
 }
+
+html.high-contrast button {
+  border: 1px solid #ffffff !important;
+}
+

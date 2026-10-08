@@ -77,9 +77,9 @@ export default function StudentDashboardPage() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans selection:bg-[#800000] selection:text-white pb-16">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans selection:bg-theme selection:text-white pb-16 transition-colors duration-200">
       {/* ================= HERO SECTION (Formal & Matched with Login Background) ================= */}
-      <div className="relative w-full overflow-hidden bg-slate-900 text-white border-b border-slate-200/50">
+      <div className="relative w-full overflow-hidden bg-slate-900 text-white border-b border-slate-200/50 dark:border-slate-800">
         {/* Background Image with Photographic Contrast */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <img
@@ -124,7 +124,7 @@ export default function StudentDashboardPage() {
 
             {/* Formal Search Bar (Matching Pill Aesthetic) */}
             <div className="mt-8 w-full max-w-2xl">
-              <div className="relative flex items-center bg-white rounded-full p-2 shadow-2xl border border-white/80">
+              <div className="relative flex items-center bg-white dark:bg-slate-800/90 rounded-full p-2 shadow-2xl border border-white/80 dark:border-slate-700">
                 <div className="pl-4 text-slate-400">
                   <Search className="w-5 h-5" />
                 </div>
@@ -133,11 +133,11 @@ export default function StudentDashboardPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search by item name, category, or location found..."
-                  className="w-full px-4 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none bg-transparent"
+                  className="w-full px-4 py-2 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none bg-transparent"
                 />
                 <button
                   type="button"
-                  className="px-6 py-3 bg-black hover:bg-neutral-800 text-white font-semibold text-xs sm:text-sm rounded-full transition shadow-md shrink-0 cursor-pointer"
+                  className="px-6 py-3 bg-theme hover:bg-theme-hover text-white font-semibold text-xs sm:text-sm rounded-full transition shadow-md shrink-0 cursor-pointer"
                 >
                   Search Vault
                 </button>
@@ -147,25 +147,25 @@ export default function StudentDashboardPage() {
         </div>
       </div>
 
-      {/* ================= CORE ACTION CARDS (Clean White Cards) ================= */}
+      {/* ================= CORE ACTION CARDS (Clean Adaptive Cards) ================= */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
           {/* Action Card 1: Report Lost Item */}
-          <div className="bg-white rounded-[32px] p-6 sm:p-7 border border-slate-200/80 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+          <div className="bg-white dark:bg-slate-900 rounded-[32px] p-6 sm:p-7 border border-slate-200/80 dark:border-slate-800 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
             <div>
-              <div className="w-12 h-12 rounded-2xl bg-black text-white flex items-center justify-center mb-4 group-hover:scale-105 transition">
+              <div className="w-12 h-12 rounded-2xl bg-theme text-white flex items-center justify-center mb-4 group-hover:scale-105 transition shadow-xs">
                 <PlusCircle className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900">Report a Lost Item</h3>
-              <p className="mt-2 text-xs sm:text-sm text-slate-500 leading-relaxed">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Report a Lost Item</h3>
+              <p className="mt-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                 Misplaced an ID, device, tumbler, or notebook on campus? File an official report with description and location.
               </p>
             </div>
-            <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between">
+            <div className="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
               <span className="text-[11px] font-semibold text-slate-400">Phase 2 Module</span>
               <button
                 type="button"
-                className="py-2.5 px-5 bg-black hover:bg-neutral-800 text-white text-xs font-semibold rounded-full transition shadow-sm cursor-pointer"
+                className="py-2.5 px-5 bg-theme hover:bg-theme-hover text-white text-xs font-semibold rounded-full transition shadow-sm cursor-pointer"
               >
                 File Report &rarr;
               </button>
@@ -173,21 +173,21 @@ export default function StudentDashboardPage() {
           </div>
 
           {/* Action Card 2: Browse Surrendered Inventory */}
-          <div className="bg-white rounded-[32px] p-6 sm:p-7 border border-slate-200/80 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+          <div className="bg-white dark:bg-slate-900 rounded-[32px] p-6 sm:p-7 border border-slate-200/80 dark:border-slate-800 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
             <div>
-              <div className="w-12 h-12 rounded-2xl bg-black text-white flex items-center justify-center mb-4 group-hover:scale-105 transition">
+              <div className="w-12 h-12 rounded-2xl bg-theme text-white flex items-center justify-center mb-4 group-hover:scale-105 transition shadow-xs">
                 <Package className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900">Surrendered Vault</h3>
-              <p className="mt-2 text-xs sm:text-sm text-slate-500 leading-relaxed">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Surrendered Vault</h3>
+              <p className="mt-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                 Filter through cataloged items turned in to the Campus Security Office by category, color, size, and date.
               </p>
             </div>
-            <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between">
+            <div className="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
               <span className="text-[11px] font-semibold text-slate-400">4 Active Items</span>
               <button
                 type="button"
-                className="py-2.5 px-5 bg-black hover:bg-neutral-800 text-white text-xs font-semibold rounded-full transition shadow-sm cursor-pointer"
+                className="py-2.5 px-5 bg-theme hover:bg-theme-hover text-white text-xs font-semibold rounded-full transition shadow-sm cursor-pointer"
               >
                 Browse Items &rarr;
               </button>
@@ -195,24 +195,24 @@ export default function StudentDashboardPage() {
           </div>
 
           {/* Action Card 3: In-Person Office Notice & Verification */}
-          <div className="bg-white rounded-[32px] p-6 sm:p-7 border border-slate-200/80 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+          <div className="bg-white dark:bg-slate-900 rounded-[32px] p-6 sm:p-7 border border-slate-200/80 dark:border-slate-800 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
             <div>
-              <div className="w-12 h-12 rounded-2xl bg-[#800000] text-amber-300 flex items-center justify-center mb-4 group-hover:scale-105 transition">
+              <div className="w-12 h-12 rounded-2xl bg-theme text-amber-300 flex items-center justify-center mb-4 group-hover:scale-105 transition shadow-xs">
                 <ShieldCheck className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900">Security Office Handover</h3>
-              <p className="mt-2 text-xs sm:text-sm text-slate-500 leading-relaxed">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Security Office Handover</h3>
+              <p className="mt-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                 All physical item turnovers require in-person identity verification at the Security Desk (Ground Floor, Main Bldg).
               </p>
             </div>
-            <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between">
-              <span className="text-[11px] font-semibold text-slate-500">8:00 AM – 5:00 PM</span>
+            <div className="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+              <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">8:00 AM – 5:00 PM</span>
               <button
                 type="button"
                 onClick={() => setShowOutlookModal(true)}
-                className="py-2 px-3 text-slate-700 hover:text-black font-semibold text-xs flex items-center gap-1.5 transition cursor-pointer"
+                className="py-2 px-3 text-slate-700 dark:text-slate-300 hover:text-black dark:hover:text-white font-semibold text-xs flex items-center gap-1.5 transition cursor-pointer"
               >
-                <Mail className="w-3.5 h-3.5 text-blue-600" />
+                <Mail className="w-3.5 h-3.5 text-blue-500" />
                 <span>Outlook Logs</span>
               </button>
             </div>
@@ -222,14 +222,14 @@ export default function StudentDashboardPage() {
 
       {/* ================= RECENT SURRENDERED ITEMS DIRECTORY ================= */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
-        <div className="bg-white rounded-[36px] sm:rounded-[44px] p-6 sm:p-10 border border-slate-200/80 shadow-xl">
+        <div className="bg-white dark:bg-slate-900 rounded-[36px] sm:rounded-[44px] p-6 sm:p-10 border border-slate-200/80 dark:border-slate-800 shadow-xl transition-colors">
           {/* Header & Category Filters */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100 dark:border-slate-800">
             <div>
-              <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                 Recently Surrendered Belongings
               </h2>
-              <p className="text-xs sm:text-sm text-slate-500 mt-1">
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
                 Items safely held in the PUP Biñan Campus Security Vault awaiting owner verification.
               </p>
             </div>
@@ -242,8 +242,8 @@ export default function StudentDashboardPage() {
                   onClick={() => setSelectedCategory(cat)}
                   className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition cursor-pointer ${
                     selectedCategory === cat
-                      ? 'bg-black text-white'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      ? 'bg-theme text-white shadow-xs'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
                   }`}
                 >
                   {cat}
@@ -258,41 +258,41 @@ export default function StudentDashboardPage() {
               filteredItems.map((item) => (
                 <div
                   key={item.id}
-                  className="p-5 rounded-3xl border border-slate-200 hover:border-slate-300 hover:shadow-md bg-slate-50/50 transition-all flex flex-col justify-between"
+                  className="p-5 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md bg-slate-50/50 dark:bg-slate-800/40 transition-all flex flex-col justify-between"
                 >
                   <div className="space-y-2">
                     <div className="flex items-start justify-between gap-3">
-                      <span className="text-[11px] font-semibold text-slate-500 bg-white px-2.5 py-1 rounded-full border border-slate-200">
+                      <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700">
                         {item.category}
                       </span>
-                      <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${item.badgeColor}`}>
+                      <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${item.badgeColor} dark:bg-opacity-20`}>
                         {item.status}
                       </span>
                     </div>
 
-                    <h4 className="text-base font-bold text-slate-900 pt-1">
+                    <h4 className="text-base font-bold text-slate-900 dark:text-white pt-1">
                       {item.name}
                     </h4>
 
-                    <div className="space-y-1 text-xs text-slate-600 pt-1">
+                    <div className="space-y-1 text-xs text-slate-600 dark:text-slate-400 pt-1">
                       <div className="flex items-center gap-2">
                         <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                        <span>Found at: <strong className="text-slate-800">{item.location}</strong></span>
+                        <span>Found at: <strong className="text-slate-800 dark:text-slate-200">{item.location}</strong></span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                        <span>Date Logged: <span className="text-slate-700">{item.date}</span></span>
+                        <span>Date Logged: <span className="text-slate-700 dark:text-slate-300">{item.date}</span></span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="mt-5 pt-4 border-t border-slate-200/80 flex items-center justify-between">
-                    <span className="text-[11px] font-mono font-medium text-slate-500">
+                  <div className="mt-5 pt-4 border-t border-slate-200/80 dark:border-slate-700/80 flex items-center justify-between">
+                    <span className="text-[11px] font-mono font-medium text-slate-500 dark:text-slate-400">
                       Vault: {item.vaultSlot}
                     </span>
                     <button
                       type="button"
-                      className="px-4 py-2 bg-black hover:bg-neutral-800 text-white text-xs font-semibold rounded-full transition cursor-pointer"
+                      className="px-4 py-2 bg-theme hover:bg-theme-hover text-white text-xs font-semibold rounded-full transition cursor-pointer shadow-2xs"
                     >
                       Inquire / Claim
                     </button>
@@ -310,7 +310,7 @@ export default function StudentDashboardPage() {
 
       {/* ================= FORMAL VERIFICATION & SAFETY POLICY ================= */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
-        <div className="bg-[#800000] text-white rounded-[32px] p-7 sm:p-8 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="bg-theme text-white rounded-[32px] p-7 sm:p-8 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 transition-colors">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center shrink-0 border border-white/20">
               <Building className="w-6 h-6 text-amber-300" />
@@ -325,7 +325,7 @@ export default function StudentDashboardPage() {
             </div>
           </div>
           <div className="shrink-0">
-            <span className="inline-block bg-white text-black font-semibold text-xs px-5 py-2.5 rounded-full shadow-md">
+            <span className="inline-block bg-white dark:bg-slate-900 text-black dark:text-white font-semibold text-xs px-5 py-2.5 rounded-full shadow-md">
               PUP Biñan Campus Regulation
             </span>
           </div>

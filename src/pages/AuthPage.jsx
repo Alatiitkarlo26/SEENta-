@@ -1,20 +1,32 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { authService } from '../services/authService';
 import { otpService } from '../services/otpService';
 import pupLogoAndText from '../assets/PUP-Logo-and-Text.png';
 import OTPModal from '../components/OTPModal';
+import AccessibilityModal from '../components/AccessibilityModal';
 import campusBg from '../assets/pup-binan-campus.jpg';
-import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import {
+  ArrowLeft,
+  Eye,
+  EyeOff,
+  UserCheck,
+  ShieldAlert,
+  Sun,
+  Moon,
+  Palette
+} from 'lucide-react';
 
 export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
   const { login, register } = useAuth();
+  const { isDark, toggleMode, currentPalette } = useTheme();
   const [view, setView] = useState(defaultView); // 'login' | 'register'
   const [direction, setDirection] = useState('right'); // 'right' | 'left' for animation
+  const [isA11yOpen, setIsA11yOpen] = useState(false);
 
-  // Password visibility toggles
+  // Password visibility toggle
   const [showLoginPassword, setShowLoginPassword] = useState(false);
-  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
 
   // Login Form State
   const [loginEmail, setLoginEmail] = useState('');
@@ -33,6 +45,7 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
     password: ''
   });
   const [regError, setRegError] = useState('');
+  const [regNotice, setRegNotice] = useState('');
   const [isSubmittingReg, setIsSubmittingReg] = useState(false);
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
 
@@ -43,17 +56,22 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
     setRegError('');
   };
 
-  // Handle Login / Step 1 -> Transition to Information Step
-  const handleLoginSubmit = (e) => {
+  // Handle Login & Automatic Smart Redirect:
+  // - If user has an account: authenticate & redirect to home page
+  // - If user does NOT have an account: redirect to register page with email & password pre-filled
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setLoginError('');
+    setRegNotice('');
 
-    if (!loginEmail.trim() || !loginPassword) {
+    const cleanEmail = loginEmail.trim().toLowerCase();
+
+    if (!cleanEmail || !loginPassword) {
       setLoginError('Please enter your PUP webmail and password.');
       return;
     }
 
-    const domainCheck = authService.validateUniversityDomain(loginEmail.trim());
+    const domainCheck = authService.validateUniversityDomain(cleanEmail);
     if (!domainCheck.isValid) {
       setLoginError('Please use your official PUP email (@iskolarngbayan.pup.edu.ph or @pup.edu.ph).');
       return;
@@ -69,16 +87,38 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
       return;
     }
 
-    // Carry over email & password, then transition smoothly to information view
-    setRegData((prev) => ({
-      ...prev,
-      email: loginEmail.trim().toLowerCase(),
-      password: loginPassword
-    }));
-    switchView('register');
+    setIsLoggingIn(true);
+
+    try {
+      // 1. Attempt login against backend database
+      const loggedUser = await login(cleanEmail, loginPassword);
+      setIsLoggingIn(false);
+
+      // If user has an account and credentials match, redirect to their home page
+      if (onAuthSuccess) {
+        onAuthSuccess(loggedUser);
+      }
+    } catch (err) {
+      setIsLoggingIn(false);
+
+      // 2. If user does NOT have an account, redirect directly to register page
+      if (err.notRegistered || err.status === 404 || err.message?.includes('No account registered')) {
+        setRegData((prev) => ({
+          ...prev,
+          email: cleanEmail,
+          password: loginPassword
+        }));
+        setRegNotice(`No account found for "${cleanEmail}". Please complete your registration details below.`);
+        switchView('register');
+        return;
+      }
+
+      // 3. If account exists but password was wrong or other error
+      setLoginError(err.message || 'Invalid university email or password.');
+    }
   };
 
-  // Handle Registration
+  // Handle Registration input changes
   const handleRegChange = (e) => {
     const { name, value } = e.target;
     setRegData((prev) => ({ ...prev, [name]: value }));
@@ -91,11 +131,16 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
       return false;
     }
     if (!regData.studentId.trim()) {
-      setRegError('Please enter your Student / Employee Number.');
+      setRegError('Please enter your Student or Employee Number.');
       return false;
     }
     if (!regData.contactNumber.trim()) {
       setRegError('Please enter your contact phone number.');
+      return false;
+    }
+    const phoneCheck = authService.validateContactNumber(regData.contactNumber);
+    if (!phoneCheck.isValid) {
+      setRegError(phoneCheck.error);
       return false;
     }
     return true;
@@ -125,9 +170,11 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
       const fullName = `${regData.lastName.trim()}, ${regData.firstName.trim()}`;
       const newUser = await register({
         fullName,
+        firstName: regData.firstName.trim(),
+        lastName: regData.lastName.trim(),
         email: regData.email,
-        studentId: regData.studentId,
-        contactNumber: regData.contactNumber,
+        studentId: regData.studentId.trim(),
+        contactNumber: regData.contactNumber.trim(),
         password: regData.password
       });
 
@@ -140,16 +187,16 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
   };
 
   return (
-    <div className="relative h-screen max-h-screen w-full flex items-center justify-end overflow-hidden bg-white font-sans selection:bg-[#800000] selection:text-white p-3 sm:p-4 lg:p-5">
+    <div className="relative min-h-screen w-full flex items-center justify-center lg:justify-end overflow-y-auto lg:overflow-hidden bg-white dark:bg-slate-950 font-sans selection:bg-theme selection:text-white p-3 sm:p-4 lg:p-5 transition-colors duration-200">
       {/* High-Quality Campus Background on White Canvas with 50% Opacity */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none bg-white">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none bg-white dark:bg-slate-950">
         <img
           src={campusBg}
           alt="PUP Biñan Campus"
-          className="w-full h-full object-cover object-center opacity-50 filter contrast-[1.05] saturate-[1.1] scale-[1.01]"
+          className="w-full h-full object-cover object-center opacity-50 dark:opacity-20 filter contrast-[1.05] saturate-[1.1] scale-[1.01]"
         />
-        {/* Soft Light Vignette */}
-        <div className="absolute inset-0 bg-gradient-to-t from-white/60 via-transparent to-white/40" />
+        {/* Soft Light / Dark Vignette */}
+        <div className="absolute inset-0 bg-gradient-to-t from-white/70 via-transparent to-white/40 dark:from-slate-950/95 dark:via-slate-950/70 dark:to-slate-950/40" />
       </div>
 
       {/* Top Left PUP Header Brand */}
@@ -157,15 +204,39 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
         <img
           src={pupLogoAndText}
           alt="Polytechnic University of the Philippines"
-          className="h-10 sm:h-12 w-auto object-contain"
+          className="h-10 sm:h-12 w-auto object-contain drop-shadow-xs brightness-100 dark:brightness-110"
         />
       </div>
 
-      {/* Right Side Main Form Container (Almost as tall as website height, non-scrollable) */}
-      <div className="relative z-10 w-full lg:w-[53%] xl:w-[50%] max-w-[650px] h-full max-h-[calc(100vh-1.5rem)] sm:max-h-[calc(100vh-2rem)] my-auto flex flex-col mr-2 sm:mr-3 lg:mr-5">
+      {/* Top Right Appearance & Accessibility Controls */}
+      <div className="absolute top-5 right-5 sm:top-7 sm:right-8 z-20 flex items-center gap-2">
+        <button
+          type="button"
+          onClick={toggleMode}
+          className="p-2.5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-neutral-200/80 dark:border-slate-800 rounded-full text-slate-700 dark:text-slate-200 hover:text-black dark:hover:text-white transition shadow-xs cursor-pointer"
+          title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          aria-label="Toggle dark mode"
+        >
+          {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setIsA11yOpen(true)}
+          className="flex items-center gap-1.5 px-3.5 py-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-neutral-200/80 dark:border-slate-800 rounded-full text-slate-700 dark:text-slate-200 hover:text-black dark:hover:text-white transition shadow-xs cursor-pointer text-xs font-semibold"
+          title="Accessibility & Theme Settings"
+          aria-label="Accessibility and theme settings"
+        >
+          <Palette className="w-4 h-4 text-theme" />
+          <span className="hidden sm:inline">{currentPalette.name}</span>
+        </button>
+      </div>
+
+      {/* Right Side Main Form Container */}
+      <div className="relative z-10 w-full lg:w-[53%] xl:w-[50%] max-w-[650px] my-auto flex flex-col mr-0 lg:mr-5">
         <div
           key={view}
-          className={`w-full h-full bg-white rounded-[36px] sm:rounded-[48px] shadow-[0_15px_50px_-15px_rgba(0,0,0,0.18)] border border-neutral-100 p-6 sm:p-10 lg:p-14 flex flex-col justify-center overflow-hidden transition-all ${
+          className={`w-full bg-white dark:bg-slate-900 rounded-[36px] sm:rounded-[48px] shadow-[0_15px_50px_-15px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] border border-neutral-100 dark:border-slate-800 p-6 sm:p-10 lg:p-12 flex flex-col justify-center transition-all ${
             direction === 'right' ? 'animate-slide-right' : 'animate-slide-left'
           }`}
         >
@@ -174,10 +245,10 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
             <div className="w-full max-w-[450px] sm:max-w-[460px] mx-auto">
               {/* Header */}
               <div className="text-center mb-6 sm:mb-8">
-                <h1 className="text-2xl sm:text-[32px] font-bold text-black tracking-tight leading-snug">
+                <h1 className="text-2xl sm:text-[32px] font-bold text-black dark:text-white tracking-tight leading-snug">
                   Welcome to SEENta
                 </h1>
-                <p className="mt-1.5 text-xs sm:text-[13px] text-neutral-500 max-w-xs mx-auto leading-relaxed">
+                <p className="mt-1.5 text-xs sm:text-[13px] text-neutral-500 dark:text-slate-400 max-w-xs mx-auto leading-relaxed">
                   Enter your PUP webmail to begin your search. SEENta&apos;s got your back.
                 </p>
               </div>
@@ -185,14 +256,15 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
               {/* Login Form */}
               <form onSubmit={handleLoginSubmit} className="space-y-4 sm:space-y-4.5">
                 {loginError && (
-                  <div className="p-3 bg-rose-50 border border-rose-200 rounded-2xl text-xs text-rose-600 font-medium text-center animate-shake">
-                    {loginError}
+                  <div className="p-3 bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900/60 rounded-2xl text-xs text-rose-600 dark:text-rose-300 font-medium text-center animate-shake flex items-center justify-center gap-2">
+                    <ShieldAlert className="w-4 h-4 shrink-0 text-rose-500" />
+                    <span>{loginError}</span>
                   </div>
                 )}
 
                 {/* Email Field */}
                 <div>
-                  <label className="block text-xs sm:text-[13px] font-semibold text-black mb-1.5 ml-1">
+                  <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 mb-1.5 ml-1">
                     Email
                   </label>
                   <input
@@ -200,13 +272,15 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                     value={loginEmail}
                     onChange={(e) => setLoginEmail(e.target.value)}
                     placeholder="name@iskolarngbayan.pup.edu.ph"
-                    className="w-full px-5 py-3 sm:py-3.5 bg-white border border-neutral-300 rounded-full text-xs sm:text-sm text-black placeholder:text-neutral-300 focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition shadow-2xs"
+                    autoComplete="username"
+                    required
+                    className="w-full px-5 py-3 sm:py-3.5 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-sm text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition shadow-2xs font-mono sm:font-sans"
                   />
                 </div>
 
                 {/* Password Field with Eye Toggle */}
                 <div>
-                  <label className="block text-xs sm:text-[13px] font-semibold text-black mb-1.5 ml-1">
+                  <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 mb-1.5 ml-1">
                     Password
                   </label>
                   <div className="relative">
@@ -215,12 +289,14 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                       value={loginPassword}
                       onChange={(e) => setLoginPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full pl-5 pr-12 py-3 sm:py-3.5 bg-white border border-neutral-300 rounded-full text-xs sm:text-sm text-black placeholder:text-neutral-300 focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition shadow-2xs"
+                      autoComplete="current-password"
+                      required
+                      className="w-full pl-5 pr-12 py-3 sm:py-3.5 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-sm text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition shadow-2xs"
                     />
                     <button
                       type="button"
                       onClick={() => setShowLoginPassword(!showLoginPassword)}
-                      className="absolute inset-y-0 right-0 pr-4 flex items-center text-neutral-400 hover:text-black transition cursor-pointer"
+                      className="absolute inset-y-0 right-0 pr-4 flex items-center text-neutral-400 hover:text-black dark:hover:text-white transition cursor-pointer"
                       title={showLoginPassword ? 'Hide password' : 'Show password'}
                     >
                       {showLoginPassword ? (
@@ -239,11 +315,11 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                     id="loginAgreeTerms"
                     checked={loginAgreeTerms}
                     onChange={(e) => setLoginAgreeTerms(e.target.checked)}
-                    className="w-3.5 h-3.5 rounded-xs border-neutral-300 text-black focus:ring-black cursor-pointer accent-black"
+                    className="w-3.5 h-3.5 rounded-xs border-neutral-300 text-black focus:ring-black cursor-pointer accent-theme"
                   />
                   <label
                     htmlFor="loginAgreeTerms"
-                    className="text-[11px] sm:text-xs text-black cursor-pointer select-none"
+                    className="text-[11px] sm:text-xs text-black dark:text-slate-300 cursor-pointer select-none"
                   >
                     I agree to all Terms, Privacy Policy and Conditions
                   </label>
@@ -253,59 +329,116 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                 <button
                   type="submit"
                   disabled={isLoggingIn}
-                  className="w-full py-3 sm:py-3.5 px-6 bg-black hover:bg-neutral-900 text-white font-semibold rounded-full text-xs sm:text-sm transition shadow-md disabled:opacity-60 cursor-pointer mt-2 active:scale-[0.99]"
+                  className="w-full py-3 sm:py-3.5 px-6 bg-theme hover:bg-theme-hover text-white font-semibold rounded-full text-xs sm:text-sm transition shadow-md disabled:opacity-60 cursor-pointer mt-2 active:scale-[0.99] flex items-center justify-center gap-2"
                 >
-                  {isLoggingIn ? 'Signing In...' : 'Sign In'}
+                  {isLoggingIn ? (
+                    <>
+                      <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>Verifying Credentials...</span>
+                    </>
+                  ) : (
+                    <span>Sign In</span>
+                  )}
                 </button>
               </form>
 
-              {/* Bottom Inquiries Link */}
-              <div className="mt-5 sm:mt-6 text-center">
-                <p className="text-[11px] sm:text-xs text-black">
-                  Have concerns with your account?{' '}
-                  <a href="#" className="text-[#088395] hover:underline font-semibold ml-0.5">
-                    Create Inquiry
-                  </a>
-                </p>
+              {/* Direct Registration Navigation */}
+              <div className="mt-4 text-center">
+                <span className="text-[11px] sm:text-xs text-neutral-500 dark:text-slate-400">
+                  New to SEENta?{' '}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRegData((prev) => ({
+                        ...prev,
+                        email: loginEmail.trim().toLowerCase(),
+                        password: loginPassword
+                      }));
+                      switchView('register');
+                    }}
+                    className="text-theme hover:underline font-bold ml-1 cursor-pointer"
+                  >
+                    Register account &rarr;
+                  </button>
+                </span>
               </div>
             </div>
           ) : (
-            /* ================= INFORMATION VIEW ("Let's get started!") ================= */
+            /* ================= REGISTER VIEW ("Let's get started!") ================= */
             <div className="w-full max-w-[450px] sm:max-w-[460px] mx-auto">
-              {/* Back Navigation Button - Positioned Higher by ~20px */}
-              <div className="-mt-8 sm:-mt-11 mb-4 sm:mb-5">
+              {/* Back Navigation Button */}
+              <div className="-mt-6 sm:-mt-8 mb-4 sm:mb-5">
                 <button
                   type="button"
                   onClick={() => switchView('login')}
-                  className="inline-flex items-center gap-2 text-xs sm:text-[13px] font-semibold text-black hover:text-neutral-600 transition cursor-pointer"
+                  className="inline-flex items-center gap-2 text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 hover:text-neutral-600 dark:hover:text-white transition cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
-                  <span>Back</span>
+                  <span>Back to Sign In</span>
                 </button>
               </div>
 
-              {/* Heading - Bigger & Moved Upward */}
-              <div className="mb-5 sm:mb-6">
-                <h1 className="text-3xl sm:text-[36px] font-bold text-black tracking-tight leading-tight">
+              {/* Heading */}
+              <div className="mb-4 sm:mb-5">
+                <h1 className="text-2xl sm:text-[32px] font-bold text-black dark:text-white tracking-tight leading-tight">
                   Let&apos;s get started!
                 </h1>
-                <p className="mt-2 text-xs sm:text-[13px] text-neutral-500 max-w-sm leading-relaxed">
-                  The smarter way for PUP Binan students, faculty, and security to report, track, and recover lost items.
+                <p className="mt-1.5 text-xs sm:text-[13px] text-neutral-500 dark:text-slate-400 max-w-sm leading-relaxed">
+                  The smarter way for PUP Biñan students, faculty, and security to report, track, and recover lost items.
                 </p>
               </div>
 
-              {/* Information Form */}
-              <form onSubmit={handleRegSubmit} className="space-y-4 sm:space-y-4.5">
+              {/* Institutional Email Pill Display */}
+              {regData.email && (
+                <div className="mb-4 bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700 rounded-2xl px-4 py-2.5 flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2">
+                    <UserCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    <span className="text-slate-500 dark:text-slate-400 font-medium">Creating account for:</span>
+                  </div>
+                  <span className="font-mono font-bold text-slate-800 dark:text-slate-200 truncate max-w-[180px] sm:max-w-[220px]">
+                    {regData.email}
+                  </span>
+                </div>
+              )}
+
+              {/* Informative Notice (e.g. when redirected from login) */}
+              {regNotice && (
+                <div className="mb-4 p-3 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-900/60 rounded-2xl text-xs text-amber-800 dark:text-amber-200 font-medium text-center animate-fadeIn">
+                  {regNotice}
+                </div>
+              )}
+
+              {/* Registration Form */}
+              <form onSubmit={handleRegSubmit} className="space-y-3.5 sm:space-y-4">
                 {regError && (
-                  <div className="p-3 bg-rose-50 border border-rose-200 rounded-2xl text-xs text-rose-600 font-medium text-center animate-shake">
-                    {regError}
+                  <div className="p-3 bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900/60 rounded-2xl text-xs text-rose-600 dark:text-rose-300 font-medium text-center animate-shake flex items-center justify-center gap-2">
+                    <ShieldAlert className="w-4 h-4 shrink-0 text-rose-500" />
+                    <span>{regError}</span>
+                  </div>
+                )}
+
+                {/* If user came directly without email, allow entering email */}
+                {!regData.email && (
+                  <div>
+                    <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 mb-1.5 ml-1">
+                      Official PUP Webmail
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={regData.email}
+                      onChange={handleRegChange}
+                      placeholder="name@iskolarngbayan.pup.edu.ph"
+                      required
+                      className="w-full px-4 sm:px-5 py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-sm text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition shadow-2xs font-mono"
+                    />
                   </div>
                 )}
 
                 {/* Row 1: First Name & Last Name */}
                 <div className="grid grid-cols-2 gap-3 sm:gap-3.5">
                   <div>
-                    <label className="block text-xs sm:text-[13px] font-semibold text-black mb-1.5 ml-1">
+                    <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 mb-1.5 ml-1">
                       First Name
                     </label>
                     <input
@@ -314,12 +447,13 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                       value={regData.firstName}
                       onChange={handleRegChange}
                       placeholder="First Name"
-                      className="w-full px-4 sm:px-5 py-3 sm:py-3.5 bg-white border border-neutral-300 rounded-full text-xs sm:text-sm text-black placeholder:text-neutral-300 focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition shadow-2xs"
+                      required
+                      className="w-full px-4 sm:px-5 py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-sm text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition shadow-2xs"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs sm:text-[13px] font-semibold text-black mb-1.5 ml-1">
+                    <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 mb-1.5 ml-1">
                       Last Name
                     </label>
                     <input
@@ -328,15 +462,16 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                       value={regData.lastName}
                       onChange={handleRegChange}
                       placeholder="Last Name"
-                      className="w-full px-4 sm:px-5 py-3 sm:py-3.5 bg-white border border-neutral-300 rounded-full text-xs sm:text-sm text-black placeholder:text-neutral-300 focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition shadow-2xs"
+                      required
+                      className="w-full px-4 sm:px-5 py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-sm text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition shadow-2xs"
                     />
                   </div>
                 </div>
 
                 {/* Row 2: Student Number */}
                 <div>
-                  <label className="block text-xs sm:text-[13px] font-semibold text-black mb-1.5 ml-1">
-                    Student Number
+                  <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 mb-1.5 ml-1">
+                    Student or Employee Number
                   </label>
                   <input
                     type="text"
@@ -344,13 +479,14 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                     value={regData.studentId}
                     onChange={handleRegChange}
                     placeholder="2024-XXXX"
-                    className="w-full px-5 py-3 sm:py-3.5 bg-white border border-neutral-300 rounded-full text-xs sm:text-sm text-black placeholder:text-neutral-300 focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition font-mono shadow-2xs"
+                    required
+                    className="w-full px-5 py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-sm text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition font-mono shadow-2xs"
                   />
                 </div>
 
                 {/* Row 3: Phone Number */}
                 <div>
-                  <label className="block text-xs sm:text-[13px] font-semibold text-black mb-1.5 ml-1">
+                  <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 mb-1.5 ml-1">
                     Phone Number
                   </label>
                   <input
@@ -359,7 +495,8 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                     value={regData.contactNumber}
                     onChange={handleRegChange}
                     placeholder="09XXXXXXXXX"
-                    className="w-full px-5 py-3 sm:py-3.5 bg-white border border-neutral-300 rounded-full text-xs sm:text-sm text-black placeholder:text-neutral-300 focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition font-mono shadow-2xs"
+                    required
+                    className="w-full px-5 py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-sm text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition font-mono shadow-2xs"
                   />
                 </div>
 
@@ -367,11 +504,32 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                 <button
                   type="submit"
                   disabled={isSubmittingReg}
-                  className="w-full py-3.5 sm:py-4 px-6 bg-black hover:bg-neutral-900 text-white font-semibold rounded-full text-xs sm:text-sm transition shadow-md disabled:opacity-60 cursor-pointer mt-4 active:scale-[0.99]"
+                  className="w-full py-3.5 px-6 bg-theme hover:bg-theme-hover text-white font-semibold rounded-full text-xs sm:text-sm transition shadow-md disabled:opacity-60 cursor-pointer mt-3 active:scale-[0.99] flex items-center justify-center gap-2"
                 >
-                  {isSubmittingReg ? 'Sending Verification Code...' : 'Complete Registration'}
+                  {isSubmittingReg ? (
+                    <>
+                      <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>Sending Verification Code...</span>
+                    </>
+                  ) : (
+                    <span>Complete Registration</span>
+                  )}
                 </button>
               </form>
+
+              {/* Already have an account link */}
+              <div className="mt-4 text-center">
+                <span className="text-[11px] sm:text-xs text-neutral-500 dark:text-slate-400">
+                  Already have an account?{' '}
+                  <button
+                    type="button"
+                    onClick={() => switchView('login')}
+                    className="text-theme hover:underline font-bold ml-1 cursor-pointer"
+                  >
+                    Sign In
+                  </button>
+                </span>
+              </div>
             </div>
           )}
         </div>
@@ -384,6 +542,12 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
         isOpen={isOtpModalOpen}
         onClose={() => setIsOtpModalOpen(false)}
         onVerified={handleOtpVerified}
+      />
+
+      {/* Accessibility & Theme Customization Modal */}
+      <AccessibilityModal
+        isOpen={isA11yOpen}
+        onClose={() => setIsA11yOpen(false)}
       />
     </div>
   );

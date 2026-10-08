@@ -127,7 +127,10 @@ export const authService = {
 
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.error || 'Invalid university email or password.');
+        const err = new Error(data.error || 'Invalid university email or password.');
+        err.notRegistered = !!data.notRegistered;
+        err.status = response.status;
+        throw err;
       }
 
       localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(data));
@@ -139,6 +142,24 @@ export const authService = {
       console.error('Backend login error:', err.message);
       throw err;
     }
+  },
+
+  /**
+   * Check if an email is already registered in the database
+   */
+  async checkEmail(email) {
+    const cleanEmail = (email || '').trim().toLowerCase();
+    if (!cleanEmail) return { exists: false };
+
+    try {
+      const response = await fetch(`${API_URL}/auth/check-email?email=${encodeURIComponent(cleanEmail)}`);
+      if (response.ok) {
+        return await response.json();
+      }
+    } catch (err) {
+      console.warn('Could not check email existence:', err.message);
+    }
+    return { exists: false };
   },
 
   /**

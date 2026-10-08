@@ -164,26 +164,26 @@ export default function OTPModal({ email, recipientName, isOpen, onClose, onVeri
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fadeIn font-sans">
-        <div className="bg-white rounded-[32px] sm:rounded-[38px] shadow-2xl w-full max-w-md overflow-hidden border border-slate-100 p-8 flex flex-col relative">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn font-sans">
+        <div className="bg-white dark:bg-slate-900 rounded-[32px] sm:rounded-[38px] shadow-2xl w-full max-w-md overflow-hidden border border-slate-100 dark:border-slate-800 p-8 flex flex-col relative transition-colors">
           {/* Close button */}
           <button
             type="button"
             onClick={onClose}
-            className="absolute top-6 right-6 text-slate-400 hover:text-slate-700 p-1 rounded-full transition cursor-pointer"
+            className="absolute top-6 right-6 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1 rounded-full transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
 
           {/* Clean Header */}
           <div className="text-center mb-6">
-            <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+            <h3 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Enter Verification Code
             </h3>
-            <p className="text-xs sm:text-sm text-slate-500 mt-2 leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
               We sent a 6-digit OTP code to:
             </p>
-            <span className="inline-block mt-1 text-xs font-semibold text-slate-800 font-mono bg-slate-100 px-3 py-1 rounded-full">
+            <span className="inline-block mt-1 text-xs font-semibold text-slate-800 dark:text-slate-200 font-mono bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full border border-slate-200/80 dark:border-slate-700">
               {email}
             </span>
           </div>
@@ -202,8 +202,8 @@ export default function OTPModal({ email, recipientName, isOpen, onClose, onVeri
                 onKeyDown={(e) => handleKeyDown(idx, e)}
                 className={`w-11 h-13 sm:w-12 sm:h-14 text-center text-xl font-bold rounded-2xl border transition outline-none ${
                   digit
-                    ? 'border-black bg-slate-50 text-slate-900 ring-1 ring-black'
-                    : 'border-slate-200 hover:border-slate-300 focus:border-black focus:ring-1 focus:ring-black'
+                    ? 'border-theme bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white ring-1 ring-theme'
+                    : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-850 hover:border-slate-300 dark:hover:border-slate-600 focus:border-theme focus:ring-1 focus:ring-theme text-slate-900 dark:text-white'
                 }`}
               />
             ))}
@@ -211,13 +211,13 @@ export default function OTPModal({ email, recipientName, isOpen, onClose, onVeri
 
           {/* Error */}
           {error && (
-            <div className="mt-3 p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-600 text-center font-medium">
+            <div className="mt-3 p-2.5 bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900/60 rounded-xl text-xs text-rose-600 dark:text-rose-300 text-center font-medium">
               {error}
             </div>
           )}
 
           {/* Timer & Resend */}
-          <div className="mt-5 flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
+          <div className="mt-5 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-1 font-medium">
               <Clock className="w-3.5 h-3.5 text-slate-400" />
               <span>Expires in: {formatTime(timeLeft)}</span>
@@ -229,12 +229,12 @@ export default function OTPModal({ email, recipientName, isOpen, onClose, onVeri
                   type="button"
                   onClick={handleResend}
                   disabled={isResending}
-                  className="font-semibold text-black hover:underline cursor-pointer"
+                  className="font-semibold text-theme hover:underline cursor-pointer"
                 >
                   Resend Code
                 </button>
               ) : (
-                <span className="text-slate-400">Resend in {resendCooldown}s</span>
+                <span className="text-slate-400 dark:text-slate-500">Resend in {resendCooldown}s</span>
               )}
             </div>
           </div>
@@ -245,7 +245,7 @@ export default function OTPModal({ email, recipientName, isOpen, onClose, onVeri
               type="button"
               onClick={() => handleVerify()}
               disabled={isVerifying || digits.join('').length !== 6 || timeLeft === 0}
-              className="w-full py-3.5 px-6 bg-black hover:bg-neutral-800 text-white font-semibold rounded-full text-sm transition shadow-md disabled:opacity-50 cursor-pointer"
+              className="w-full py-3.5 px-6 bg-theme hover:bg-theme-hover text-white font-semibold rounded-full text-sm transition shadow-md disabled:opacity-50 cursor-pointer"
             >
               {isVerifying ? 'Verifying...' : 'Verify & Continue'}
             </button>

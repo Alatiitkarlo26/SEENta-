@@ -65,6 +65,32 @@ async function ensureLocalDataFile() {
   }
 }
 
+function normalizeUser(user) {
+  if (!user) return null;
+  return {
+    ...user,
+    id: user.id,
+    fullName: user.fullName || user.full_name || `${user.last_name || ''}, ${user.first_name || ''}`.replace(/^,\s*|,\s*$/g, '').trim(),
+    full_name: user.full_name || user.fullName || '',
+    firstName: user.firstName || user.first_name || '',
+    first_name: user.first_name || user.firstName || '',
+    lastName: user.lastName || user.last_name || '',
+    last_name: user.last_name || user.lastName || '',
+    email: (user.email || '').trim().toLowerCase(),
+    studentId: user.studentId || user.student_id || '',
+    student_id: user.student_id || user.studentId || '',
+    contactNumber: user.contactNumber || user.contact_number || '',
+    contact_number: user.contact_number || user.contactNumber || '',
+    password: user.password,
+    role: user.role || 'student',
+    roleTitle: user.roleTitle || user.role_title || (user.role === 'admin' ? 'Campus Security Staff' : user.role === 'faculty' ? 'Faculty / Professor' : 'PUP Student'),
+    role_title: user.role_title || user.roleTitle || (user.role === 'admin' ? 'Campus Security Staff' : user.role === 'faculty' ? 'Faculty / Professor' : 'PUP Student'),
+    isVerified: user.isVerified ?? user.is_verified ?? true,
+    is_verified: user.is_verified ?? user.isVerified ?? true,
+    createdAt: user.createdAt || user.created_at || new Date().toISOString()
+  };
+}
+
 export const db = {
   isCloud() {
     return !!supabase;
@@ -75,7 +101,7 @@ export const db = {
       try {
         const { data, error } = await supabase.from('users').select('*').order('created_at', { ascending: true });
         if (error) throw error;
-        return data || [];
+        return (data || []).map(normalizeUser);
       } catch (err) {
         console.error('[Supabase Error] getUsers failed:', err.message);
       }
@@ -85,7 +111,8 @@ export const db = {
     await ensureLocalDataFile();
     try {
       const content = await fs.readFile(USERS_FILE, 'utf-8');
-      return JSON.parse(content || '[]');
+      const list = JSON.parse(content || '[]');
+      return list.map(normalizeUser);
     } catch (err) {
       console.error('Failed to read users.json:', err.message);
       return [];
@@ -95,7 +122,7 @@ export const db = {
   async saveUsers(users) {
     await ensureLocalDataFile();
     await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2), 'utf-8');
-    return users;
+    return users.map(normalizeUser);
   },
 
   async findUserByEmail(email) {
@@ -110,14 +137,15 @@ export const db = {
           .maybeSingle();
 
         if (error) throw error;
-        return data || null;
+        return normalizeUser(data);
       } catch (err) {
         console.error('[Supabase Error] findUserByEmail failed:', err.message);
       }
     }
 
     const users = await this.getUsers();
-    return users.find((u) => u.email.toLowerCase() === cleanEmail) || null;
+    const found = users.find((u) => u.email.toLowerCase() === cleanEmail) || null;
+    return normalizeUser(found);
   },
 
   async findUserById(id) {
@@ -130,14 +158,15 @@ export const db = {
           .maybeSingle();
 
         if (error) throw error;
-        return data || null;
+        return normalizeUser(data);
       } catch (err) {
         console.error('[Supabase Error] findUserById failed:', err.message);
       }
     }
 
     const users = await this.getUsers();
-    return users.find((u) => u.id === id) || null;
+    const found = users.find((u) => u.id === id) || null;
+    return normalizeUser(found);
   },
 
   async createUser(userData) {

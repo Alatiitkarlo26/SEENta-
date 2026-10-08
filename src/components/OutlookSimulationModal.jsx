@@ -122,7 +122,7 @@ export default function OutlookSimulationModal({ emailData, isOpen, onClose, onA
               handleCopy();
               onClose();
             }}
-            className="px-4 py-1.5 bg-[#800000] hover:bg-[#600000] text-white font-medium rounded-md transition text-xs"
+            className="px-4 py-1.5 bg-theme hover:bg-theme-hover text-white font-medium rounded-md transition text-xs cursor-pointer"
           >
             Use OTP & Return
           </button>
