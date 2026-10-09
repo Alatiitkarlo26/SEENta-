@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import PUPLogo from './PUPLogo';
 import AccessibilityModal from './AccessibilityModal';
 import {
   LogOut,
@@ -10,52 +9,34 @@ import {
   ShieldCheck,
   Sun,
   Moon,
-  Palette
+  Eye
 } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab }) {
   const { user, role, logout } = useAuth();
-  const { isDark, toggleMode, currentPalette } = useTheme();
+  const { isDark, toggleMode } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isA11yModalOpen, setIsA11yModalOpen] = useState(false);
 
   return (
     <>
       <header className="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 shadow-xs transition-colors duration-200">
-        {/* Formal Top University Bar */}
-        <div className="bg-theme text-amber-100 text-[11px] py-1.5 px-4 sm:px-8 font-medium tracking-wide flex items-center justify-between transition-colors">
-          <div className="flex items-center gap-2">
-            <span>Politeknikong Unibersidad ng Pilipinas — Sangay ng Biñan</span>
-          </div>
-          <div className="hidden sm:flex items-center gap-3 text-[10px] text-amber-200/90">
-            <span>Campus Security Office • Ground Floor Main Building</span>
-            <span>•</span>
-            <span>8:00 AM – 5:00 PM</span>
-          </div>
-        </div>
-
         {/* Main Header Bar */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-18">
-            {/* PUP Brand & Logo */}
+        <div
+          className="w-full flex items-center justify-between h-18 pr-4 sm:pr-6 lg:pr-8"
+          style={{ paddingLeft: 'max(1.5rem, calc((100% - 80rem) / 2 + 2rem))' }}
+        >
+            {/* SEENta Brand */}
             <div
               onClick={() => setActiveTab(role === 'admin' ? 'admin-dashboard' : 'student-dashboard')}
-              className="flex items-center gap-3.5 cursor-pointer select-none group"
+              className="flex flex-col cursor-pointer select-none group"
             >
-              <PUPLogo className="w-10 h-10 shrink-0 drop-shadow-xs group-hover:scale-105 transition" />
-              <div className="flex flex-col">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white group-hover:text-theme transition">
-                    SEEN<span className="text-theme">ta</span>
-                  </span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 uppercase tracking-wider border border-slate-200 dark:border-slate-700">
-                    Biñan
-                  </span>
-                </div>
-                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium hidden sm:block">
-                  Lost and Found Management System
-                </span>
-              </div>
+              <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white group-hover:text-theme transition leading-tight">
+                SEEN<span className="text-theme">ta</span>
+              </span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium tracking-tight">
+                Lost and Found Management System
+              </span>
             </div>
 
             {/* Center Navigation Links */}
@@ -85,7 +66,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
             </nav>
 
             {/* Right Controls: Theme Buttons + User Card & Logout */}
-            <div className="hidden sm:flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-3 -mr-1 sm:-mr-2">
               {/* Quick Dark/Light Toggle */}
               <button
                 type="button"
@@ -101,16 +82,16 @@ export default function Navbar({ activeTab, setActiveTab }) {
                 )}
               </button>
 
-              {/* Theme & Accessibility Modal Opener */}
+              {/* Accessibility Modal Opener */}
               <button
                 type="button"
                 onClick={() => setIsA11yModalOpen(true)}
                 className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition cursor-pointer shadow-2xs"
-                title="Theme Colors & Accessibility Options"
+                title="Accessibility & Appearance"
                 aria-label="Open appearance and accessibility settings"
               >
-                <Palette className="w-3.5 h-3.5 text-theme" />
-                <span className="hidden lg:inline">{currentPalette.name}</span>
+                <Eye className="w-3.5 h-3.5 text-theme" />
+                <span className="hidden lg:inline">Accessibility</span>
               </button>
 
               {/* User Identity Pill */}
@@ -140,7 +121,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
             </div>
 
             {/* Mobile Actions: Dark Mode + Theme + Hamburger */}
-            <div className="flex sm:hidden items-center gap-1">
+            <div className="flex sm:hidden items-center gap-1 -mr-1 sm:-mr-2">
               <button
                 type="button"
                 onClick={toggleMode}
@@ -155,10 +136,10 @@ export default function Navbar({ activeTab, setActiveTab }) {
                 type="button"
                 onClick={() => setIsA11yModalOpen(true)}
                 className="p-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
-                title="Customize Theme"
-                aria-label="Customize theme"
+                title="Accessibility & Appearance"
+                aria-label="Open appearance and accessibility settings"
               >
-                <Palette className="w-5 h-5 text-theme" />
+                <Eye className="w-5 h-5 text-theme" />
               </button>
 
               <button
@@ -170,7 +151,6 @@ export default function Navbar({ activeTab, setActiveTab }) {
               </button>
             </div>
           </div>
-        </div>
 
         {/* Mobile Drawer */}
         {mobileMenuOpen && (
@@ -230,10 +210,9 @@ export default function Navbar({ activeTab, setActiveTab }) {
               className="w-full py-2.5 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-semibold flex items-center justify-between cursor-pointer"
             >
               <span className="flex items-center gap-2">
-                <Palette className="w-4 h-4 text-theme" />
-                <span>Theme &amp; Accessibility Options</span>
+                <Eye className="w-4 h-4 text-theme" />
+                <span>Accessibility &amp; Appearance</span>
               </span>
-              <span className="text-[11px] font-bold text-theme">{currentPalette.name}</span>
             </button>
 
             {/* Sign Out */}

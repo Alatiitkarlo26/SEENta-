@@ -1,29 +1,22 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
 import { authService } from '../services/authService';
 import { otpService } from '../services/otpService';
 import pupLogoAndText from '../assets/PUP-Logo-and-Text.png';
 import OTPModal from '../components/OTPModal';
-import AccessibilityModal from '../components/AccessibilityModal';
 import campusBg from '../assets/pup-binan-campus.jpg';
 import {
   ArrowLeft,
   Eye,
   EyeOff,
   UserCheck,
-  ShieldAlert,
-  Sun,
-  Moon,
-  Palette
+  ShieldAlert
 } from 'lucide-react';
 
 export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
   const { login, register } = useAuth();
-  const { isDark, toggleMode, currentPalette } = useTheme();
   const [view, setView] = useState(defaultView); // 'login' | 'register'
   const [direction, setDirection] = useState('right'); // 'right' | 'left' for animation
-  const [isA11yOpen, setIsA11yOpen] = useState(false);
 
   // Password visibility toggle
   const [showLoginPassword, setShowLoginPassword] = useState(false);
@@ -131,7 +124,7 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
       return false;
     }
     if (!regData.studentId.trim()) {
-      setRegError('Please enter your Student or Employee Number.');
+      setRegError('Please enter your Student Number.');
       return false;
     }
     if (!regData.contactNumber.trim()) {
@@ -187,7 +180,7 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center lg:justify-end overflow-y-auto lg:overflow-hidden bg-white dark:bg-slate-950 font-sans selection:bg-theme selection:text-white p-3 sm:p-4 lg:p-5 transition-colors duration-200">
+    <div className="relative min-h-screen w-full flex items-center justify-center lg:justify-end overflow-y-auto lg:overflow-hidden bg-white dark:bg-slate-950 font-sans p-3 sm:p-4 lg:p-5 transition-colors duration-200">
       {/* High-Quality Campus Background on White Canvas with 50% Opacity */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none bg-white dark:bg-slate-950">
         <img
@@ -204,48 +197,24 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
         <img
           src={pupLogoAndText}
           alt="Polytechnic University of the Philippines"
-          className="h-10 sm:h-12 w-auto object-contain drop-shadow-xs brightness-100 dark:brightness-110"
+          className="h-12 sm:h-14 lg:h-16 w-auto object-contain drop-shadow-xs brightness-100 dark:brightness-110"
         />
       </div>
 
-      {/* Top Right Appearance & Accessibility Controls */}
-      <div className="absolute top-5 right-5 sm:top-7 sm:right-8 z-20 flex items-center gap-2">
-        <button
-          type="button"
-          onClick={toggleMode}
-          className="p-2.5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-neutral-200/80 dark:border-slate-800 rounded-full text-slate-700 dark:text-slate-200 hover:text-black dark:hover:text-white transition shadow-xs cursor-pointer"
-          title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-          aria-label="Toggle dark mode"
-        >
-          {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setIsA11yOpen(true)}
-          className="flex items-center gap-1.5 px-3.5 py-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-neutral-200/80 dark:border-slate-800 rounded-full text-slate-700 dark:text-slate-200 hover:text-black dark:hover:text-white transition shadow-xs cursor-pointer text-xs font-semibold"
-          title="Accessibility & Theme Settings"
-          aria-label="Accessibility and theme settings"
-        >
-          <Palette className="w-4 h-4 text-theme" />
-          <span className="hidden sm:inline">{currentPalette.name}</span>
-        </button>
-      </div>
-
-      {/* Right Side Main Form Container */}
-      <div className="relative z-10 w-full lg:w-[53%] xl:w-[50%] max-w-[650px] my-auto flex flex-col mr-0 lg:mr-5">
+      {/* Main Form White Card Container */}
+      <div className="relative z-10 w-full sm:w-[560px] md:w-[600px] lg:w-[620px] max-w-[94vw] h-[calc(100vh-2rem)] sm:h-[calc(100vh-2.5rem)] max-h-[920px] my-auto flex flex-col justify-center">
         <div
           key={view}
-          className={`w-full bg-white dark:bg-slate-900 rounded-[36px] sm:rounded-[48px] shadow-[0_15px_50px_-15px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] border border-neutral-100 dark:border-slate-800 p-6 sm:p-10 lg:p-12 flex flex-col justify-center transition-all ${
+          className={`w-full h-full bg-white dark:bg-slate-900 rounded-[52px] sm:rounded-[64px] shadow-[0_25px_70px_-15px_rgba(0,0,0,0.18)] dark:shadow-[0_25px_70px_rgba(0,0,0,0.6)] border border-neutral-100/80 dark:border-slate-800 p-8 sm:p-12 md:p-14 lg:p-16 flex flex-col justify-center items-center overflow-y-auto transition-all ${
             direction === 'right' ? 'animate-slide-right' : 'animate-slide-left'
           }`}
         >
           {view === 'login' ? (
             /* ================= LOGIN VIEW (Exact Minimal Design) ================= */
-            <div className="w-full max-w-[450px] sm:max-w-[460px] mx-auto">
-              {/* Header */}
-              <div className="text-center mb-6 sm:mb-8">
-                <h1 className="text-2xl sm:text-[32px] font-bold text-black dark:text-white tracking-tight leading-snug">
+            <div className="w-full max-w-[390px] sm:max-w-[410px] mx-auto font-sans">
+              {/* Header - Positioned higher with exact typography match to register view */}
+              <div className="text-center -mt-6 sm:-mt-10 md:-mt-12 mb-10 sm:mb-12 md:mb-14">
+                <h1 className="text-2xl sm:text-[32px] font-bold text-black dark:text-white tracking-tight leading-tight">
                   Welcome to SEENta
                 </h1>
                 <p className="mt-1.5 text-xs sm:text-[13px] text-neutral-500 dark:text-slate-400 max-w-xs mx-auto leading-relaxed">
@@ -254,7 +223,7 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
               </div>
 
               {/* Login Form */}
-              <form onSubmit={handleLoginSubmit} className="space-y-4 sm:space-y-4.5">
+              <form onSubmit={handleLoginSubmit} className="space-y-3.5 sm:space-y-4">
                 {loginError && (
                   <div className="p-3 bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900/60 rounded-2xl text-xs text-rose-600 dark:text-rose-300 font-medium text-center animate-shake flex items-center justify-center gap-2">
                     <ShieldAlert className="w-4 h-4 shrink-0 text-rose-500" />
@@ -264,7 +233,7 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
 
                 {/* Email Field */}
                 <div>
-                  <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 mb-1.5 ml-1">
+                  <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 mb-1.5 ml-1.5">
                     Email
                   </label>
                   <input
@@ -274,13 +243,13 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                     placeholder="name@iskolarngbayan.pup.edu.ph"
                     autoComplete="username"
                     required
-                    className="w-full px-5 py-3 sm:py-3.5 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-sm text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition shadow-2xs font-mono sm:font-sans"
+                    className="w-full px-5 py-2.5 sm:py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-[13px] text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition shadow-2xs font-sans"
                   />
                 </div>
 
                 {/* Password Field with Eye Toggle */}
                 <div>
-                  <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 mb-1.5 ml-1">
+                  <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 mb-1.5 ml-1.5">
                     Password
                   </label>
                   <div className="relative">
@@ -288,10 +257,10 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                       type={showLoginPassword ? 'text' : 'password'}
                       value={loginPassword}
                       onChange={(e) => setLoginPassword(e.target.value)}
-                      placeholder="••••••••"
+                      placeholder=""
                       autoComplete="current-password"
                       required
-                      className="w-full pl-5 pr-12 py-3 sm:py-3.5 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-sm text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition shadow-2xs"
+                      className="w-full pl-5 pr-11 py-2.5 sm:py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-[13px] text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition shadow-2xs font-sans"
                     />
                     <button
                       type="button"
@@ -309,17 +278,17 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                 </div>
 
                 {/* Terms and Conditions Checkbox */}
-                <div className="flex items-center gap-2 pt-0.5 ml-1">
+                <div className="flex items-center gap-2.5 pt-0.5 ml-1.5">
                   <input
                     type="checkbox"
                     id="loginAgreeTerms"
                     checked={loginAgreeTerms}
                     onChange={(e) => setLoginAgreeTerms(e.target.checked)}
-                    className="w-3.5 h-3.5 rounded-xs border-neutral-300 text-black focus:ring-black cursor-pointer accent-theme"
+                    className="w-3.5 h-3.5 rounded-xs border-neutral-300 text-theme focus:ring-theme cursor-pointer accent-theme"
                   />
                   <label
                     htmlFor="loginAgreeTerms"
-                    className="text-[11px] sm:text-xs text-black dark:text-slate-300 cursor-pointer select-none"
+                    className="text-[11px] sm:text-xs text-black dark:text-slate-300 cursor-pointer select-none font-medium"
                   >
                     I agree to all Terms, Privacy Policy and Conditions
                   </label>
@@ -329,7 +298,7 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                 <button
                   type="submit"
                   disabled={isLoggingIn}
-                  className="w-full py-3 sm:py-3.5 px-6 bg-theme hover:bg-theme-hover text-white font-semibold rounded-full text-xs sm:text-sm transition shadow-md disabled:opacity-60 cursor-pointer mt-2 active:scale-[0.99] flex items-center justify-center gap-2"
+                  className="w-full py-3 sm:py-3.5 px-6 bg-theme hover:bg-theme-hover text-white font-semibold rounded-full text-xs sm:text-sm transition shadow-md hover:shadow-lg disabled:opacity-60 cursor-pointer mt-2 active:scale-[0.99] flex items-center justify-center gap-2 tracking-wide font-sans"
                 >
                   {isLoggingIn ? (
                     <>
@@ -342,10 +311,10 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                 </button>
               </form>
 
-              {/* Direct Registration Navigation */}
-              <div className="mt-4 text-center">
+              {/* Switch to Register View */}
+              <div className="mt-4 sm:mt-5 text-center">
                 <span className="text-[11px] sm:text-xs text-neutral-500 dark:text-slate-400">
-                  New to SEENta?{' '}
+                  Don&apos;t have an account?{' '}
                   <button
                     type="button"
                     onClick={() => {
@@ -358,7 +327,7 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                     }}
                     className="text-theme hover:underline font-bold ml-1 cursor-pointer"
                   >
-                    Register account &rarr;
+                    Register
                   </button>
                 </span>
               </div>
@@ -367,7 +336,7 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
             /* ================= REGISTER VIEW ("Let's get started!") ================= */
             <div className="w-full max-w-[450px] sm:max-w-[460px] mx-auto">
               {/* Back Navigation Button */}
-              <div className="-mt-6 sm:-mt-8 mb-4 sm:mb-5">
+              <div className="-mt-10 sm:-mt-14 md:-mt-16 mb-5 sm:mb-7">
                 <button
                   type="button"
                   onClick={() => switchView('login')}
@@ -420,7 +389,7 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                 {/* If user came directly without email, allow entering email */}
                 {!regData.email && (
                   <div>
-                    <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 mb-1.5 ml-1">
+                    <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 mb-1.5 ml-1.5">
                       Official PUP Webmail
                     </label>
                     <input
@@ -430,7 +399,7 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                       onChange={handleRegChange}
                       placeholder="name@iskolarngbayan.pup.edu.ph"
                       required
-                      className="w-full px-4 sm:px-5 py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-sm text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition shadow-2xs font-mono"
+                      className="w-full px-5 py-2.5 sm:py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-[13px] text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition shadow-2xs font-sans"
                     />
                   </div>
                 )}
@@ -438,7 +407,7 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                 {/* Row 1: First Name & Last Name */}
                 <div className="grid grid-cols-2 gap-3 sm:gap-3.5">
                   <div>
-                    <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 mb-1.5 ml-1">
+                    <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 mb-1.5 ml-1.5">
                       First Name
                     </label>
                     <input
@@ -448,12 +417,12 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                       onChange={handleRegChange}
                       placeholder="First Name"
                       required
-                      className="w-full px-4 sm:px-5 py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-sm text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition shadow-2xs"
+                      className="w-full px-4 sm:px-5 py-2.5 sm:py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-[13px] text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition shadow-2xs font-sans"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 mb-1.5 ml-1">
+                    <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 mb-1.5 ml-1.5">
                       Last Name
                     </label>
                     <input
@@ -463,30 +432,30 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                       onChange={handleRegChange}
                       placeholder="Last Name"
                       required
-                      className="w-full px-4 sm:px-5 py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-sm text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition shadow-2xs"
+                      className="w-full px-4 sm:px-5 py-2.5 sm:py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-[13px] text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition shadow-2xs font-sans"
                     />
                   </div>
                 </div>
 
                 {/* Row 2: Student Number */}
                 <div>
-                  <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 mb-1.5 ml-1">
-                    Student or Employee Number
+                  <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 mb-1.5 ml-1.5">
+                    Student Number
                   </label>
                   <input
                     type="text"
                     name="studentId"
                     value={regData.studentId}
                     onChange={handleRegChange}
-                    placeholder="2024-XXXX"
+                    placeholder="2024-XXXXX-BN-X"
                     required
-                    className="w-full px-5 py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-sm text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition font-mono shadow-2xs"
+                    className="w-full px-5 py-2.5 sm:py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-[13px] text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition font-sans shadow-2xs"
                   />
                 </div>
 
                 {/* Row 3: Phone Number */}
                 <div>
-                  <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 mb-1.5 ml-1">
+                  <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 mb-1.5 ml-1.5">
                     Phone Number
                   </label>
                   <input
@@ -496,7 +465,7 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                     onChange={handleRegChange}
                     placeholder="09XXXXXXXXX"
                     required
-                    className="w-full px-5 py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-sm text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition font-mono shadow-2xs"
+                    className="w-full px-5 py-2.5 sm:py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-[13px] text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition font-sans shadow-2xs"
                   />
                 </div>
 
@@ -504,7 +473,7 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                 <button
                   type="submit"
                   disabled={isSubmittingReg}
-                  className="w-full py-3.5 px-6 bg-theme hover:bg-theme-hover text-white font-semibold rounded-full text-xs sm:text-sm transition shadow-md disabled:opacity-60 cursor-pointer mt-3 active:scale-[0.99] flex items-center justify-center gap-2"
+                  className="w-full py-3 sm:py-3.5 px-6 bg-theme hover:bg-theme-hover text-white font-semibold rounded-full text-xs sm:text-sm transition shadow-md hover:shadow-lg disabled:opacity-60 cursor-pointer mt-2 active:scale-[0.99] flex items-center justify-center gap-2 font-sans tracking-wide"
                 >
                   {isSubmittingReg ? (
                     <>
@@ -542,12 +511,6 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
         isOpen={isOtpModalOpen}
         onClose={() => setIsOtpModalOpen(false)}
         onVerified={handleOtpVerified}
-      />
-
-      {/* Accessibility & Theme Customization Modal */}
-      <AccessibilityModal
-        isOpen={isA11yOpen}
-        onClose={() => setIsA11yOpen(false)}
       />
     </div>
   );

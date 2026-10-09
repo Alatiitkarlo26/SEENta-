@@ -114,7 +114,15 @@ body {
   color: #f8fafc;
 }
 
+input, button, textarea, select {
+  font-family: inherit;
+}
+
 /* Accessibility: Font Size Scaling */
+html.font-compact {
+  font-size: 85%;
+}
+
 html.font-large {
-  font-size: 112.5%;
+  font-size: 115%;
 }

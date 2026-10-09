@@ -3,23 +3,18 @@ import {
   Sun,
   Moon,
   Laptop,
-  Check,
   Eye,
   Type,
   RotateCcw,
-  X,
-  Palette
+  X
 } from 'lucide-react';
 
 export default function AccessibilityModal({ isOpen, onClose }) {
   const {
     mode,
-    themeColor,
     highContrast,
     fontSize,
-    palettes,
     setMode,
-    setThemeColor,
     setHighContrast,
     setFontSize,
     resetDefaults
@@ -38,14 +33,14 @@ export default function AccessibilityModal({ isOpen, onClose }) {
         <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/60 dark:bg-slate-900/60">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-theme text-white flex items-center justify-center shadow-sm">
-              <Palette className="w-5 h-5" />
+              <Eye className="w-5 h-5" />
             </div>
             <div>
               <h3 className="text-base font-bold text-slate-900 dark:text-white">
                 Accessibility &amp; Appearance
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Personalize themes, dark mode, and reading options.
+                Personalize appearance mode and campus accessibility options.
               </p>
             </div>
           </div>
@@ -61,7 +56,7 @@ export default function AccessibilityModal({ isOpen, onClose }) {
 
         {/* Modal Scrollable Body */}
         <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
-          {/* Section 1: Color Scheme (Light / Dark / System) */}
+          {/* Section 1: Appearance Mode (Light / Dark / System) */}
           <div className="space-y-3">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
               <Sun className="w-3.5 h-3.5 text-amber-500" />
@@ -113,58 +108,7 @@ export default function AccessibilityModal({ isOpen, onClose }) {
             </div>
           </div>
 
-          {/* Section 2: Accent Theme Colors */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
-                <Palette className="w-3.5 h-3.5 text-theme" />
-                <span>Theme Accent Colors</span>
-              </label>
-              <span className="text-[11px] font-semibold text-theme">
-                {palettes.find((p) => p.id === themeColor)?.name}
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-              {palettes.map((p) => {
-                const isSelected = themeColor === p.id;
-                return (
-                  <button
-                    key={p.id}
-                    type="button"
-                    onClick={() => setThemeColor(p.id)}
-                    className={`relative p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between h-24 ${
-                      isSelected
-                        ? 'border-slate-900 dark:border-white bg-slate-50 dark:bg-slate-800/90 shadow-sm ring-2 ring-slate-900/10 dark:ring-white/20'
-                        : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/30 hover:border-slate-300 dark:hover:border-slate-700'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span
-                        className="w-5 h-5 rounded-full shadow-xs border border-white/50"
-                        style={{ backgroundColor: p.primary }}
-                      />
-                      {isSelected && (
-                        <span className="w-4 h-4 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center">
-                          <Check className="w-2.5 h-2.5 stroke-[3]" />
-                        </span>
-                      )}
-                    </div>
-                    <div>
-                      <div className="text-xs font-bold text-slate-900 dark:text-white leading-tight">
-                        {p.name}
-                      </div>
-                      <div className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5 font-medium">
-                        {p.badge}
-                      </div>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Section 3: Readability & High Contrast (NFR-SEEN-0001) */}
+          {/* Section 2: Campus Accessibility Options (NFR-SEEN-0001) */}
           <div className="space-y-3 pt-2 border-t border-slate-100 dark:border-slate-800">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
               <Eye className="w-3.5 h-3.5 text-emerald-500" />
@@ -202,7 +146,7 @@ export default function AccessibilityModal({ isOpen, onClose }) {
               </button>
             </div>
 
-            {/* Font Size Booster */}
+            {/* Font Size Booster (85% compact, 100% normal, 115% large) */}
             <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800">
               <div className="space-y-0.5">
                 <div className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -210,11 +154,23 @@ export default function AccessibilityModal({ isOpen, onClose }) {
                   <span>Text Size Boost</span>
                 </div>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                  Increase font scaling for easier reading while mobile.
+                  Scale text size for comfortable viewing or mobile reading.
                 </p>
               </div>
 
               <div className="flex items-center gap-1 bg-white dark:bg-slate-900 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
+                <button
+                  type="button"
+                  onClick={() => setFontSize('compact')}
+                  className={`px-2.5 py-1 text-xs font-bold rounded-lg transition cursor-pointer ${
+                    fontSize === 'compact'
+                      ? 'bg-theme text-white shadow-xs'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-black dark:hover:text-white'
+                  }`}
+                  title="85% Compact font size"
+                >
+                  85%
+                </button>
                 <button
                   type="button"
                   onClick={() => setFontSize('normal')}
@@ -223,6 +179,7 @@ export default function AccessibilityModal({ isOpen, onClose }) {
                       ? 'bg-theme text-white shadow-xs'
                       : 'text-slate-600 dark:text-slate-400 hover:text-black dark:hover:text-white'
                   }`}
+                  title="100% Standard font size"
                 >
                   100%
                 </button>
@@ -234,6 +191,7 @@ export default function AccessibilityModal({ isOpen, onClose }) {
                       ? 'bg-theme text-white shadow-xs'
                       : 'text-slate-600 dark:text-slate-400 hover:text-black dark:hover:text-white'
                   }`}
+                  title="115% Large font size"
                 >
                   115%
                 </button>

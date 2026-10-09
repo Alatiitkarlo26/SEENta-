@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import campusBg from '../assets/pup-binan-campus.jpg';
-import PUPLogo from '../components/PUPLogo';
 import OutlookSimulationModal from '../components/OutlookSimulationModal';
 import { otpService } from '../services/otpService';
 import {
@@ -77,7 +76,7 @@ export default function StudentDashboardPage() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans selection:bg-theme selection:text-white pb-16 transition-colors duration-200">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans pb-16 transition-colors duration-200">
       {/* ================= HERO SECTION (Formal & Matched with Login Background) ================= */}
       <div className="relative w-full overflow-hidden bg-slate-900 text-white border-b border-slate-200/50 dark:border-slate-800">
         {/* Background Image with Photographic Contrast */}
@@ -93,14 +92,6 @@ export default function StudentDashboardPage() {
         {/* Hero Content */}
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
           <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
-            {/* PUP Institutional Seal Badge */}
-            <div className="inline-flex items-center gap-2.5 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20 mb-5 shadow-sm">
-              <PUPLogo className="w-5 h-5 shrink-0" />
-              <span className="text-xs font-semibold tracking-wide text-amber-200 uppercase">
-                PUP Biñan Central Clearinghouse
-              </span>
-            </div>
-
             {/* Formal Greeting */}
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
               Mabuhay, {user?.fullName || 'Iskolar'}!

@@ -73,11 +73,12 @@ export function ThemeProvider({ children }) {
       root.classList.remove('high-contrast');
     }
 
-    // 3. Font Size Scaling
-    if (fontSize === 'large') {
+    // 3. Font Size Scaling (85% compact, 100% normal, 115% large)
+    root.classList.remove('font-compact', 'font-large');
+    if (fontSize === 'compact' || fontSize === '85' || fontSize === 'small') {
+      root.classList.add('font-compact');
+    } else if (fontSize === 'large' || fontSize === '115') {
       root.classList.add('font-large');
-    } else {
-      root.classList.remove('font-large');
     }
 
     // 4. Set Theme Color Attribute
