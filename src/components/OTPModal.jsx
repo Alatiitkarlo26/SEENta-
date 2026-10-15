@@ -250,6 +250,11 @@ export default function OTPModal({ email, recipientName, isOpen, onClose, onVeri
               {isVerifying ? 'Verifying...' : 'Verify & Continue'}
             </button>
           </div>
+
+          {/* Outlook Delivery Tip */}
+          <p className="mt-4 text-[11px] text-slate-500 dark:text-slate-400 text-center leading-relaxed">
+            📩 Can&apos;t find the email in your main inbox? Check your <strong>Junk Email</strong> folder. In Outlook, click <strong>&quot;Report as Not Junk&quot;</strong> to receive all future SEENta notifications directly in your Focused Inbox!
+          </p>
         </div>
       </div>
 

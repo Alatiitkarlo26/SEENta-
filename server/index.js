@@ -11,7 +11,8 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '15mb' }));
+app.use(express.urlencoded({ extended: true, limit: '15mb' }));
 
 // -------------------------------------------------------------
 // Direct Password Verification (Plain Text Mode)
@@ -77,13 +78,20 @@ function createTransporter() {
       });
     }
 
-    if ((host && host.includes('outlook')) || (host && host.includes('office365'))) {
+    if (
+      (host && (host.includes('outlook') || host.includes('office365'))) ||
+      (user && (user.endsWith('@pup.edu.ph') || user.endsWith('@iskolarngbayan.pup.edu.ph') || user.endsWith('@outlook.com') || user.endsWith('@hotmail.com')))
+    ) {
       return nodemailer.createTransport({
         host: 'smtp.office365.com',
         port: 587,
         secure: false,
+        requireTLS: true,
         auth: { user, pass },
-        tls: { ciphers: 'SSLv3' }
+        tls: {
+          minVersion: 'TLSv1.2',
+          ciphers: 'SSLv3'
+        }
       });
     }
 
@@ -324,62 +332,136 @@ app.post('/api/send-otp', async (req, res) => {
 
   if (transporter) {
     try {
-      const fromSender = process.env.SMTP_FROM || `"Project SEENta PUP Biñan" <${process.env.SMTP_USER}>`;
+      // Anti-Spam & Deliverability Optimization for Microsoft Outlook / Office 365:
+      // 1. Generic sender name prevents Microsoft Anti-Phishing User Impersonation detection
+      const fromSender = process.env.SMTP_FROM || `"SEENta Verification" <${process.env.SMTP_USER}>`;
+
+      // 2. Standard transactional subject line avoids Bayesian bulk filters
+      const subject = `Your SEENta verification code is ${otp}`;
+
+      // 3. Complete plain text alternative matching HTML structure
+      const textBody = [
+        `Mabuhay, ${recipientName || 'Iskolar'}!`,
+        '',
+        `Your 6-digit verification code for Project SEENta is: ${otp}`,
+        '',
+        'This code is valid for 5 minutes. Never share this code with anyone.',
+        '',
+        'If you did not request this registration, please disregard this email or report to the Campus Security Office.',
+        '',
+        'Politeknikong Unibersidad ng Pilipinas — Sangay ng Biñan',
+        'Official Peer-to-Peer Lost & Found Clearinghouse'
+      ].join('\n');
+
+      // 4. Outlook Word-rendering engine table-based layout
+      const htmlBody = `
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SEENta Verification Code</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f1f5f9; padding: 24px 12px;">
+    <tr>
+      <td align="center">
+        <!-- Main Card Container -->
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 520px; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+          
+          <!-- Header Banner -->
+          <tr>
+            <td style="background-color: #800000; padding: 18px 24px; text-align: left;">
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td width="42" valign="middle">
+                    <div style="background-color: #ffffff; color: #800000; font-weight: 900; font-size: 16px; border-radius: 8px; width: 36px; height: 36px; line-height: 36px; text-align: center; font-family: monospace;">
+                      ST
+                    </div>
+                  </td>
+                  <td valign="middle" style="padding-left: 12px;">
+                    <div style="color: #ffffff; font-size: 16px; font-weight: 800; letter-spacing: 0.5px;">Project SEENta</div>
+                    <div style="color: #fef08a; font-size: 11px; font-weight: 500;">PUP Biñan Campus • P2P Lost &amp; Found</div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Body Content -->
+          <tr>
+            <td style="padding: 28px 24px 20px 24px; text-align: left;">
+              <p style="margin: 0 0 12px 0; font-size: 15px; color: #1e293b; font-weight: 600;">
+                Mabuhay, ${recipientName || 'Iskolar'}!
+              </p>
+              <p style="margin: 0 0 20px 0; font-size: 13px; line-height: 1.6; color: #475569;">
+                You are verifying your account for the <strong>Project SEENta Peer-to-Peer Lost and Found Management System</strong>. Please enter the single-use verification code below:
+              </p>
+
+              <!-- OTP Code Display Box -->
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin: 20px 0; background-color: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 10px;">
+                <tr>
+                  <td align="center" style="padding: 20px 16px;">
+                    <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #64748b; margin-bottom: 6px;">
+                      Single-Use Security Code
+                    </div>
+                    <div style="font-size: 36px; font-weight: 800; letter-spacing: 10px; color: #800000; font-family: 'Courier New', Courier, monospace; padding-left: 10px;">
+                      ${otp}
+                    </div>
+                    <div style="font-size: 11px; color: #64748b; margin-top: 8px;">
+                      ⏱️ Valid for <strong>5 minutes</strong> • Single use only
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Notice Box -->
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin: 16px 0; background-color: #fef2f2; border-left: 4px solid #800000; border-radius: 4px;">
+                <tr>
+                  <td style="padding: 10px 14px; font-size: 11px; color: #7f1d1d; line-height: 1.5;">
+                    <strong>Security Reminder:</strong> Never share this code with anyone. Campus administrators and security staff will never ask for your code.
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin: 20px 0 0 0; font-size: 11px; color: #94a3b8; line-height: 1.5;">
+                If you did not request this verification code, please ignore this email or report to the Campus Security Office.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 14px 24px; text-align: center;">
+              <p style="margin: 0; font-size: 10px; color: #94a3b8; line-height: 1.4;">
+                Politeknikong Unibersidad ng Pilipinas — Sangay ng Biñan<br/>
+                Zapote, Biñan City, Laguna • Official Student Clearinghouse
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+      `;
 
       const info = await transporter.sendMail({
         from: fromSender,
+        replyTo: process.env.SMTP_USER,
         to: cleanEmail,
-        subject: `[SEENta PUP Biñan] ${otp} is your lost and found verification code`,
-        text: `Mabuhay ${recipientName || 'User'}! Your verification code for Project SEENta PUP Biñan is ${otp}. This code expires in 5 minutes.`,
-        html: `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 560px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #ffffff;">
-            <div style="display: flex; align-items: center; border-bottom: 2px solid #800000; padding-bottom: 14px; margin-bottom: 20px;">
-              <div style="background-color: #800000; color: #fef08a; padding: 6px 14px; font-weight: 800; border-radius: 6px; font-size: 18px; letter-spacing: 0.5px;">
-                SEENta
-              </div>
-              <div style="margin-left: 14px;">
-                <div style="font-weight: 700; color: #1e293b; font-size: 14px;">PUP Biñan Campus</div>
-                <div style="font-size: 12px; color: #64748b;">Lost &amp; Found Management System</div>
-              </div>
-            </div>
-
-            <p style="font-size: 16px; color: #1e293b; margin-top: 0;">
-              Mabuhay, <strong>${recipientName || 'Iskolar'}</strong>!
-            </p>
-
-            <p style="font-size: 14px; line-height: 1.6; color: #334155;">
-              You have requested an account on the <strong>Project SEENta Lost and Found Management System</strong> using your official university credentials.
-            </p>
-
-            <div style="text-align: center; margin: 28px 0; background-color: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 24px;">
-              <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #64748b; font-weight: 700;">
-                Your 6-Digit OTP Code
-              </span>
-              <div style="font-size: 38px; font-weight: 800; letter-spacing: 8px; color: #800000; margin-top: 8px; font-family: monospace;">
-                ${otp}
-              </div>
-              <p style="font-size: 12px; color: #64748b; margin-top: 10px;">
-                ⏱️ Valid for <strong>5 minutes</strong>. Never share this code with anyone.
-              </p>
-            </div>
-
-            <div style="background-color: #fef2f2; border-left: 4px solid #800000; padding: 12px 16px; border-radius: 4px; margin-bottom: 20px;">
-              <p style="font-size: 12px; color: #7f1d1d; margin: 0; line-height: 1.5;">
-                <strong>Campus Security Notice:</strong> All digital claims require subsequent in-person identity verification at the PUP Biñan Campus Security Office.
-              </p>
-            </div>
-
-            <p style="font-size: 12px; color: #94a3b8; line-height: 1.5;">
-              If you did not make this registration request, please disregard this email or report to the Campus Security Office.
-            </p>
-
-            <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0 16px 0;" />
-            <p style="font-size: 11px; color: #94a3b8; text-align: center; margin: 0;">
-              Politeknikong Unibersidad ng Pilipinas — Sangay ng Biñan<br/>
-              Zapote, Biñan City, Laguna • Official Lost &amp; Found Clearinghouse
-            </p>
-          </div>
-        `
+        subject,
+        text: textBody,
+        html: htmlBody,
+        headers: {
+          'X-Priority': '3',
+          'X-MSMail-Priority': 'Normal',
+          'Importance': 'Normal',
+          'Auto-Submitted': 'auto-generated',
+          'X-Auto-Response-Suppress': 'All',
+          'X-Mailer': 'SEENta-Mailer/2.0'
+        }
       });
 
       console.log(`[SMTP Live] Email delivered to: ${cleanEmail} (MessageId: ${info.messageId})`);
@@ -405,6 +487,230 @@ app.post('/api/send-otp', async (req, res) => {
     mode: 'simulated',
     message: `SMTP not configured in .env yet. Simulated OTP is: ${otp}`
   });
+});
+
+// =========================================================================
+// FOUND ITEM POSTS ENDPOINTS (FR-SEEN-0003, UC-003)
+// =========================================================================
+
+// 1. Get all found item posts (with filters for search, category, status, finderId)
+app.get('/api/items/found', async (req, res) => {
+  try {
+    const { category, search, status, finderId } = req.query;
+    const posts = await db.getFoundPosts({ category, search, status, finderId });
+    res.json({ success: true, count: posts.length, items: posts });
+  } catch (err) {
+    console.error('Error fetching found item posts:', err.message);
+    res.status(500).json({ success: false, error: 'Failed to retrieve found item posts.' });
+  }
+});
+
+// 2. Get single found post by ID
+app.get('/api/items/found/:id', async (req, res) => {
+  try {
+    const post = await db.getFoundPostById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ success: false, error: 'Found item post not found.' });
+    }
+    res.json({ success: true, item: post });
+  } catch (err) {
+    console.error('Error fetching found post details:', err.message);
+    res.status(500).json({ success: false, error: 'Failed to retrieve post details.' });
+  }
+});
+
+// 3. Create a new found item post (includes automated matching check)
+app.post('/api/items/found', async (req, res) => {
+  try {
+    const {
+      finderId,
+      finder_id,
+      itemName,
+      item_name,
+      category,
+      description,
+      color,
+      size,
+      locationFound,
+      location_found,
+      dateFound,
+      date_found,
+      timeFound,
+      time_found,
+      condition,
+      photoUrls,
+      photos
+    } = req.body;
+
+    const actualFinderId = finderId || finder_id;
+    const actualItemName = itemName || item_name;
+    const actualLocation = locationFound || location_found;
+    const actualDate = dateFound || date_found;
+
+    if (!actualFinderId || !actualItemName || !category || !actualLocation || !actualDate) {
+      return res.status(400).json({
+        success: false,
+        error: 'Missing required fields: finderId, itemName, category, locationFound, and dateFound are mandatory.'
+      });
+    }
+
+    const postData = {
+      finderId: actualFinderId,
+      itemName: actualItemName,
+      category,
+      description,
+      color,
+      size,
+      locationFound: actualLocation,
+      dateFound: actualDate,
+      timeFound: timeFound || time_found,
+      condition: condition || 'Good'
+    };
+
+    const urls = Array.isArray(photoUrls) ? photoUrls : (Array.isArray(photos) ? photos : []);
+    const createdPost = await db.createFoundPost(postData, urls);
+
+    res.status(201).json({
+      success: true,
+      message: 'Found item posted successfully to SEENta campus feed!',
+      item: createdPost
+    });
+  } catch (err) {
+    console.error('Error creating found item post:', err.message);
+    res.status(500).json({ success: false, error: err.message || 'Failed to create found item post.' });
+  }
+});
+
+// =========================================================================
+// LOST ITEM REPORTS ENDPOINTS (FR-SEEN-0002, UC-002)
+// =========================================================================
+
+// 1. Get all lost item reports (with filters for search, category, status, userId)
+app.get('/api/items/lost', async (req, res) => {
+  try {
+    const { category, search, status, userId } = req.query;
+    const reports = await db.getLostReports({ category, search, status, userId });
+    res.json({ success: true, count: reports.length, items: reports });
+  } catch (err) {
+    console.error('Error fetching lost item reports:', err.message);
+    res.status(500).json({ success: false, error: 'Failed to retrieve lost item reports.' });
+  }
+});
+
+// 2. Get single lost item report by ID
+app.get('/api/items/lost/:id', async (req, res) => {
+  try {
+    const report = await db.getLostReportById(req.params.id);
+    if (!report) {
+      return res.status(404).json({ success: false, error: 'Lost item report not found.' });
+    }
+    res.json({ success: true, item: report });
+  } catch (err) {
+    console.error('Error fetching lost report details:', err.message);
+    res.status(500).json({ success: false, error: 'Failed to retrieve report details.' });
+  }
+});
+
+// 3. Create a new lost item report (includes automated matching check)
+app.post('/api/items/lost', async (req, res) => {
+  try {
+    const {
+      userId,
+      user_id,
+      itemName,
+      item_name,
+      category,
+      description,
+      color,
+      size,
+      lastKnownLocation,
+      last_known_location,
+      dateLost,
+      date_lost,
+      photoUrl,
+      photo_url
+    } = req.body;
+
+    const actualUserId = userId || user_id;
+    const actualItemName = itemName || item_name;
+    const actualLocation = lastKnownLocation || last_known_location;
+    const actualDate = dateLost || date_lost;
+
+    if (!actualUserId || !actualItemName || !category || !actualLocation || !actualDate) {
+      return res.status(400).json({
+        success: false,
+        error: 'Missing required fields: userId, itemName, category, lastKnownLocation, and dateLost are mandatory.'
+      });
+    }
+
+    const reportData = {
+      userId: actualUserId,
+      itemName: actualItemName,
+      category,
+      description,
+      color,
+      size,
+      lastKnownLocation: actualLocation,
+      dateLost: actualDate,
+      photoUrl: photoUrl || photo_url
+    };
+
+    const createdReport = await db.createLostReport(reportData);
+
+    res.status(201).json({
+      success: true,
+      message: 'Missing item report filed successfully on SEENta!',
+      item: createdReport
+    });
+  } catch (err) {
+    console.error('Error filing lost item report:', err.message);
+    res.status(500).json({ success: false, error: err.message || 'Failed to file lost item report.' });
+  }
+});
+
+// =========================================================================
+// NOTIFICATIONS ENDPOINTS (SYS-SEEN-0002, Dual-Sided In-App Alerts)
+// =========================================================================
+
+// 1. Get user notifications
+app.get('/api/notifications', async (req, res) => {
+  try {
+    const { userId } = req.query;
+    if (!userId) {
+      return res.status(400).json({ success: false, error: 'Query parameter userId is required.' });
+    }
+    const notifs = await db.getNotifications(userId);
+    res.json({ success: true, count: notifs.length, notifications: notifs });
+  } catch (err) {
+    console.error('Error fetching notifications:', err.message);
+    res.status(500).json({ success: false, error: 'Failed to retrieve notifications.' });
+  }
+});
+
+// 2. Mark notification as read
+app.put('/api/notifications/:id/read', async (req, res) => {
+  try {
+    const updated = await db.markNotificationRead(req.params.id);
+    res.json({ success: true, notification: updated });
+  } catch (err) {
+    console.error('Error marking notification read:', err.message);
+    res.status(500).json({ success: false, error: 'Failed to update notification.' });
+  }
+});
+
+// 3. Mark all notifications as read for a user
+app.put('/api/notifications/read-all', async (req, res) => {
+  try {
+    const { userId } = req.body;
+    if (!userId) {
+      return res.status(400).json({ success: false, error: 'Field userId is required.' });
+    }
+    await db.markAllNotificationsRead(userId);
+    res.json({ success: true, message: 'All notifications marked as read.' });
+  } catch (err) {
+    console.error('Error marking all notifications read:', err.message);
+    res.status(500).json({ success: false, error: 'Failed to update notifications.' });
+  }
 });
 
 app.listen(PORT, () => {

@@ -332,27 +332,6 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                   )}
                 </button>
               </form>
-
-              {/* Switch to Register View */}
-              <div className="mt-4 sm:mt-5 text-center">
-                <span className="text-[11px] sm:text-xs text-neutral-500 dark:text-slate-400">
-                  Don&apos;t have an account?{' '}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setRegData((prev) => ({
-                        ...prev,
-                        email: loginEmail.trim().toLowerCase(),
-                        password: loginPassword
-                      }));
-                      switchView('register');
-                    }}
-                    className="text-theme hover:underline font-bold ml-1 cursor-pointer"
-                  >
-                    Register
-                  </button>
-                </span>
-              </div>
             </div>
           ) : (
             /* ================= REGISTER VIEW ("Let's get started!") ================= */
