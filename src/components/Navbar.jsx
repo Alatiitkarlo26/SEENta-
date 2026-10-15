@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import SeentaLogo from './SeentaLogo';
 import AccessibilityModal from './AccessibilityModal';
 import {
   LogOut,
@@ -31,12 +32,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
               onClick={() => setActiveTab(role === 'admin' ? 'admin-dashboard' : 'student-dashboard')}
               className="flex flex-col cursor-pointer select-none group"
             >
-              <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white group-hover:text-theme transition leading-tight">
-                SEEN<span className="text-theme">ta</span>
-              </span>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium tracking-tight">
-                Lost and Found Management System
-              </span>
+              <SeentaLogo size="md" showSubtitle={true} />
             </div>
 
             {/* Center Navigation Links */}

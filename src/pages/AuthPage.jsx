@@ -218,7 +218,11 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
               {/* Header - Positioned higher with exact typography match to register view */}
               <div className="text-center -mt-6 sm:-mt-10 md:-mt-12 mb-10 sm:mb-12 md:mb-14">
                 <h1 className="text-2xl sm:text-[32px] font-bold text-black dark:text-white tracking-tight leading-tight">
-                  Welcome to SEENta
+                  Welcome to{' '}
+                  <span className="inline-flex items-baseline">
+                    <span className="font-albert font-black uppercase text-black dark:text-white" style={{ fontFamily: "'Albert Sans', sans-serif" }}>SEEN</span>
+                    <span className="font-alan font-normal text-[0.96em] text-black dark:text-white ml-0.5" style={{ fontFamily: "'Alan Sans', sans-serif", fontWeight: 400 }}>ta</span>
+                  </span>
                 </h1>
                 <p className="mt-1.5 text-xs sm:text-[13px] text-neutral-500 dark:text-slate-400 max-w-xs mx-auto leading-relaxed">
                   Enter your PUP webmail to begin your search. SEENta&apos;s got your back.

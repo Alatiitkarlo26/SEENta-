@@ -10,7 +10,15 @@ export default function Footer() {
           <div className="space-y-3">
             <div className="flex items-center gap-2.5">
               <PUPLogo className="w-8 h-8 shrink-0" />
-              <span className="text-white font-extrabold text-base tracking-tight">Project SEEN<span className="text-theme">ta</span></span>
+              <div className="flex items-baseline leading-none">
+                <span className="text-white font-medium text-xs mr-1 opacity-80">Project</span>
+                <span className="font-albert font-black text-base text-white tracking-tight uppercase" style={{ fontFamily: "'Albert Sans', sans-serif" }}>
+                  SEEN
+                </span>
+                <span className="font-alan font-normal text-[15.5px] text-white tracking-tight ml-0.5" style={{ fontFamily: "'Alan Sans', sans-serif", fontWeight: 400 }}>
+                  ta
+                </span>
+              </div>
             </div>
             <p className="text-slate-400 leading-relaxed text-xs">
               A centralized digital lost and found management platform built specifically for the students, faculty, and campus security of PUP Biñan.
