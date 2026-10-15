@@ -195,11 +195,12 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
       </div>
 
       {/* Top Left PUP Header Brand */}
-      <div className="absolute top-5 left-5 sm:top-7 sm:left-8 z-20 select-none">
+      <div className="absolute top-6 left-6 z-20 select-none pointer-events-none shrink-0">
         <img
           src={pupLogoAndText}
           alt="Polytechnic University of the Philippines"
-          className="h-12 sm:h-14 lg:h-16 w-auto object-contain drop-shadow-xs brightness-100 dark:brightness-110"
+          draggable={false}
+          className="h-11 w-auto object-contain drop-shadow-xs brightness-100 dark:brightness-110 shrink-0 select-none"
         />
       </div>
 
