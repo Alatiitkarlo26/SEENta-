@@ -4,6 +4,7 @@ import { authService } from '../services/authService';
 import { otpService } from '../services/otpService';
 import pupLogoAndText from '../assets/PUP-Logo-and-Text.png';
 import OTPModal from '../components/OTPModal';
+import TermsPrivacyModal from '../components/TermsPrivacyModal';
 import campusBg from '../assets/pup-binan-campus.jpg';
 import {
   ArrowLeft,
@@ -25,6 +26,7 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [loginAgreeTerms, setLoginAgreeTerms] = useState(false);
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
@@ -76,7 +78,7 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
     }
 
     if (!loginAgreeTerms) {
-      setLoginError('Please agree to the Terms, Privacy Policy and Conditions.');
+      setLoginError('Please agree to the Terms, Privacy and Conditions.');
       return;
     }
 
@@ -284,13 +286,32 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                     id="loginAgreeTerms"
                     checked={loginAgreeTerms}
                     onChange={(e) => setLoginAgreeTerms(e.target.checked)}
-                    className="w-3.5 h-3.5 rounded-xs border-neutral-300 text-theme focus:ring-theme cursor-pointer accent-theme"
+                    className="w-3.5 h-3.5 rounded-xs border-neutral-300 text-theme focus:ring-theme cursor-pointer accent-theme shrink-0"
                   />
                   <label
                     htmlFor="loginAgreeTerms"
-                    className="text-[11px] sm:text-xs text-black dark:text-slate-300 cursor-pointer select-none font-medium"
+                    className="text-[11px] sm:text-xs text-black dark:text-slate-300 select-none font-medium cursor-pointer"
                   >
-                    I agree to all Terms, Privacy Policy and Conditions
+                    I agree to all{' '}
+                    <span
+                      role="button"
+                      tabIndex={0}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setIsTermsModalOpen(true);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setIsTermsModalOpen(true);
+                        }
+                      }}
+                      className="underline text-black dark:text-white hover:text-theme dark:hover:text-theme font-semibold cursor-pointer transition-colors"
+                    >
+                      Terms, Privacy and Conditions
+                    </span>
                   </label>
                 </div>
 
@@ -511,6 +532,18 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
         isOpen={isOtpModalOpen}
         onClose={() => setIsOtpModalOpen(false)}
         onVerified={handleOtpVerified}
+      />
+
+      {/* Terms & Conditions / Privacy Policy Modal Card */}
+      <TermsPrivacyModal
+        isOpen={isTermsModalOpen}
+        onClose={() => setIsTermsModalOpen(false)}
+        isChecked={loginAgreeTerms}
+        onToggleCheck={(checked) => setLoginAgreeTerms(checked)}
+        onAccept={() => {
+          setLoginAgreeTerms(true);
+          setIsTermsModalOpen(false);
+        }}
       />
     </div>
   );
