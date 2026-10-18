@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { authService } from '../services/authService';
 import { otpService } from '../services/otpService';
 import pupLogoAndText from '../assets/PUP-Logo-and-Text.png';
@@ -11,11 +12,15 @@ import {
   Eye,
   EyeOff,
   UserCheck,
-  ShieldAlert
+  ShieldAlert,
+  Lock,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
   const { login, register } = useAuth();
+  const { isDark, toggleMode } = useTheme();
   const [view, setView] = useState(defaultView); // 'login' | 'register'
   const [direction, setDirection] = useState('right'); // 'right' | 'left' for animation
 
@@ -182,41 +187,73 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center lg:justify-end overflow-y-auto lg:overflow-hidden bg-white dark:bg-slate-950 font-sans p-3 sm:p-4 lg:p-5 transition-colors duration-200">
+    <div className="relative h-screen max-h-screen w-full flex items-center justify-center lg:justify-between overflow-hidden bg-white dark:bg-slate-950 font-sans p-3 sm:p-4 lg:p-6 transition-colors duration-200">
       {/* High-Quality Campus Background on White Canvas with 50% Opacity */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none bg-white dark:bg-slate-950">
         <img
           src={campusBg}
           alt="PUP Biñan Campus"
-          className="w-full h-full object-cover object-center opacity-50 dark:opacity-20 filter contrast-[1.05] saturate-[1.1] scale-[1.01]"
+          className="w-full h-full object-cover object-center opacity-45 dark:opacity-20 filter contrast-[1.05] saturate-[1.1] scale-[1.01]"
         />
         {/* Soft Light / Dark Vignette */}
-        <div className="absolute inset-0 bg-gradient-to-t from-white/70 via-transparent to-white/40 dark:from-slate-950/95 dark:via-slate-950/70 dark:to-slate-950/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-white/80 via-white/20 to-white/50 dark:from-slate-950/95 dark:via-slate-950/70 dark:to-slate-950/50" />
       </div>
 
       {/* Top Left PUP Header Brand */}
-      <div className="absolute top-6 left-6 z-20 select-none pointer-events-none shrink-0">
+      <div className="absolute top-5 sm:top-6 left-5 sm:left-6 z-20 select-none pointer-events-none shrink-0 flex items-center gap-3">
         <img
           src={pupLogoAndText}
           alt="Polytechnic University of the Philippines"
           draggable={false}
-          className="h-11 w-auto object-contain drop-shadow-xs brightness-100 dark:brightness-110 shrink-0 select-none"
+          className="h-10 sm:h-11 w-auto object-contain drop-shadow-xs brightness-100 dark:brightness-110 shrink-0 select-none"
         />
       </div>
 
+      {/* Top Right Quick Controls (Theme Toggle) */}
+      <div className="absolute top-5 sm:top-6 right-5 sm:right-6 z-20 flex items-center gap-2">
+        <button
+          type="button"
+          onClick={toggleMode}
+          title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+          className="p-2.5 rounded-full bg-white/85 dark:bg-slate-900/85 backdrop-blur-md border border-neutral-200/80 dark:border-slate-800 text-neutral-600 dark:text-slate-300 hover:text-black dark:hover:text-white transition shadow-2xs cursor-pointer active:scale-95"
+        >
+          {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
+        </button>
+      </div>
+
+      {/* Left-Side Minimal Editorial Experience (Desktop Only, Keeping Center Open) */}
+      <div className="hidden lg:flex flex-col justify-end h-[calc(100vh-2rem)] sm:h-[calc(100vh-2.5rem)] max-h-[880px] my-auto pl-10 xl:pl-16 pr-8 pb-3 z-10 select-none max-w-xl xl:max-w-2xl pointer-events-none">
+        <div className="space-y-4">
+          <h2 className="text-4xl xl:text-5xl 2xl:text-[54px] font-extrabold text-neutral-900 dark:text-white tracking-tight leading-[1.12]">
+            Reconnecting what was lost <br />
+            <span className="text-neutral-500 dark:text-slate-400 font-normal">with who it belongs to.</span>
+          </h2>
+          <p className="text-sm sm:text-base text-neutral-600 dark:text-slate-400 leading-relaxed font-sans max-w-lg font-normal">
+            A digital lost and found management platform built specifically for the students, faculty, and campus security of PUP Biñan.
+          </p>
+        </div>
+
+        {/* Minimal Bottom Line - positioned at the exact same bottom Y coordinate as the card */}
+        <div className="mt-8 pt-5 border-t border-neutral-200/50 dark:border-slate-800/80 flex items-center gap-2.5 text-xs text-neutral-400 dark:text-slate-500 font-sans">
+          <span>&copy; {new Date().getFullYear()} Project SEENta</span>
+          <span>&bull;</span>
+          <span>PUP Biñan Campus</span>
+        </div>
+      </div>
+
       {/* Main Form White Card Container */}
-      <div className="relative z-10 w-full sm:w-[560px] md:w-[600px] lg:w-[620px] max-w-[94vw] h-[calc(100vh-2rem)] sm:h-[calc(100vh-2.5rem)] max-h-[920px] my-auto flex flex-col justify-center">
+      <div className="relative z-10 w-full sm:w-[560px] md:w-[600px] lg:w-[600px] xl:w-[620px] max-w-[94vw] h-[calc(100vh-2rem)] sm:h-[calc(100vh-2.5rem)] max-h-[880px] my-auto flex flex-col justify-center lg:ml-auto">
         <div
           key={view}
-          className={`w-full h-full bg-white dark:bg-slate-900 rounded-[52px] sm:rounded-[64px] shadow-[0_25px_70px_-15px_rgba(0,0,0,0.18)] dark:shadow-[0_25px_70px_rgba(0,0,0,0.6)] border border-neutral-100/80 dark:border-slate-800 p-8 sm:p-12 md:p-14 lg:p-16 flex flex-col justify-center items-center overflow-y-auto transition-all ${
+          className={`w-full h-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-[44px] sm:rounded-[56px] shadow-[0_25px_70px_-15px_rgba(0,0,0,0.16)] dark:shadow-[0_25px_70px_rgba(0,0,0,0.6)] border border-neutral-100/90 dark:border-slate-800 p-6 sm:p-8 md:p-10 lg:p-12 flex flex-col justify-center items-center overflow-hidden transition-all ${
             direction === 'right' ? 'animate-slide-right' : 'animate-slide-left'
           }`}
         >
           {view === 'login' ? (
-            /* ================= LOGIN VIEW (Exact Minimal Design) ================= */
+            /* ================= LOGIN VIEW (Clean Minimal Design) ================= */
             <div className="w-full max-w-[390px] sm:max-w-[410px] mx-auto font-sans">
-              {/* Header - Positioned higher with exact typography match to register view */}
-              <div className="text-center -mt-6 sm:-mt-10 md:-mt-12 mb-10 sm:mb-12 md:mb-14">
+              {/* Header */}
+              <div className="text-center mb-7 sm:mb-8 md:mb-9">
                 <h1 className="text-2xl sm:text-[32px] font-bold text-black dark:text-white tracking-tight leading-tight">
                   Welcome to{' '}
                   <span className="inline-flex items-baseline">
@@ -336,16 +373,22 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                   )}
                 </button>
               </form>
+
+              {/* Subtle Security & Institutional Trust Footer */}
+              <div className="mt-8 pt-4 border-t border-neutral-100 dark:border-slate-800/80 flex items-center justify-center gap-1.5 text-[11px] text-neutral-400 dark:text-slate-500 select-none">
+                <Lock className="w-3 h-3 text-neutral-400 dark:text-slate-500" />
+                <span>PUP Webmail Authenticated &bull; RA 10173 Protected</span>
+              </div>
             </div>
           ) : (
             /* ================= REGISTER VIEW ("Let's get started!") ================= */
             <div className="w-full max-w-[450px] sm:max-w-[460px] mx-auto">
               {/* Back Navigation Button */}
-              <div className="-mt-10 sm:-mt-14 md:-mt-16 mb-5 sm:mb-7">
+              <div className="mb-4 sm:mb-5">
                 <button
                   type="button"
                   onClick={() => switchView('login')}
-                  className="inline-flex items-center gap-2 text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 hover:text-neutral-600 dark:hover:text-white transition cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 hover:text-theme dark:hover:text-theme transition cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
                   <span>Back to Sign In</span>
@@ -404,7 +447,7 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                       onChange={handleRegChange}
                       placeholder="name@iskolarngbayan.pup.edu.ph"
                       required
-                      className="w-full px-5 py-2.5 sm:py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-[13px] text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition shadow-2xs font-sans"
+                      className="w-full px-5 py-2.5 sm:py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-[13px] text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-2 focus:ring-theme/20 transition shadow-2xs font-sans"
                     />
                   </div>
                 )}
@@ -422,7 +465,7 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                       onChange={handleRegChange}
                       placeholder="First Name"
                       required
-                      className="w-full px-4 sm:px-5 py-2.5 sm:py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-[13px] text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition shadow-2xs font-sans"
+                      className="w-full px-4 sm:px-5 py-2.5 sm:py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-[13px] text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-2 focus:ring-theme/20 transition shadow-2xs font-sans"
                     />
                   </div>
 
@@ -437,7 +480,7 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                       onChange={handleRegChange}
                       placeholder="Last Name"
                       required
-                      className="w-full px-4 sm:px-5 py-2.5 sm:py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-[13px] text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition shadow-2xs font-sans"
+                      className="w-full px-4 sm:px-5 py-2.5 sm:py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-[13px] text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-2 focus:ring-theme/20 transition shadow-2xs font-sans"
                     />
                   </div>
                 </div>
@@ -503,6 +546,12 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
                     Sign In
                   </button>
                 </span>
+              </div>
+
+              {/* Subtle Security & Institutional Trust Footer */}
+              <div className="mt-5 pt-3.5 border-t border-neutral-100 dark:border-slate-800/80 flex items-center justify-center gap-1.5 text-[11px] text-neutral-400 dark:text-slate-500 select-none">
+                <Lock className="w-3 h-3 text-neutral-400 dark:text-slate-500" />
+                <span>PUP Webmail Authenticated &bull; RA 10173 Protected</span>
               </div>
             </div>
           )}
