@@ -293,15 +293,20 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
 
                 {/* Password Field with Eye Toggle */}
                 <div>
-                  <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200 mb-1.5 ml-1.5">
-                    Password
-                  </label>
+                  <div className="flex items-center justify-between mb-1.5 ml-1.5 mr-1">
+                    <label className="block text-xs sm:text-[13px] font-semibold text-black dark:text-slate-200">
+                      Password
+                    </label>
+                    <span className="text-[10px] text-neutral-400 dark:text-slate-500 font-mono">
+                      Min. 6 characters
+                    </span>
+                  </div>
                   <div className="relative">
                     <input
                       type={showLoginPassword ? 'text' : 'password'}
                       value={loginPassword}
                       onChange={(e) => setLoginPassword(e.target.value)}
-                      placeholder=""
+                      placeholder="••••••••"
                       autoComplete="current-password"
                       required
                       className="w-full pl-5 pr-11 py-2.5 sm:py-3 bg-white dark:bg-slate-800/90 border border-neutral-300 dark:border-slate-700 rounded-full text-xs sm:text-[13px] text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-theme focus:ring-1 focus:ring-theme transition shadow-2xs font-sans"
