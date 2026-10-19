@@ -46,8 +46,8 @@ export default function ItemDetailModal({ isOpen, onClose, item, onInitiateClaim
         {/* Header */}
         <div className="relative px-6 py-4 sm:px-8 sm:py-5 bg-slate-50/80 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
-              {item.status || 'AvailableForClaim'}
+            <span className="text-[11px] font-semibold px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+              {item.status === 'AvailableForClaim' || !item.status || item.status === 'Available' ? 'Available for Claim' : item.status}
             </span>
             <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-800 px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700">
               {item.category}

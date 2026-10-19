@@ -23,7 +23,8 @@ import {
   ArrowRight,
   Building2,
   X,
-  HelpCircle
+  HelpCircle,
+  ChevronRight
 } from 'lucide-react';
 
 export default function StudentDashboardPage() {
@@ -138,270 +139,195 @@ export default function StudentDashboardPage() {
     'Iskolar';
   const myFoundCount = foundItems.filter((i) => i.finder_id === user?.id).length;
 
+  const tabs = [
+    { key: 'campus-feed', label: 'Campus Feed', count: foundItems.length },
+    { key: 'my-found', label: 'My Posts', count: myFoundCount },
+    { key: 'my-lost', label: 'My Reports', count: lostReports.length }
+  ];
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans pb-20 transition-colors duration-200">
-      {/* ================= REFINED HERO SECTION ================= */}
-      <section className="relative w-full overflow-hidden bg-slate-950 text-white border-b border-slate-200/40 dark:border-slate-800">
-        {/* Subtle Ambient Photographic Background */}
+      {/* ================= HERO ================= */}
+      <section className="relative w-full overflow-hidden bg-slate-950 text-white">
+        {/* Background */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <img
             src={campusBg}
             alt="PUP Biñan Campus"
-            className="w-full h-full object-cover object-center filter saturate-[1.1] brightness-[0.45] scale-[1.02] transform transition-transform duration-1000"
+            className="w-full h-full object-cover object-center brightness-[0.35] saturate-[1.05] scale-[1.01]"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/75 to-slate-950/40" />
-          <div className="absolute inset-0 bg-radial from-transparent via-slate-950/50 to-slate-950/90" />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/50 via-slate-950/70 to-slate-950/95" />
         </div>
 
-        {/* Hero Content */}
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16 sm:pt-16 sm:pb-20">
-          <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
-            {/* Welcoming Greeting */}
-            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-[1.15]">
-              Mabuhay, {firstName}!
+        <div className="relative z-10 max-w-5xl mx-auto px-5 sm:px-8 pt-12 pb-16 sm:pt-14 sm:pb-20">
+          <div className="max-w-2xl">
+            <p className="text-[11px] font-medium tracking-wide uppercase text-slate-400/80 mb-3">
+              Polytechnic University of the Philippines: Biñan Campus
+            </p>
+            <h1 className="text-3xl sm:text-[2.75rem] font-bold tracking-tight text-white leading-[1.1]">
+              Welcome back,<br />{firstName}.
             </h1>
-            <p className="mt-3.5 text-sm sm:text-base text-slate-300 max-w-xl leading-relaxed">
-              Report misplaced belongings, browse surrendered campus items, and coordinate safe custody turnover.
+            <p className="mt-4 text-sm sm:text-base text-slate-400 leading-relaxed max-w-lg">
+              A centralized platform for reporting, tracking, and recovering lost and found items across campus.
             </p>
 
-            {/* Mobbin-Inspired Tactile Search Bar */}
-            <div className="mt-8 w-full max-w-2xl">
-              <div className="relative flex items-center bg-white dark:bg-slate-900/90 backdrop-blur-md rounded-2xl sm:rounded-full p-1.5 sm:p-2 shadow-2xl border border-white/80 dark:border-slate-700/80 focus-within:ring-2 focus-within:ring-theme/30 focus-within:border-theme transition-all">
-                <div className="pl-3.5 sm:pl-4 text-slate-400 dark:text-slate-500">
-                  <Search className="w-4 h-4 sm:w-5 sm:h-5" />
-                </div>
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search by item name, color, or location (e.g. Rm 302, Library)..."
-                  className="w-full px-3 sm:px-4 py-2 text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none bg-transparent"
-                />
-                {searchQuery && (
-                  <button
-                    type="button"
-                    onClick={() => setSearchQuery('')}
-                    className="p-1.5 mr-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
-                    title="Clear search"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={() => loadData(true)}
-                  disabled={refreshing}
-                  className="px-4 sm:px-5 py-2 sm:py-2.5 bg-theme hover:bg-theme-hover text-white font-semibold text-xs sm:text-sm rounded-xl sm:rounded-full transition shadow-md shrink-0 cursor-pointer flex items-center gap-1.5"
-                >
-                  <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
-                  <span className="hidden sm:inline">Refresh</span>
-                </button>
-              </div>
-
-              {/* Search Shortcut Hint */}
-              <div className="mt-3 flex items-center justify-center gap-4 text-[11px] text-slate-400">
-                <span>{foundItems.length} active items logged</span>
-                <span className="w-1 h-1 rounded-full bg-slate-600" />
-                <span>{lostReports.length} reports filed</span>
-                {unreadMatches.length > 0 && (
-                  <>
-                    <span className="w-1 h-1 rounded-full bg-slate-600" />
-                    <span className="text-amber-400 font-medium flex items-center gap-1">
-                      <Sparkles className="w-3 h-3" />
-                      {unreadMatches.length} match alert{unreadMatches.length > 1 ? 's' : ''}
-                    </span>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ================= CORE ACTION CARDS (Tactile Launchpad) ================= */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-          {/* Card 1: Report Lost Item */}
-          <div className="group relative bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-300 flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between">
-                <div className="w-11 h-11 rounded-2xl bg-amber-500/10 dark:bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center border border-amber-500/20 group-hover:scale-105 transition-transform">
-                  <HelpCircle className="w-5 h-5" />
-                </div>
-                <span className="text-[11px] font-semibold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 px-2.5 py-0.5 rounded-full border border-amber-200/80 dark:border-amber-800/80">
-                  Missing Property
-                </span>
-              </div>
-              <h3 className="mt-4 text-lg font-bold text-slate-900 dark:text-white">
-                Report a Lost Item
-              </h3>
-              <p className="mt-1.5 text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-                Misplaced your student ID, calculator, keys, tumbler, or device? File an official notice so finders and security personnel can match it.
-              </p>
-            </div>
-            <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-              <span className="text-xs text-slate-400 font-medium">Auto-match scanning active</span>
+            {/* Quick Actions */}
+            <div className="mt-7 flex flex-wrap gap-3">
               <button
                 type="button"
                 onClick={() => setShowReportLostModal(true)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-theme hover:bg-theme-hover text-white text-xs font-semibold rounded-full transition shadow-xs cursor-pointer group-hover:shadow-md"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-slate-900 text-sm font-semibold rounded-full hover:bg-slate-100 transition-all duration-200 cursor-pointer active:scale-[0.97] shadow-lg"
               >
-                <span>File Report</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                <HelpCircle className="w-4 h-4" />
+                <span>Report Lost Item</span>
               </button>
-            </div>
-          </div>
-
-          {/* Card 2: Post Found Item */}
-          <div className="group relative bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-300 flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between">
-                <div className="w-11 h-11 rounded-2xl bg-theme/10 dark:bg-theme/20 text-theme flex items-center justify-center border border-theme/20 group-hover:scale-105 transition-transform">
-                  <Camera className="w-5 h-5" />
-                </div>
-                <span className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-200/80 dark:border-emerald-800/80">
-                  Campus Safe Custody
-                </span>
-              </div>
-              <h3 className="mt-4 text-lg font-bold text-slate-900 dark:text-white">
-                Post a Found Item
-              </h3>
-              <p className="mt-1.5 text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-                Found unattended property in a room, corridor, or canteen? Post photos and location details to hold safe custody until claimed.
-              </p>
-            </div>
-            <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-              <span className="text-xs text-slate-400 font-medium">Safe P2P turnover</span>
               <button
                 type="button"
                 onClick={() => setShowPostFoundModal(true)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-theme hover:bg-theme-hover text-white text-xs font-semibold rounded-full transition shadow-xs cursor-pointer group-hover:shadow-md"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 text-white text-sm font-semibold rounded-full border border-white/20 hover:bg-white/20 backdrop-blur-sm transition-all duration-200 cursor-pointer active:scale-[0.97]"
               >
-                <span>Post Item</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                <Camera className="w-4 h-4" />
+                <span>Post Found Item</span>
               </button>
+            </div>
+
+            {/* Stats row */}
+            <div className="mt-6 flex items-center gap-5 text-xs text-slate-500">
+              <span>{foundItems.length} items logged</span>
+              <span className="w-px h-3 bg-slate-700" />
+              <span>{lostReports.length} reports filed</span>
+              {unreadMatches.length > 0 && (
+                <>
+                  <span className="w-px h-3 bg-slate-700" />
+                  <button
+                    type="button"
+                    onClick={() => setShowNotifModal(true)}
+                    className="text-amber-400 font-medium flex items-center gap-1 hover:text-amber-300 transition-colors cursor-pointer"
+                  >
+                    <Sparkles className="w-3 h-3" />
+                    {unreadMatches.length} match{unreadMatches.length > 1 ? 'es' : ''}
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
       </section>
 
-      {/* ================= AUTOMATED MATCH ALERT BANNER ================= */}
-      {unreadMatches.length > 0 && (
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-          <div
-            onClick={() => setShowNotifModal(true)}
-            className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-amber-500/10 to-amber-500/5 border border-amber-500/40 dark:border-amber-500/30 flex items-center justify-between gap-4 cursor-pointer hover:shadow-md transition group"
+      {/* ================= SEARCH BAR (floating, overlapping hero) ================= */}
+      <section className="max-w-5xl mx-auto px-5 sm:px-8 -mt-7 relative z-20">
+        <div className="relative flex items-center bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-800 focus-within:border-slate-300 dark:focus-within:border-slate-700 focus-within:shadow-2xl transition-all duration-200">
+          <div className="pl-5 text-slate-400 dark:text-slate-500">
+            <Search className="w-[18px] h-[18px]" />
+          </div>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by item name, color, or location..."
+            className="w-full px-4 py-4 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none bg-transparent"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery('')}
+              className="p-2 mr-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+              title="Clear search"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => loadData(true)}
+            disabled={refreshing}
+            className="p-2.5 mr-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+            title="Refresh data"
           >
-            <div className="flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-xs">
-                <Sparkles className="w-5 h-5 animate-pulse" />
+            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+          </button>
+        </div>
+      </section>
+
+      {/* ================= MATCH ALERT ================= */}
+      {unreadMatches.length > 0 && (
+        <section className="max-w-5xl mx-auto px-5 sm:px-8 mt-5">
+          <button
+            type="button"
+            onClick={() => setShowNotifModal(true)}
+            className="w-full p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/50 flex items-center justify-between gap-4 cursor-pointer hover:bg-amber-100/80 dark:hover:bg-amber-950/50 transition-colors group text-left"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0">
+                <Sparkles className="w-4 h-4" />
               </div>
               <div>
-                <h4 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <span>Potential Match Alert ({unreadMatches.length})</span>
-                  <span className="text-[10px] font-semibold px-2 py-0.2 rounded-full bg-amber-500 text-white">Action Required</span>
-                </h4>
-                <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
-                  Our matching engine discovered an item matching your reported missing belongings! Tap to inspect.
+                <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                  {unreadMatches.length} potential match{unreadMatches.length > 1 ? 'es' : ''} found
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  An item matching your report has been logged. Review to confirm.
                 </p>
               </div>
             </div>
-            <span className="hidden sm:inline-flex items-center gap-1 px-4 py-2 rounded-full bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold transition shadow-xs shrink-0 group-hover:translate-x-0.5">
-              <span>View Matches</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </span>
-          </div>
+            <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300 shrink-0 transition-colors" />
+          </button>
         </section>
       )}
 
-      {/* ================= MAIN DIRECTORY & DISCOVERY FEED ================= */}
-      <section id="inventory-feed" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 scroll-mt-24">
-        {/* Feed Controls Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4">
-          {/* Segmented Controller (Tabs) */}
-          <div className="inline-flex p-1 bg-slate-200/70 dark:bg-slate-900 rounded-2xl border border-slate-300/60 dark:border-slate-800 shadow-2xs self-start">
-            <button
-              type="button"
-              onClick={() => setActiveTab('campus-feed')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition cursor-pointer flex items-center gap-1.5 ${
-                activeTab === 'campus-feed'
-                  ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <Package className="w-3.5 h-3.5" />
-              <span>Campus Found Feed</span>
-              <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                activeTab === 'campus-feed'
-                  ? 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200'
-                  : 'bg-slate-200/60 dark:bg-slate-800 text-slate-500'
-              }`}>
-                {foundItems.length}
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab('my-found')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition cursor-pointer flex items-center gap-1.5 ${
-                activeTab === 'my-found'
-                  ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <Camera className="w-3.5 h-3.5" />
-              <span>My Posts</span>
-              <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                activeTab === 'my-found'
-                  ? 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200'
-                  : 'bg-slate-200/60 dark:bg-slate-800 text-slate-500'
-              }`}>
-                {myFoundCount}
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab('my-lost')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition cursor-pointer flex items-center gap-1.5 ${
-                activeTab === 'my-lost'
-                  ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <FileText className="w-3.5 h-3.5" />
-              <span>My Lost Reports</span>
-              <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                activeTab === 'my-lost'
-                  ? 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200'
-                  : 'bg-slate-200/60 dark:bg-slate-800 text-slate-500'
-              }`}>
-                {lostReports.length}
-              </span>
-            </button>
+      {/* ================= INVENTORY FEED ================= */}
+      <section id="inventory-feed" className="max-w-5xl mx-auto px-5 sm:px-8 mt-8 scroll-mt-24">
+        {/* Tab bar */}
+        <div className="flex items-end justify-between border-b border-slate-200 dark:border-slate-800 mb-1">
+          <div className="flex items-center gap-0">
+            {tabs.map((tab) => (
+              <button
+                key={tab.key}
+                type="button"
+                onClick={() => setActiveTab(tab.key)}
+                className={`relative px-4 py-3 text-sm font-medium transition-colors duration-200 cursor-pointer select-none ${
+                  activeTab === tab.key
+                    ? 'text-slate-900 dark:text-white'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
+                }`}
+              >
+                <span>{tab.label}</span>
+                <span className={`ml-1.5 text-xs tabular-nums ${
+                  activeTab === tab.key
+                    ? 'text-slate-500 dark:text-slate-400'
+                    : 'text-slate-400 dark:text-slate-500'
+                }`}>
+                  {tab.count}
+                </span>
+                {/* Active underline */}
+                {activeTab === tab.key && (
+                  <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-theme rounded-full" />
+                )}
+              </button>
+            ))}
           </div>
 
-          {/* Active Filter Indicators */}
-          <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+          {/* Active filter chips (compact) */}
+          <div className="hidden sm:flex items-center gap-2 pb-2.5">
             {selectedCategory !== 'All' && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                <span>{selectedCategory}</span>
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                {selectedCategory}
                 <button
                   type="button"
                   onClick={() => setSelectedCategory('All')}
-                  className="hover:text-black dark:hover:text-white cursor-pointer"
+                  className="hover:text-slate-900 dark:hover:text-white cursor-pointer"
                 >
                   <X className="w-3 h-3" />
                 </button>
               </span>
             )}
             {searchQuery && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                <span>&quot;{searchQuery}&quot;</span>
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                &quot;{searchQuery}&quot;
                 <button
                   type="button"
                   onClick={() => setSearchQuery('')}
-                  className="hover:text-black dark:hover:text-white cursor-pointer"
+                  className="hover:text-slate-900 dark:hover:text-white cursor-pointer"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -410,8 +336,8 @@ export default function StudentDashboardPage() {
           </div>
         </div>
 
-        {/* Horizontal Category Filter Pills (Mobbin Style) */}
-        <div className="py-2 overflow-x-auto custom-scrollbar flex items-center gap-2 pb-3">
+        {/* Category pills */}
+        <div className="py-3 overflow-x-auto custom-scrollbar flex items-center gap-2">
           {categories.map((cat) => {
             const isSelected = selectedCategory === cat;
             return (
@@ -419,10 +345,10 @@ export default function StudentDashboardPage() {
                 key={cat}
                 type="button"
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-full text-xs whitespace-nowrap transition-all duration-200 cursor-pointer ${
                   isSelected
-                    ? 'bg-theme text-white shadow-xs font-semibold'
-                    : 'bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/60'
+                    ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold shadow-xs'
+                    : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-800 dark:hover:text-slate-200 font-medium'
                 }`}
               >
                 {cat}
@@ -431,214 +357,194 @@ export default function StudentDashboardPage() {
           })}
         </div>
 
-        {/* Feed Grid Display */}
+        {/* Feed content */}
         {loading ? (
-          <div className="py-24 text-center text-slate-400 text-sm">
-            <div className="w-8 h-8 border-2 border-theme border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-            <p className="font-medium text-slate-600 dark:text-slate-300">Loading campus clearinghouse...</p>
+          <div className="py-28 text-center">
+            <div className="w-7 h-7 border-2 border-slate-300 dark:border-slate-600 border-t-slate-600 dark:border-t-slate-300 rounded-full animate-spin mx-auto mb-3" />
+            <p className="text-sm text-slate-500 dark:text-slate-400">Loading items...</p>
           </div>
         ) : activeTab === 'my-lost' ? (
-          // ================= MY LOST REPORTS VIEW =================
-          <div className="mt-4">
+          /* ================= MY LOST REPORTS ================= */
+          <div className="mt-3">
             {displayedLostReports.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {displayedLostReports.map((report) => (
                   <div
                     key={report.id}
-                    className="p-5 rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 hover:shadow-md transition-all flex flex-col justify-between"
+                    className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200 flex flex-col justify-between"
                   >
                     <div className="space-y-3">
                       <div className="flex items-start justify-between gap-3">
-                        <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 rounded-full border border-slate-200/80 dark:border-slate-700">
+                        <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
                           {report.category}
                         </span>
                         <span
-                          className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${
+                          className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
                             report.status === 'Matched'
-                              ? 'bg-amber-50 text-amber-700 border-amber-300 dark:bg-amber-950/70 dark:text-amber-300'
-                              : 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/50 dark:text-blue-300'
+                              ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300'
+                              : 'bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-300'
                           }`}
                         >
-                          {report.status === 'Matched' ? '🎯 Potential Match Found' : report.status || 'Active Report'}
+                          {report.status === 'Matched' ? 'Match Found' : report.status || 'Active'}
                         </span>
                       </div>
 
                       <div className="flex items-start gap-3.5">
                         {report.photo_url ? (
-                          <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 border border-slate-200 dark:border-slate-700">
+                          <div className="w-14 h-14 rounded-xl overflow-hidden shrink-0 border border-slate-200 dark:border-slate-700">
                             <img src={report.photo_url} alt="" className="w-full h-full object-cover" />
                           </div>
                         ) : (
-                          <div className="w-16 h-16 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center shrink-0 border border-slate-200/60 dark:border-slate-700/60">
-                            <Tag className="w-6 h-6" />
+                          <div className="w-14 h-14 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-300 dark:text-slate-600 flex items-center justify-center shrink-0">
+                            <Tag className="w-5 h-5" />
                           </div>
                         )}
-                        <div className="space-y-1">
-                          <h4 className="text-base font-bold text-slate-900 dark:text-white leading-snug">
+                        <div className="min-w-0">
+                          <h4 className="text-sm font-semibold text-slate-900 dark:text-white leading-snug truncate">
                             {report.item_name}
                           </h4>
                           {report.color && (
-                            <span className="inline-block text-[10px] font-medium px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                              Color: {report.color}
+                            <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                              {report.color}
                             </span>
                           )}
                         </div>
                       </div>
 
-                      <div className="space-y-1 text-xs text-slate-600 dark:text-slate-400 pt-1">
+                      <div className="space-y-1 text-xs text-slate-500 dark:text-slate-400">
                         <div className="flex items-center gap-2">
-                          <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                          <span>Last seen at: <strong className="text-slate-800 dark:text-slate-200">{report.last_known_location}</strong></span>
+                          <MapPin className="w-3.5 h-3.5 shrink-0" />
+                          <span className="truncate">{report.last_known_location}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                          <span>Reported on: <span className="text-slate-700 dark:text-slate-300">{report.date_lost}</span></span>
+                          <Calendar className="w-3.5 h-3.5 shrink-0" />
+                          <span>{report.date_lost}</span>
                         </div>
                       </div>
 
                       {report.description && (
-                        <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 italic pt-1">
+                        <p className="text-xs text-slate-400 dark:text-slate-500 line-clamp-2 italic">
                           &quot;{report.description}&quot;
                         </p>
                       )}
                     </div>
 
-                    <div className="mt-4 pt-3.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                    <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
                       <span className="text-[11px] text-slate-400 font-mono">
-                        REF #{report.id?.slice(0, 8)}
+                        #{report.id?.slice(0, 8)}
                       </span>
                       {report.status === 'Matched' ? (
                         <button
                           type="button"
                           onClick={() => setShowNotifModal(true)}
-                          className="px-3.5 py-1.5 rounded-full bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold transition shadow-xs cursor-pointer flex items-center gap-1"
+                          className="text-xs font-semibold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 transition-colors cursor-pointer flex items-center gap-1"
                         >
-                          <Sparkles className="w-3 h-3" />
-                          <span>Inspect Match</span>
+                          <span>View Match</span>
+                          <ArrowRight className="w-3 h-3" />
                         </button>
                       ) : (
-                        <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                          Actively scanning posts
-                        </span>
+                        <span className="text-[11px] text-slate-400">Scanning...</span>
                       )}
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="py-20 text-center bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-8">
-                <FileText className="w-10 h-10 mx-auto mb-3 text-slate-300 dark:text-slate-600" />
-                <h4 className="font-bold text-slate-800 dark:text-slate-200">No lost item reports found</h4>
-                <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+              <div className="py-24 text-center">
+                <FileText className="w-8 h-8 mx-auto mb-3 text-slate-300 dark:text-slate-600" />
+                <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300">No reports yet</h4>
+                <p className="text-xs text-slate-500 mt-1.5 max-w-xs mx-auto leading-relaxed">
                   {searchQuery || selectedCategory !== 'All'
-                    ? 'No reports match your current filter settings. Try clearing the search or category.'
-                    : 'Have you misplaced an ID, keys, or device? File a report so our system can alert you when it turns up.'}
+                    ? 'No reports match your filters. Try clearing them.'
+                    : 'Lost something? File a report and our system will notify you when a match appears.'}
                 </p>
                 <button
                   type="button"
                   onClick={() => setShowReportLostModal(true)}
-                  className="mt-4 px-4 py-2 bg-theme hover:bg-theme-hover text-white text-xs font-semibold rounded-full transition shadow-xs cursor-pointer"
+                  className="mt-5 px-4 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
                 >
-                  File a Lost Report
+                  File a Report
                 </button>
               </div>
             )}
           </div>
         ) : (
-          // ================= FOUND ITEMS CAMPUS FEED =================
-          <div className="mt-4">
+          /* ================= FOUND ITEMS FEED ================= */
+          <div className="mt-3">
             {displayedFoundItems.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {displayedFoundItems.map((item) => {
                   const coverPhoto = item.photos?.[0]?.photo_url;
                   return (
                     <div
                       key={item.id}
-                      className="group rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-lg transition-all duration-200 flex flex-col justify-between overflow-hidden"
+                      onClick={() => setSelectedItemForDetail(item)}
+                      className="group rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden cursor-pointer"
                     >
-                      {/* Photo Thumbnail / Visual Area */}
-                      <div className="relative w-full h-44 sm:h-48 bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                      {/* Photo */}
+                      <div className="relative w-full aspect-[4/3] bg-slate-100 dark:bg-slate-800 overflow-hidden">
                         {coverPhoto ? (
                           <img
                             src={coverPhoto}
                             alt={item.item_name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300 ease-out"
                           />
                         ) : (
-                          <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 bg-gradient-to-br from-slate-100 to-slate-200/60 dark:from-slate-800 dark:to-slate-900/60">
-                            <Package className="w-9 h-9 stroke-[1.5] text-slate-400" />
-                            <span className="text-[11px] font-medium text-slate-400 mt-1">Photo not provided</span>
+                          <div className="w-full h-full flex flex-col items-center justify-center text-slate-300 dark:text-slate-600">
+                            <Package className="w-8 h-8 stroke-[1.5]" />
+                            <span className="text-[11px] mt-1.5">No photo</span>
                           </div>
                         )}
-
-                        {/* Category Floating Pill */}
-                        <div className="absolute top-3 left-3">
-                          <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-black/60 backdrop-blur-md text-white border border-white/15">
-                            {item.category}
-                          </span>
-                        </div>
-
-                        {/* Status Floating Pill */}
-                        <div className="absolute top-3 right-3">
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/90 backdrop-blur-md text-white shadow-xs">
-                            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                            {item.status || 'Available'}
+                        {/* Status badge */}
+                        <div className="absolute top-2.5 right-2.5">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-medium tracking-tight bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-slate-700 dark:text-slate-200 border border-slate-200/70 dark:border-slate-700/70 shadow-2xs">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 shrink-0" />
+                            <span>
+                              {item.status === 'AvailableForClaim' || !item.status || item.status === 'Available'
+                                ? 'Available for Claim'
+                                : item.status === 'ClaimUnderReview'
+                                ? 'Under Review'
+                                : item.status === 'CoordinatingHandover'
+                                ? 'Handover'
+                                : item.status}
+                            </span>
                           </span>
                         </div>
                       </div>
 
-                      {/* Card Details */}
-                      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
-                        <div className="space-y-2">
+                      {/* Details */}
+                      <div className="p-4 flex-1 flex flex-col justify-between">
+                        <div>
                           <div className="flex items-start justify-between gap-2">
-                            <h4 className="text-base font-bold text-slate-900 dark:text-white line-clamp-1 group-hover:text-theme transition-colors">
+                            <h4 className="text-sm font-semibold text-slate-900 dark:text-white line-clamp-1">
                               {item.item_name}
                             </h4>
                           </div>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                            {item.category}
+                          </p>
 
-                          {/* Attributes Tags */}
-                          <div className="flex flex-wrap items-center gap-1.5">
-                            <span className="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700">
-                              {item.condition || 'Good'}
-                            </span>
-                            {item.color && (
-                              <span className="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700">
-                                {item.color}
-                              </span>
-                            )}
-                          </div>
-
-                          {/* Location & Date */}
-                          <div className="space-y-1 text-xs text-slate-600 dark:text-slate-400 pt-1">
-                            <div className="flex items-center gap-2">
-                              <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                              <span className="truncate">Found at: <strong className="text-slate-800 dark:text-slate-200">{item.location_found}</strong></span>
+                          {/* Meta */}
+                          <div className="mt-3 space-y-1 text-xs text-slate-500 dark:text-slate-400">
+                            <div className="flex items-center gap-1.5">
+                              <MapPin className="w-3 h-3 shrink-0" />
+                              <span className="truncate">{item.location_found}</span>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                              <span>Discovered: <span className="text-slate-700 dark:text-slate-300">{item.date_found}</span></span>
+                            <div className="flex items-center gap-1.5">
+                              <Calendar className="w-3 h-3 shrink-0" />
+                              <span>{item.date_found}</span>
                             </div>
                           </div>
-
-                          {item.description && (
-                            <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed pt-0.5">
-                              {item.description}
-                            </p>
-                          )}
                         </div>
 
-                        {/* Card Footer / Action */}
-                        <div className="pt-3.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                          <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate max-w-[130px]">
-                            {item.finder?.full_name ? `By ${item.finder.full_name}` : 'Campus Custody'}
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setSelectedItemForDetail(item)}
-                            className="px-3.5 py-1.5 bg-theme hover:bg-theme-hover text-white text-xs font-semibold rounded-full transition cursor-pointer shadow-2xs"
-                          >
-                            Inspect &amp; Claim
-                          </button>
+                        <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+                          <span className="text-[11px] text-slate-400 truncate max-w-[120px]">
+                            {item.finder?.full_name ? `${item.finder.full_name}` : 'Campus Custody'}
+                          </span>
+                          <span className="text-xs font-medium text-theme flex items-center gap-0.5 group-hover:gap-1.5 transition-all duration-200">
+                            View
+                            <ArrowRight className="w-3 h-3" />
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -646,11 +552,11 @@ export default function StudentDashboardPage() {
                 })}
               </div>
             ) : (
-              <div className="py-20 text-center bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-8">
-                <Package className="w-10 h-10 mx-auto mb-3 text-slate-300 dark:text-slate-600" />
-                <h4 className="font-bold text-slate-800 dark:text-slate-200">No items match your search</h4>
-                <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-                  Try adjusting your search keywords, clearing filters, or check back later as students post surrendered items.
+              <div className="py-24 text-center">
+                <Package className="w-8 h-8 mx-auto mb-3 text-slate-300 dark:text-slate-600" />
+                <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300">No items found</h4>
+                <p className="text-xs text-slate-500 mt-1.5 max-w-xs mx-auto leading-relaxed">
+                  Try adjusting your search or category filter, or check back later.
                 </p>
                 {(searchQuery || selectedCategory !== 'All') && (
                   <button
@@ -659,9 +565,9 @@ export default function StudentDashboardPage() {
                       setSearchQuery('');
                       setSelectedCategory('All');
                     }}
-                    className="mt-4 px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-full transition cursor-pointer"
+                    className="mt-5 px-4 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
                   >
-                    Reset Filters
+                    Clear Filters
                   </button>
                 )}
               </div>
@@ -670,61 +576,61 @@ export default function StudentDashboardPage() {
         )}
       </section>
 
-      {/* ================= CAMPUS HANDOVER & SECURITY PROTOCOL (Institutional Trust) ================= */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-14">
-        <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200/80 dark:border-slate-800 shadow-xs">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-100 dark:border-slate-800/80">
+      {/* ================= RECOVERY PROTOCOL ================= */}
+      <section className="max-w-5xl mx-auto px-5 sm:px-8 mt-12 mb-8">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800">
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
             <div>
-              <div className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-theme mb-1">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                <span>PUP Biñan Campus Regulation</span>
-              </div>
-              <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
-                Official Property Recovery Protocol
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-theme" />
+                Property Recovery Protocol
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Three steps ensuring verified ownership transfer at the Ground Floor Security Office.
+                Three steps to recover your belongings at the Campus Security Office.
               </p>
             </div>
-            <div className="shrink-0">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-medium border border-slate-200/80 dark:border-slate-700/80">
-                <Building2 className="w-3.5 h-3.5 text-theme" />
-                <span>Ground Floor Security Office • Mon–Sat: 8:00 AM – 3:00 PM</span>
-              </span>
-            </div>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-50 dark:bg-slate-800 text-xs text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 shrink-0">
+              <Building2 className="w-3.5 h-3.5" />
+              Mon–Sat, 8 AM – 3 PM
+            </span>
           </div>
 
-          {/* 3 Step Protocol Columns */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
-            <div className="space-y-1.5">
-              <span className="text-xs font-mono font-bold text-theme">01</span>
-              <h5 className="text-xs font-bold text-slate-900 dark:text-white">
-                Verify Distinct Identifiers
-              </h5>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                Confirm serial numbers, distinguishing scratches, lock screens, or stickers to verify legitimate ownership.
-              </p>
-            </div>
-
-            <div className="space-y-1.5">
-              <span className="text-xs font-mono font-bold text-theme">02</span>
-              <h5 className="text-xs font-bold text-slate-900 dark:text-white">
-                Coordinate Custody Claim
-              </h5>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                Submit an inquiry through the clearinghouse to coordinate safe turnover with the finder or campus custodian.
-              </p>
-            </div>
-
-            <div className="space-y-1.5">
-              <span className="text-xs font-mono font-bold text-theme">03</span>
-              <h5 className="text-xs font-bold text-slate-900 dark:text-white">
-                Present Official PUP ID
-              </h5>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                Complete physical recovery in person at the Campus Security Office by presenting your official university ID card (Mon–Sat, 8:00 AM–3:00 PM).
-              </p>
-            </div>
+          {/* Steps */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            {[
+              {
+                step: '1',
+                title: 'Verify Ownership',
+                desc: 'Confirm identifiers like serial numbers, scratches, stickers, or lock screens to prove legitimate ownership.'
+              },
+              {
+                step: '2',
+                title: 'Coordinate Claim',
+                desc: 'Submit an inquiry through SEENta to arrange safe turnover with the finder or campus custodian.'
+              },
+              {
+                step: '3',
+                title: 'Present Your ID',
+                desc: 'Complete recovery in person at the Security Office by presenting your official PUP university ID.'
+              }
+            ].map((s, i) => (
+              <div key={s.step} className="flex gap-4">
+                <div className="shrink-0">
+                  <span className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-600 dark:text-slate-300 flex items-center justify-center border border-slate-200 dark:border-slate-700">
+                    {s.step}
+                  </span>
+                </div>
+                <div>
+                  <h5 className="text-xs font-semibold text-slate-900 dark:text-white">
+                    {s.title}
+                  </h5>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mt-1">
+                    {s.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
