@@ -40,7 +40,7 @@ function MainContent() {
   const currentTab = activeTab === 'about-us' ? 'about-us' : (role === 'admin' ? 'admin-dashboard' : activeTab);
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-theme selection:text-white transition-colors duration-200">
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-blue-600 selection:text-white transition-colors duration-200">
       <Navbar activeTab={currentTab} setActiveTab={setActiveTab} />
 
       <main className="flex-1">
