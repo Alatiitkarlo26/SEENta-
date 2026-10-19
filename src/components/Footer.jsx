@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import TermsPrivacyModal from './TermsPrivacyModal';
+import ScrollReveal from './ScrollReveal';
 import { MapPin, Clock, Mail } from 'lucide-react';
 
 export default function Footer() {
@@ -8,9 +9,10 @@ export default function Footer() {
   return (
     <>
       <footer className="bg-slate-200/70 dark:bg-black text-slate-600 dark:text-slate-400 border-t border-slate-300/70 dark:border-slate-800 text-xs mt-auto transition-colors duration-200">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-7 pb-6">
-          {/* Apple-style Footnote Disclosures */}
-          <div className="pb-4 space-y-1 text-[11px] text-slate-500 dark:text-slate-500 leading-normal border-b border-slate-300/70 dark:border-slate-800/80">
+        <ScrollReveal threshold={0.04} yOffset={14}>
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-7 pb-6">
+            {/* Apple-style Footnote Disclosures */}
+            <div className="pb-4 space-y-1 text-[11px] text-slate-500 dark:text-slate-500 leading-normal border-b border-slate-300/70 dark:border-slate-800/80">
             <p>
               * All surrendered items logged in the SEENta clearinghouse remain under verified finder custody or designated campus storage until legitimate ownership authentication is finalized.
             </p>
@@ -140,7 +142,8 @@ export default function Footer() {
             </div>
           </div>
         </div>
-      </footer>
+      </ScrollReveal>
+    </footer>
 
       {/* Terms & Privacy Modal */}
       <TermsPrivacyModal

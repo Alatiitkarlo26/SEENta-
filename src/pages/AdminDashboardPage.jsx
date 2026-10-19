@@ -7,6 +7,7 @@ import {
   PlusCircle,
   Lock
 } from 'lucide-react';
+import ScrollReveal from '../components/ScrollReveal';
 
 export default function AdminDashboardPage() {
   const { user, role } = useAuth();
@@ -105,21 +106,24 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Metrics Row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {stats.map((s, idx) => (
-          <div key={idx} className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs transition-colors">
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
-              {s.label}
+      <ScrollReveal threshold={0.05} yOffset={16}>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {stats.map((s, idx) => (
+            <div key={idx} className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs transition-colors">
+              <div className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
+                {s.label}
+              </div>
+              <div className={`text-3xl font-extrabold ${s.color}`}>
+                {s.count}
+              </div>
             </div>
-            <div className={`text-3xl font-extrabold ${s.color}`}>
-              {s.count}
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </ScrollReveal>
 
       {/* Audit Trail & Action Management */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <ScrollReveal threshold={0.05} delay={60} yOffset={20}>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column: Immutable Audit Trail Preview (FR-SEEN-0007, SYS-SEEN-0004) */}
         <div className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden transition-colors">
           <div className="p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
@@ -210,6 +214,7 @@ export default function AdminDashboardPage() {
           </div>
         </div>
       </div>
+    </ScrollReveal>
     </div>
   );
 }

@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useRef } from 'react';
+import { flushSync } from 'react-dom';
 import { useAuth } from './AuthContext';
 import { THEME_PALETTES } from '../constants/themes';
 
@@ -109,8 +110,118 @@ export function ThemeProvider({ children }) {
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, [mode]);
 
-  const setMode = (newMode) => {
+  const isTransitioningRef = useRef(false);
+
+  const executeThemeTransition = (newMode, event) => {
+    if (isTransitioningRef.current) return;
+
+    const isSystemDarkNow = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const nextIsDark = newMode === 'dark' || (newMode === 'system' && isSystemDarkNow);
+
+    // If active appearance doesn't change or prefers reduced motion, toggle immediately
+    const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (nextIsDark === isDark || prefersReducedMotion) {
+      setSettings((prev) => ({ ...prev, mode: newMode }));
+      return;
+    }
+
+    // Determine circular origin (x, y) starting on the icon
+    let x = typeof window !== 'undefined' ? Math.round(window.innerWidth - 60) : 0;
+    let y = 36;
+
+    if (event) {
+      if (event.currentTarget && typeof event.currentTarget.getBoundingClientRect === 'function') {
+        const rect = event.currentTarget.getBoundingClientRect();
+        x = Math.round(rect.left + rect.width / 2);
+        y = Math.round(rect.top + rect.height / 2);
+      } else if (typeof event.clientX === 'number' && event.clientX > 0) {
+        x = Math.round(event.clientX);
+        y = Math.round(event.clientY);
+      }
+    }
+
+    const endRadius = typeof window !== 'undefined'
+      ? Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y))
+      : 1200;
+
+    // 1. Modern View Transitions API with circular clipPath reveal
+    if (typeof document !== 'undefined' && document.startViewTransition) {
+      isTransitioningRef.current = true;
+      try {
+        const transition = document.startViewTransition(() => {
+          flushSync(() => {
+            setSettings((prev) => ({
+              ...prev,
+              mode: newMode
+            }));
+          });
+        });
+
+        transition.ready.then(() => {
+          document.documentElement.animate(
+            {
+              clipPath: [
+                `circle(0px at ${x}px ${y}px)`,
+                `circle(${endRadius}px at ${x}px ${y}px)`
+              ]
+            },
+            {
+              duration: 650,
+              easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+              pseudoElement: '::view-transition-new(root)'
+            }
+          );
+        });
+
+        transition.finished.finally(() => {
+          isTransitioningRef.current = false;
+        });
+        return;
+      } catch (err) {
+        console.warn('View transition failed, falling back:', err);
+        isTransitioningRef.current = false;
+      }
+    }
+
+    // 2. Pure JavaScript Ripple Fallback (For browsers without View Transitions)
+    if (typeof document !== 'undefined') {
+      isTransitioningRef.current = true;
+      const ripple = document.createElement('div');
+      ripple.className = 'theme-circle-ripple';
+      ripple.style.position = 'fixed';
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y}px`;
+      ripple.style.width = '24px';
+      ripple.style.height = '24px';
+      ripple.style.borderRadius = '50%';
+      ripple.style.transform = 'translate(-50%, -50%) scale(1)';
+      ripple.style.backgroundColor = nextIsDark ? '#090d16' : '#f8fafc';
+      ripple.style.zIndex = '999999';
+      ripple.style.pointerEvents = 'none';
+      ripple.style.boxShadow = nextIsDark ? '0 0 25px rgba(0,0,0,0.5)' : '0 0 25px rgba(255,255,255,0.7)';
+      ripple.style.transition = 'transform 600ms cubic-bezier(0.16, 1, 0.3, 1), opacity 250ms ease';
+      document.body.appendChild(ripple);
+
+      requestAnimationFrame(() => {
+        const scale = (endRadius * 2.2) / 24;
+        ripple.style.transform = `translate(-50%, -50%) scale(${scale})`;
+        setTimeout(() => {
+          setSettings((prev) => ({ ...prev, mode: newMode }));
+          ripple.style.opacity = '0';
+          setTimeout(() => {
+            if (ripple.parentNode) ripple.remove();
+            isTransitioningRef.current = false;
+          }, 300);
+        }, 450);
+      });
+      return;
+    }
+
     setSettings((prev) => ({ ...prev, mode: newMode }));
+  };
+
+  const setMode = (newMode, event) => {
+    executeThemeTransition(newMode, event);
   };
 
   const setThemeColor = (newColor) => {
@@ -125,11 +236,9 @@ export function ThemeProvider({ children }) {
     setSettings((prev) => ({ ...prev, fontSize: newSize }));
   };
 
-  const toggleMode = () => {
-    setSettings((prev) => ({
-      ...prev,
-      mode: isDark ? 'light' : 'dark'
-    }));
+  const toggleMode = (event) => {
+    const nextMode = isDark ? 'light' : 'dark';
+    executeThemeTransition(nextMode, event);
   };
 
   const resetDefaults = () => {

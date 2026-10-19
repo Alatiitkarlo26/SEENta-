@@ -26,6 +26,8 @@ import {
   HelpCircle,
   ChevronRight
 } from 'lucide-react';
+import ScrollReveal from '../components/ScrollReveal';
+import { ItemCardSkeleton, LostReportCardSkeleton } from '../components/Skeleton';
 
 export default function StudentDashboardPage() {
   const { user } = useAuth();
@@ -161,18 +163,18 @@ export default function StudentDashboardPage() {
 
         <div className="relative z-10 max-w-5xl mx-auto px-5 sm:px-8 pt-12 pb-16 sm:pt-14 sm:pb-20">
           <div className="max-w-2xl">
-            <p className="text-[11px] font-medium tracking-wide uppercase text-slate-400/80 mb-3">
+            <p className="animate-fadeIn text-[11px] font-medium tracking-wide uppercase text-slate-400/80 mb-3">
               Polytechnic University of the Philippines: Biñan Campus
             </p>
-            <h1 className="text-3xl sm:text-[2.75rem] font-bold tracking-tight text-white leading-[1.1]">
+            <h1 className="animate-fadeInUp text-3xl sm:text-[2.75rem] font-bold tracking-tight text-white leading-[1.1]">
               Welcome back,<br />{firstName}.
             </h1>
-            <p className="mt-4 text-sm sm:text-base text-slate-400 leading-relaxed max-w-lg">
+            <p className="animate-fadeInUp [animation-delay:100ms] text-sm sm:text-base text-slate-400 leading-relaxed max-w-lg mt-4">
               A centralized platform for reporting, tracking, and recovering lost and found items across campus.
             </p>
 
             {/* Quick Actions */}
-            <div className="mt-7 flex flex-wrap gap-3">
+            <div className="animate-fadeInUp [animation-delay:180ms] mt-7 flex flex-wrap gap-3">
               <button
                 type="button"
                 onClick={() => setShowReportLostModal(true)}
@@ -192,7 +194,7 @@ export default function StudentDashboardPage() {
             </div>
 
             {/* Stats row */}
-            <div className="mt-6 flex items-center gap-5 text-xs text-slate-500">
+            <div className="animate-fadeIn [animation-delay:260ms] mt-6 flex items-center gap-5 text-xs text-slate-500">
               <span>{foundItems.length} items logged</span>
               <span className="w-px h-3 bg-slate-700" />
               <span>{lostReports.length} reports filed</span>
@@ -216,237 +218,267 @@ export default function StudentDashboardPage() {
 
       {/* ================= SEARCH BAR (floating, overlapping hero) ================= */}
       <section className="max-w-5xl mx-auto px-5 sm:px-8 -mt-7 relative z-20">
-        <div className="relative flex items-center bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-800 focus-within:border-slate-300 dark:focus-within:border-slate-700 focus-within:shadow-2xl transition-all duration-200">
-          <div className="pl-5 text-slate-400 dark:text-slate-500">
-            <Search className="w-[18px] h-[18px]" />
-          </div>
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by item name, color, or location..."
-            className="w-full px-4 py-4 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none bg-transparent"
-          />
-          {searchQuery && (
+        <ScrollReveal threshold={0.05} yOffset={16}>
+          <div className="relative flex items-center bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-800 focus-within:border-slate-300 dark:focus-within:border-slate-700 focus-within:shadow-2xl transition-all duration-200">
+            <div className="pl-5 text-slate-400 dark:text-slate-500">
+              <Search className="w-[18px] h-[18px]" />
+            </div>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by item name, color, or location..."
+              className="w-full px-4 py-4 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none bg-transparent"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="p-2 mr-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+                title="Clear search"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
             <button
               type="button"
-              onClick={() => setSearchQuery('')}
-              className="p-2 mr-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
-              title="Clear search"
+              onClick={() => loadData(true)}
+              disabled={refreshing}
+              className="p-2.5 mr-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+              title="Refresh data"
             >
-              <X className="w-4 h-4" />
+              <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
             </button>
-          )}
-          <button
-            type="button"
-            onClick={() => loadData(true)}
-            disabled={refreshing}
-            className="p-2.5 mr-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
-            title="Refresh data"
-          >
-            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-          </button>
-        </div>
+          </div>
+        </ScrollReveal>
       </section>
 
       {/* ================= MATCH ALERT ================= */}
       {unreadMatches.length > 0 && (
         <section className="max-w-5xl mx-auto px-5 sm:px-8 mt-5">
-          <button
-            type="button"
-            onClick={() => setShowNotifModal(true)}
-            className="w-full p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/50 flex items-center justify-between gap-4 cursor-pointer hover:bg-amber-100/80 dark:hover:bg-amber-950/50 transition-colors group text-left"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0">
-                <Sparkles className="w-4 h-4" />
+          <ScrollReveal threshold={0.05} yOffset={14} delay={30}>
+            <button
+              type="button"
+              onClick={() => setShowNotifModal(true)}
+              className="w-full p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/50 flex items-center justify-between gap-4 cursor-pointer hover:bg-amber-100/80 dark:hover:bg-amber-950/50 transition-colors group text-left"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0">
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                    {unreadMatches.length} potential match{unreadMatches.length > 1 ? 'es' : ''} found
+                  </p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    An item matching your report has been logged. Review to confirm.
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm font-semibold text-slate-900 dark:text-white">
-                  {unreadMatches.length} potential match{unreadMatches.length > 1 ? 'es' : ''} found
-                </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                  An item matching your report has been logged. Review to confirm.
-                </p>
-              </div>
-            </div>
-            <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300 shrink-0 transition-colors" />
-          </button>
+              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300 shrink-0 transition-colors" />
+            </button>
+          </ScrollReveal>
         </section>
       )}
 
       {/* ================= INVENTORY FEED ================= */}
       <section id="inventory-feed" className="max-w-5xl mx-auto px-5 sm:px-8 mt-8 scroll-mt-24">
         {/* Tab bar */}
-        <div className="flex items-end justify-between border-b border-slate-200 dark:border-slate-800 mb-1">
-          <div className="flex items-center gap-0">
-            {tabs.map((tab) => (
-              <button
-                key={tab.key}
-                type="button"
-                onClick={() => setActiveTab(tab.key)}
-                className={`relative px-4 py-3 text-sm font-medium transition-colors duration-200 cursor-pointer select-none ${
-                  activeTab === tab.key
-                    ? 'text-slate-900 dark:text-white'
-                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
-                }`}
-              >
-                <span>{tab.label}</span>
-                <span className={`ml-1.5 text-xs tabular-nums ${
-                  activeTab === tab.key
-                    ? 'text-slate-500 dark:text-slate-400'
-                    : 'text-slate-400 dark:text-slate-500'
-                }`}>
-                  {tab.count}
-                </span>
-                {/* Active underline */}
-                {activeTab === tab.key && (
-                  <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-theme rounded-full" />
-                )}
-              </button>
-            ))}
-          </div>
+        <ScrollReveal threshold={0.05} yOffset={14}>
+          <div className="flex items-end justify-between border-b border-slate-200 dark:border-slate-800 mb-1">
+            <div className="flex items-center gap-0">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.key}
+                  type="button"
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`relative px-4 py-3 text-sm font-medium transition-colors duration-200 cursor-pointer select-none ${
+                    activeTab === tab.key
+                      ? 'text-slate-900 dark:text-white'
+                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
+                  }`}
+                >
+                  <span>{tab.label}</span>
+                  <span className={`ml-1.5 text-xs tabular-nums ${
+                    activeTab === tab.key
+                      ? 'text-slate-500 dark:text-slate-400'
+                      : 'text-slate-400 dark:text-slate-500'
+                  }`}>
+                    {tab.count}
+                  </span>
+                  {/* Active underline */}
+                  {activeTab === tab.key && (
+                    <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-theme rounded-full" />
+                  )}
+                </button>
+              ))}
+            </div>
 
-          {/* Active filter chips (compact) */}
-          <div className="hidden sm:flex items-center gap-2 pb-2.5">
-            {selectedCategory !== 'All' && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                {selectedCategory}
-                <button
-                  type="button"
-                  onClick={() => setSelectedCategory('All')}
-                  className="hover:text-slate-900 dark:hover:text-white cursor-pointer"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              </span>
-            )}
-            {searchQuery && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                &quot;{searchQuery}&quot;
-                <button
-                  type="button"
-                  onClick={() => setSearchQuery('')}
-                  className="hover:text-slate-900 dark:hover:text-white cursor-pointer"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              </span>
-            )}
+            {/* Active filter chips (compact) */}
+            <div className="hidden sm:flex items-center gap-2 pb-2.5">
+              {selectedCategory !== 'All' && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                  {selectedCategory}
+                  <button
+                    type="button"
+                    onClick={() => setSelectedCategory('All')}
+                    className="hover:text-slate-900 dark:hover:text-white cursor-pointer"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              )}
+              {searchQuery && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                  &quot;{searchQuery}&quot;
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery('')}
+                    className="hover:text-slate-900 dark:hover:text-white cursor-pointer"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              )}
+            </div>
           </div>
-        </div>
+        </ScrollReveal>
 
         {/* Category pills */}
-        <div className="py-3 overflow-x-auto custom-scrollbar flex items-center gap-2">
-          {categories.map((cat) => {
-            const isSelected = selectedCategory === cat;
-            return (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-3.5 py-1.5 rounded-full text-xs whitespace-nowrap transition-all duration-200 cursor-pointer ${
-                  isSelected
-                    ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold shadow-xs'
-                    : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-800 dark:hover:text-slate-200 font-medium'
-                }`}
-              >
-                {cat}
-              </button>
-            );
-          })}
-        </div>
+        <ScrollReveal threshold={0.05} delay={40} yOffset={10}>
+          <div className="py-3 overflow-x-auto custom-scrollbar flex items-center gap-2">
+            {categories.map((cat) => {
+              const isSelected = selectedCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-3.5 py-1.5 rounded-full text-xs whitespace-nowrap transition-all duration-200 cursor-pointer ${
+                    isSelected
+                      ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold shadow-xs'
+                      : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-800 dark:hover:text-slate-200 font-medium'
+                  }`}
+                >
+                  {cat}
+                </button>
+              );
+            })}
+          </div>
+        </ScrollReveal>
 
-        {/* Feed content */}
+        {/* Shimmer bar when refreshing data in background */}
+        {refreshing && (
+          <div className="w-full h-1 rounded-full shimmer-bg my-2 animate-fadeIn" />
+        )}
+
+        {/* Feed content with Skeletons */}
         {loading ? (
-          <div className="py-28 text-center">
-            <div className="w-7 h-7 border-2 border-slate-300 dark:border-slate-600 border-t-slate-600 dark:border-t-slate-300 rounded-full animate-spin mx-auto mb-3" />
-            <p className="text-sm text-slate-500 dark:text-slate-400">Loading items...</p>
+          <div className="mt-4">
+            {activeTab === 'my-lost' ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {Array.from({ length: 4 }).map((_, idx) => (
+                  <LostReportCardSkeleton key={idx} delay={idx * 60} />
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Array.from({ length: 6 }).map((_, idx) => (
+                  <ItemCardSkeleton key={idx} delay={idx * 50} />
+                ))}
+              </div>
+            )}
           </div>
         ) : activeTab === 'my-lost' ? (
           /* ================= MY LOST REPORTS ================= */
           <div className="mt-3">
             {displayedLostReports.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {displayedLostReports.map((report) => (
-                  <div
+                {displayedLostReports.map((report, idx) => (
+                  <ScrollReveal
                     key={report.id}
-                    className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200 flex flex-col justify-between"
+                    delay={(idx % 4) * 45}
+                    threshold={0.04}
+                    className="h-full"
                   >
-                    <div className="space-y-3">
-                      <div className="flex items-start justify-between gap-3">
-                        <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
-                          {report.category}
-                        </span>
-                        <span
-                          className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
-                            report.status === 'Matched'
-                              ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300'
-                              : 'bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-300'
-                          }`}
-                        >
-                          {report.status === 'Matched' ? 'Match Found' : report.status || 'Active'}
-                        </span>
-                      </div>
+                    <div
+                      className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200 flex flex-col justify-between h-full"
+                    >
+                      <div className="space-y-3">
+                        <div className="flex items-start justify-between gap-3">
+                          <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                            {report.category}
+                          </span>
+                          <span
+                            className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                              report.status === 'Matched'
+                                ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300'
+                                : 'bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-300'
+                            }`}
+                          >
+                            {report.status === 'Matched' ? 'Match Found' : report.status || 'Active'}
+                          </span>
+                        </div>
 
-                      <div className="flex items-start gap-3.5">
-                        {report.photo_url ? (
-                          <div className="w-14 h-14 rounded-xl overflow-hidden shrink-0 border border-slate-200 dark:border-slate-700">
-                            <img src={report.photo_url} alt="" className="w-full h-full object-cover" />
-                          </div>
-                        ) : (
-                          <div className="w-14 h-14 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-300 dark:text-slate-600 flex items-center justify-center shrink-0">
-                            <Tag className="w-5 h-5" />
-                          </div>
-                        )}
-                        <div className="min-w-0">
-                          <h4 className="text-sm font-semibold text-slate-900 dark:text-white leading-snug truncate">
-                            {report.item_name}
-                          </h4>
-                          {report.color && (
-                            <span className="text-[11px] text-slate-500 dark:text-slate-400">
-                              {report.color}
-                            </span>
+                        <div className="flex items-start gap-3.5">
+                          {report.photo_url ? (
+                            <div className="w-14 h-14 rounded-xl overflow-hidden shrink-0 border border-slate-200 dark:border-slate-700">
+                              <img src={report.photo_url} alt="" className="w-full h-full object-cover" />
+                            </div>
+                          ) : (
+                            <div className="w-14 h-14 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-300 dark:text-slate-600 flex items-center justify-center shrink-0">
+                              <Tag className="w-5 h-5" />
+                            </div>
                           )}
+                          <div className="min-w-0">
+                            <h4 className="text-sm font-semibold text-slate-900 dark:text-white leading-snug truncate">
+                              {report.item_name}
+                            </h4>
+                            {report.color && (
+                              <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                                {report.color}
+                              </span>
+                            )}
+                          </div>
                         </div>
+
+                        <div className="space-y-1 text-xs text-slate-500 dark:text-slate-400">
+                          <div className="flex items-center gap-2">
+                            <MapPin className="w-3.5 h-3.5 shrink-0" />
+                            <span className="truncate">{report.last_known_location}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-3.5 h-3.5 shrink-0" />
+                            <span>{report.date_lost}</span>
+                          </div>
+                        </div>
+
+                        {report.description && (
+                          <p className="text-xs text-slate-400 dark:text-slate-500 line-clamp-2 italic">
+                            &quot;{report.description}&quot;
+                          </p>
+                        )}
                       </div>
 
-                      <div className="space-y-1 text-xs text-slate-500 dark:text-slate-400">
-                        <div className="flex items-center gap-2">
-                          <MapPin className="w-3.5 h-3.5 shrink-0" />
-                          <span className="truncate">{report.last_known_location}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Calendar className="w-3.5 h-3.5 shrink-0" />
-                          <span>{report.date_lost}</span>
-                        </div>
+                      <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+                        <span className="text-[11px] text-slate-400 font-mono">
+                          #{report.id?.slice(0, 8)}
+                        </span>
+                        {report.status === 'Matched' ? (
+                          <button
+                            type="button"
+                            onClick={() => setShowNotifModal(true)}
+                            className="text-xs font-semibold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 transition-colors cursor-pointer flex items-center gap-1"
+                          >
+                            <span>View Match</span>
+                            <ArrowRight className="w-3 h-3" />
+                          </button>
+                        ) : (
+                          <span className="text-[11px] text-slate-400">Scanning...</span>
+                        )}
                       </div>
-
-                      {report.description && (
-                        <p className="text-xs text-slate-400 dark:text-slate-500 line-clamp-2 italic">
-                          &quot;{report.description}&quot;
-                        </p>
-                      )}
                     </div>
-
-                    <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
-                      <span className="text-[11px] text-slate-400 font-mono">
-                        #{report.id?.slice(0, 8)}
-                      </span>
-                      {report.status === 'Matched' ? (
-                        <button
-                          type="button"
-                          onClick={() => setShowNotifModal(true)}
-                          className="text-xs font-semibold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 transition-colors cursor-pointer flex items-center gap-1"
-                        >
-                          <span>View Match</span>
-                          <ArrowRight className="w-3 h-3" />
-                        </button>
-                      ) : (
-                        <span className="text-[11px] text-slate-400">Scanning...</span>
-                      )}
-                    </div>
-                  </div>
+                  </ScrollReveal>
                 ))}
               </div>
             ) : (
@@ -473,81 +505,87 @@ export default function StudentDashboardPage() {
           <div className="mt-3">
             {displayedFoundItems.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {displayedFoundItems.map((item) => {
+                {displayedFoundItems.map((item, idx) => {
                   const coverPhoto = item.photos?.[0]?.photo_url;
                   return (
-                    <div
+                    <ScrollReveal
                       key={item.id}
-                      onClick={() => setSelectedItemForDetail(item)}
-                      className="group rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden cursor-pointer"
+                      delay={(idx % 6) * 45}
+                      threshold={0.04}
+                      className="h-full"
                     >
-                      {/* Photo */}
-                      <div className="relative w-full aspect-[4/3] bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                        {coverPhoto ? (
-                          <img
-                            src={coverPhoto}
-                            alt={item.item_name}
-                            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300 ease-out"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex flex-col items-center justify-center text-slate-300 dark:text-slate-600">
-                            <Package className="w-8 h-8 stroke-[1.5]" />
-                            <span className="text-[11px] mt-1.5">No photo</span>
-                          </div>
-                        )}
-                        {/* Status badge */}
-                        <div className="absolute top-2.5 right-2.5">
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-medium tracking-tight bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-slate-700 dark:text-slate-200 border border-slate-200/70 dark:border-slate-700/70 shadow-2xs">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 shrink-0" />
-                            <span>
-                              {item.status === 'AvailableForClaim' || !item.status || item.status === 'Available'
-                                ? 'Available for Claim'
-                                : item.status === 'ClaimUnderReview'
-                                ? 'Under Review'
-                                : item.status === 'CoordinatingHandover'
-                                ? 'Handover'
-                                : item.status}
+                      <div
+                        onClick={() => setSelectedItemForDetail(item)}
+                        className="group rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden cursor-pointer h-full"
+                      >
+                        {/* Photo */}
+                        <div className="relative w-full aspect-[4/3] bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                          {coverPhoto ? (
+                            <img
+                              src={coverPhoto}
+                              alt={item.item_name}
+                              className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300 ease-out"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex flex-col items-center justify-center text-slate-300 dark:text-slate-600">
+                              <Package className="w-8 h-8 stroke-[1.5]" />
+                              <span className="text-[11px] mt-1.5">No photo</span>
+                            </div>
+                          )}
+                          {/* Status badge */}
+                          <div className="absolute top-2.5 right-2.5">
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-medium tracking-tight bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-slate-700 dark:text-slate-200 border border-slate-200/70 dark:border-slate-700/70 shadow-2xs">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 shrink-0" />
+                              <span>
+                                {item.status === 'AvailableForClaim' || !item.status || item.status === 'Available'
+                                  ? 'Available for Claim'
+                                  : item.status === 'ClaimUnderReview'
+                                  ? 'Under Review'
+                                  : item.status === 'CoordinatingHandover'
+                                  ? 'Handover'
+                                  : item.status}
+                              </span>
                             </span>
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Details */}
-                      <div className="p-4 flex-1 flex flex-col justify-between">
-                        <div>
-                          <div className="flex items-start justify-between gap-2">
-                            <h4 className="text-sm font-semibold text-slate-900 dark:text-white line-clamp-1">
-                              {item.item_name}
-                            </h4>
-                          </div>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                            {item.category}
-                          </p>
-
-                          {/* Meta */}
-                          <div className="mt-3 space-y-1 text-xs text-slate-500 dark:text-slate-400">
-                            <div className="flex items-center gap-1.5">
-                              <MapPin className="w-3 h-3 shrink-0" />
-                              <span className="truncate">{item.location_found}</span>
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                              <Calendar className="w-3 h-3 shrink-0" />
-                              <span>{item.date_found}</span>
-                            </div>
                           </div>
                         </div>
 
-                        <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
-                          <span className="text-[11px] text-slate-400 truncate max-w-[120px]">
-                            {item.finder?.full_name ? `${item.finder.full_name}` : 'Campus Custody'}
-                          </span>
-                          <span className="text-xs font-medium text-theme flex items-center gap-0.5 group-hover:gap-1.5 transition-all duration-200">
-                            View
-                            <ArrowRight className="w-3 h-3" />
-                          </span>
+                        {/* Details */}
+                        <div className="p-4 flex-1 flex flex-col justify-between">
+                          <div>
+                            <div className="flex items-start justify-between gap-2">
+                              <h4 className="text-sm font-semibold text-slate-900 dark:text-white line-clamp-1">
+                                {item.item_name}
+                              </h4>
+                            </div>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                              {item.category}
+                            </p>
+
+                            {/* Meta */}
+                            <div className="mt-3 space-y-1 text-xs text-slate-500 dark:text-slate-400">
+                              <div className="flex items-center gap-1.5">
+                                <MapPin className="w-3 h-3 shrink-0" />
+                                <span className="truncate">{item.location_found}</span>
+                              </div>
+                              <div className="flex items-center gap-1.5">
+                                <Calendar className="w-3 h-3 shrink-0" />
+                                <span>{item.date_found}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+                            <span className="text-[11px] text-slate-400 truncate max-w-[120px]">
+                              {item.finder?.full_name ? `${item.finder.full_name}` : 'Campus Custody'}
+                            </span>
+                            <span className="text-xs font-medium text-theme flex items-center gap-0.5 group-hover:gap-1.5 transition-all duration-200">
+                              View
+                              <ArrowRight className="w-3 h-3" />
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    </ScrollReveal>
                   );
                 })}
               </div>
@@ -578,61 +616,65 @@ export default function StudentDashboardPage() {
 
       {/* ================= RECOVERY PROTOCOL ================= */}
       <section className="max-w-5xl mx-auto px-5 sm:px-8 mt-12 mb-8">
-        <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800">
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
-            <div>
-              <h3 className="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-theme" />
-                Property Recovery Protocol
-              </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Three steps to recover your belongings at the Campus Security Office.
-              </p>
-            </div>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-50 dark:bg-slate-800 text-xs text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 shrink-0">
-              <Building2 className="w-3.5 h-3.5" />
-              Mon–Sat, 8 AM – 3 PM
-            </span>
-          </div>
-
-          {/* Steps */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            {[
-              {
-                step: '1',
-                title: 'Verify Ownership',
-                desc: 'Confirm identifiers like serial numbers, scratches, stickers, or lock screens to prove legitimate ownership.'
-              },
-              {
-                step: '2',
-                title: 'Coordinate Claim',
-                desc: 'Submit an inquiry through SEENta to arrange safe turnover with the finder or campus custodian.'
-              },
-              {
-                step: '3',
-                title: 'Present Your ID',
-                desc: 'Complete recovery in person at the Security Office by presenting your official PUP university ID.'
-              }
-            ].map((s, i) => (
-              <div key={s.step} className="flex gap-4">
-                <div className="shrink-0">
-                  <span className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-600 dark:text-slate-300 flex items-center justify-center border border-slate-200 dark:border-slate-700">
-                    {s.step}
-                  </span>
-                </div>
-                <div>
-                  <h5 className="text-xs font-semibold text-slate-900 dark:text-white">
-                    {s.title}
-                  </h5>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mt-1">
-                    {s.desc}
-                  </p>
-                </div>
+        <ScrollReveal threshold={0.05} yOffset={22}>
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800">
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
+              <div>
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-theme" />
+                  Property Recovery Protocol
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Three steps to recover your belongings at the Campus Security Office.
+                </p>
               </div>
-            ))}
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-50 dark:bg-slate-800 text-xs text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 shrink-0">
+                <Building2 className="w-3.5 h-3.5" />
+                Mon–Sat, 8 AM – 3 PM
+              </span>
+            </div>
+
+            {/* Steps */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+              {[
+                {
+                  step: '1',
+                  title: 'Verify Ownership',
+                  desc: 'Confirm identifiers like serial numbers, scratches, stickers, or lock screens to prove legitimate ownership.'
+                },
+                {
+                  step: '2',
+                  title: 'Coordinate Claim',
+                  desc: 'Submit an inquiry through SEENta to arrange safe turnover with the finder or campus custodian.'
+                },
+                {
+                  step: '3',
+                  title: 'Present Your ID',
+                  desc: 'Complete recovery in person at the Security Office by presenting your official PUP university ID.'
+                }
+              ].map((s, i) => (
+                <ScrollReveal key={s.step} threshold={0.05} delay={i * 80} yOffset={12}>
+                  <div className="flex gap-4">
+                    <div className="shrink-0">
+                      <span className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-600 dark:text-slate-300 flex items-center justify-center border border-slate-200 dark:border-slate-700">
+                        {s.step}
+                      </span>
+                    </div>
+                    <div>
+                      <h5 className="text-xs font-semibold text-slate-900 dark:text-white">
+                        {s.title}
+                      </h5>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mt-1">
+                        {s.desc}
+                      </p>
+                    </div>
+                  </div>
+                </ScrollReveal>
+              ))}
+            </div>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* ================= MODALS ================= */}

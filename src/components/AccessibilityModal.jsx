@@ -66,7 +66,7 @@ export default function AccessibilityModal({ isOpen, onClose }) {
             <div className="grid grid-cols-3 gap-2.5">
               <button
                 type="button"
-                onClick={() => setMode('light')}
+                onClick={(e) => setMode('light', e)}
                 className={`flex flex-col items-center justify-center p-3.5 rounded-2xl border transition-all cursor-pointer ${
                   mode === 'light'
                     ? 'border-theme bg-theme-light dark:bg-slate-800/80 shadow-xs ring-2 ring-theme/20'
@@ -80,7 +80,7 @@ export default function AccessibilityModal({ isOpen, onClose }) {
 
               <button
                 type="button"
-                onClick={() => setMode('dark')}
+                onClick={(e) => setMode('dark', e)}
                 className={`flex flex-col items-center justify-center p-3.5 rounded-2xl border transition-all cursor-pointer ${
                   mode === 'dark'
                     ? 'border-theme bg-theme-light dark:bg-slate-800/80 shadow-xs ring-2 ring-theme/20'
@@ -94,7 +94,7 @@ export default function AccessibilityModal({ isOpen, onClose }) {
 
               <button
                 type="button"
-                onClick={() => setMode('system')}
+                onClick={(e) => setMode('system', e)}
                 className={`flex flex-col items-center justify-center p-3.5 rounded-2xl border transition-all cursor-pointer ${
                   mode === 'system'
                     ? 'border-theme bg-theme-light dark:bg-slate-800/80 shadow-xs ring-2 ring-theme/20'

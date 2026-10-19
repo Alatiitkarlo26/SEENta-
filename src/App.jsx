@@ -7,6 +7,7 @@ import AuthPage from './pages/AuthPage';
 import StudentDashboardPage from './pages/StudentDashboardPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import AboutUsPage from './pages/AboutUsPage';
+import { AppLoadingSkeleton } from './components/Skeleton';
 import './App.css';
 
 function MainContent() {
@@ -14,14 +15,7 @@ function MainContent() {
   const [activeTab, setActiveTab] = useState('student-dashboard');
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 transition-colors">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 border-4 border-theme border-t-transparent rounded-full animate-spin"></div>
-          <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">Loading SEENta System...</span>
-        </div>
-      </div>
-    );
+    return <AppLoadingSkeleton />;
   }
 
   // If user is not authenticated, render the centered AuthPage with smooth transitions

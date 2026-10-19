@@ -227,7 +227,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
               {/* Quick Dark/Light Toggle */}
               <button
                 type="button"
-                onClick={toggleMode}
+                onClick={(e) => toggleMode(e)}
                 className="w-8 h-8 flex items-center justify-center rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-800/40 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-black dark:hover:text-white transition cursor-pointer shadow-2xs active:scale-95"
                 title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
                 aria-label="Toggle dark mode"
@@ -301,7 +301,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
             <div className="flex sm:hidden items-center gap-1 -mr-1 sm:-mr-2">
               <button
                 type="button"
-                onClick={toggleMode}
+                onClick={(e) => toggleMode(e)}
                 className="w-8 h-8 flex items-center justify-center rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-800/40 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 cursor-pointer shadow-2xs active:scale-95"
                 title="Toggle Mode"
                 aria-label="Toggle dark mode"
