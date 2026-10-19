@@ -315,7 +315,7 @@ export default function StudentDashboardPage() {
       )}
 
       {/* ================= MAIN DIRECTORY & DISCOVERY FEED ================= */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+      <section id="inventory-feed" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 scroll-mt-24">
         {/* Feed Controls Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4">
           {/* Segmented Controller (Tabs) */}
