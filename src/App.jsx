@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import AuthPage from './pages/AuthPage';
 import StudentDashboardPage from './pages/StudentDashboardPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
+import AboutUsPage from './pages/AboutUsPage';
 import './App.css';
 
 function MainContent() {
@@ -35,8 +36,8 @@ function MainContent() {
     );
   }
 
-  // When logged in, render the dashboard shell with Navbar and Footer
-  const currentTab = role === 'admin' ? 'admin-dashboard' : activeTab;
+  // When logged in, render the shell with Navbar, Tab Content, and Footer
+  const currentTab = activeTab === 'about-us' ? 'about-us' : (role === 'admin' ? 'admin-dashboard' : activeTab);
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-theme selection:text-white transition-colors duration-200">
@@ -49,6 +50,10 @@ function MainContent() {
 
         {currentTab === 'admin-dashboard' && (
           <AdminDashboardPage />
+        )}
+
+        {currentTab === 'about-us' && (
+          <AboutUsPage />
         )}
       </main>
 

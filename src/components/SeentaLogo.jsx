@@ -47,7 +47,7 @@ export default function SeentaLogo({
 
       {showSubtitle && (
         <span
-          className={`text-[10px] text-slate-500 dark:text-slate-400 font-medium tracking-tight mt-1 ${subtitleClassName}`}
+          className={`text-[10px] text-slate-500 dark:text-slate-400 font-medium tracking-tight -mt-0.5 sm:-mt-1 ${subtitleClassName}`}
         >
           {subtitle}
         </span>
