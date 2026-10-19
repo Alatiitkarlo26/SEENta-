@@ -13,7 +13,7 @@ import {
   ShieldCheck,
   Sun,
   Moon,
-  Eye,
+  PersonStanding,
   Bell
 } from 'lucide-react';
 
@@ -247,7 +247,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
                 title="Accessibility & Appearance"
                 aria-label="Open appearance and accessibility settings"
               >
-                <Eye className="w-3.5 h-3.5 text-theme" />
+                <PersonStanding className="w-3.5 h-3.5 text-theme" />
                 <span className="hidden lg:inline">Accessibility</span>
               </button>
 
@@ -316,7 +316,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
                 title="Accessibility & Appearance"
                 aria-label="Open appearance and accessibility settings"
               >
-                <Eye className="w-5 h-5 text-theme" />
+                <PersonStanding className="w-5 h-5 text-theme" />
               </button>
 
               <button
@@ -444,7 +444,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
               className="w-full py-2.5 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-semibold flex items-center justify-between cursor-pointer"
             >
               <span className="flex items-center gap-2">
-                <Eye className="w-4 h-4 text-theme" />
+                <PersonStanding className="w-4 h-4 text-theme" />
                 <span>Accessibility &amp; Appearance</span>
               </span>
             </button>

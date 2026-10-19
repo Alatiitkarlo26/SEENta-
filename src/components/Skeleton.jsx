@@ -124,6 +124,11 @@ export function AppLoadingSkeleton() {
             <div className="h-10 w-36 rounded-full shimmer-bg opacity-40" />
             <div className="h-10 w-36 rounded-full shimmer-bg opacity-20" />
           </div>
+          <div className="pt-2 flex items-center gap-4">
+            <div className="h-3 w-24 rounded-md shimmer-bg opacity-30" />
+            <div className="h-3 w-24 rounded-md shimmer-bg opacity-30" />
+            <div className="h-3 w-24 rounded-md shimmer-bg opacity-30" />
+          </div>
         </div>
       </div>
 

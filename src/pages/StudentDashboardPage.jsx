@@ -7,6 +7,7 @@ import ReportLostItemModal from '../components/ReportLostItemModal';
 import ItemDetailModal from '../components/ItemDetailModal';
 import NotificationsModal from '../components/NotificationsModal';
 import { itemService } from '../services/itemService';
+import { authService } from '../services/authService';
 import { otpService } from '../services/otpService';
 import { ITEM_CATEGORIES } from '../constants/itemPresets';
 import {
@@ -39,6 +40,7 @@ export default function StudentDashboardPage() {
   const [foundItems, setFoundItems] = useState([]);
   const [lostReports, setLostReports] = useState([]);
   const [notifications, setNotifications] = useState([]);
+  const [activeUsersCount, setActiveUsersCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -56,15 +58,17 @@ export default function StudentDashboardPage() {
     else setLoading(true);
 
     try {
-      const [foundData, lostData, notifsData] = await Promise.all([
+      const [foundData, lostData, notifsData, usersData] = await Promise.all([
         itemService.getFoundPosts(),
         user?.id ? itemService.getLostReports({ userId: user.id }) : [],
-        user?.id ? itemService.getNotifications(user.id) : []
+        user?.id ? itemService.getNotifications(user.id) : [],
+        authService.getAllUsers()
       ]);
 
       setFoundItems(foundData || []);
       setLostReports(lostData || []);
       setNotifications(notifsData || []);
+      setActiveUsersCount(Array.isArray(usersData) && usersData.length > 0 ? usersData.length : (user ? 1 : 0));
     } catch (err) {
       console.error('Failed to load dashboard data:', err);
     } finally {
@@ -194,10 +198,12 @@ export default function StudentDashboardPage() {
             </div>
 
             {/* Stats row */}
-            <div className="animate-fadeIn [animation-delay:260ms] mt-6 flex items-center gap-5 text-xs text-slate-500">
+            <div className="animate-fadeIn [animation-delay:260ms] mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-slate-500">
               <span>{foundItems.length} items logged</span>
               <span className="w-px h-3 bg-slate-700" />
               <span>{lostReports.length} reports filed</span>
+              <span className="w-px h-3 bg-slate-700" />
+              <span>{activeUsersCount} active users</span>
               {unreadMatches.length > 0 && (
                 <>
                   <span className="w-px h-3 bg-slate-700" />
