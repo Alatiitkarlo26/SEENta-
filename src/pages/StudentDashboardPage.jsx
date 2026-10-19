@@ -22,7 +22,7 @@ import {
   RefreshCw,
   ShieldCheck,
   ArrowRight,
-  Building2,
+  Clock,
   X,
   HelpCircle,
   ChevronRight
@@ -250,8 +250,9 @@ export default function StudentDashboardPage() {
               type="button"
               onClick={() => loadData(true)}
               disabled={refreshing}
-              className="p-2.5 mr-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+              className="p-2.5 mr-2 text-red-600 dark:text-red-400 bg-red-500/[0.08] dark:bg-red-500/[0.14] hover:bg-red-500/[0.16] dark:hover:bg-red-500/[0.22] border border-red-500/20 dark:border-red-500/30 rounded-xl transition-all duration-200 cursor-pointer active:scale-95 disabled:opacity-50"
               title="Refresh data"
+              aria-label="Refresh inventory data"
             >
               <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
             </button>
@@ -636,48 +637,76 @@ export default function StudentDashboardPage() {
                 </p>
               </div>
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-50 dark:bg-slate-800 text-xs text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 shrink-0">
-                <Building2 className="w-3.5 h-3.5" />
+                <Clock className="w-3.5 h-3.5" />
                 Mon–Sat, 8 AM – 3 PM
               </span>
             </div>
 
-            {/* Steps */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-              {[
-                {
-                  step: '1',
-                  title: 'Verify Ownership',
-                  desc: 'Confirm identifiers like serial numbers, scratches, stickers, or lock screens to prove legitimate ownership.'
-                },
-                {
-                  step: '2',
-                  title: 'Coordinate Claim',
-                  desc: 'Submit an inquiry through SEENta to arrange safe turnover with the finder or campus custodian.'
-                },
-                {
-                  step: '3',
-                  title: 'Present Your ID',
-                  desc: 'Complete recovery in person at the Security Office by presenting your official PUP university ID.'
-                }
-              ].map((s, i) => (
-                <ScrollReveal key={s.step} threshold={0.05} delay={i * 80} yOffset={12}>
-                  <div className="flex gap-4">
-                    <div className="shrink-0">
-                      <span className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-600 dark:text-slate-300 flex items-center justify-center border border-slate-200 dark:border-slate-700">
-                        {s.step}
-                      </span>
+            {/* Steps Progress Flow */}
+            <div className="relative">
+              {/* Desktop connecting progress track */}
+              <div
+                className="hidden md:block absolute top-5 left-[16.6%] right-[16.6%] h-[2px] bg-slate-200/90 dark:bg-slate-800 -translate-y-1/2"
+                aria-hidden="true"
+              >
+                <div className="h-full w-full bg-gradient-to-r from-red-500/70 via-red-500/45 to-red-500/25 rounded-full" />
+              </div>
+
+              {/* Mobile connecting vertical line */}
+              <div
+                className="md:hidden absolute top-5 bottom-8 left-5 w-[2px] bg-slate-200/90 dark:bg-slate-800 -translate-x-1/2"
+                aria-hidden="true"
+              >
+                <div className="h-full w-full bg-gradient-to-b from-red-500/70 via-red-500/45 to-red-500/25 rounded-full" />
+              </div>
+
+              {/* Steps Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 lg:gap-10">
+                {[
+                  {
+                    step: '1',
+                    stage: 'STEP 01',
+                    title: 'Verify Ownership',
+                    desc: 'Confirm identifiers like serial numbers, scratches, stickers, or lock screens to prove legitimate ownership.'
+                  },
+                  {
+                    step: '2',
+                    stage: 'STEP 02',
+                    title: 'Coordinate Claim',
+                    desc: 'Submit an inquiry through SEENta to arrange safe turnover with the finder or campus custodian.'
+                  },
+                  {
+                    step: '3',
+                    stage: 'STEP 03',
+                    title: 'Present Your ID',
+                    desc: 'Complete recovery in person at the Security Office by presenting your official PUP university ID.'
+                  }
+                ].map((s, i) => (
+                  <ScrollReveal key={s.step} threshold={0.05} delay={i * 80} yOffset={12}>
+                    <div className="group relative flex md:flex-col items-start md:items-center gap-4 md:gap-0 cursor-default transition-transform duration-300 md:hover:-translate-y-1">
+                      {/* Step Indicator Node with Red Shade */}
+                      <div className="relative z-10 w-10 h-10 rounded-full bg-white dark:bg-slate-900 p-0.5 shrink-0 flex items-center justify-center">
+                        <span className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-red-500/[0.08] dark:bg-red-500/[0.14] text-xs sm:text-sm font-mono font-bold text-red-700 dark:text-red-400 flex items-center justify-center border border-red-500/25 dark:border-red-500/35 shadow-2xs group-hover:scale-110 group-hover:bg-red-500/[0.18] group-hover:border-red-500/50 group-hover:ring-4 group-hover:ring-red-500/10 dark:group-hover:ring-red-500/20 transition-all duration-300">
+                          {s.step}
+                        </span>
+                      </div>
+
+                      {/* Step Content */}
+                      <div className="pt-0.5 md:pt-3.5 md:text-center w-full px-2.5 py-2 rounded-xl transition-colors duration-300 group-hover:bg-slate-50/70 dark:group-hover:bg-slate-800/30">
+                        <span className="inline-block text-xs sm:text-sm font-mono font-bold uppercase tracking-wider text-red-600 dark:text-red-400 mb-0.5 group-hover:text-red-700 dark:group-hover:text-red-300 transition-colors">
+                          {s.stage}
+                        </span>
+                        <h5 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white tracking-tight group-hover:text-theme transition-colors">
+                          {s.title}
+                        </h5>
+                        <p className="text-xs sm:text-[13px] text-slate-500 dark:text-slate-400 leading-relaxed mt-1 md:max-w-xs md:mx-auto">
+                          {s.desc}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h5 className="text-xs font-semibold text-slate-900 dark:text-white">
-                        {s.title}
-                      </h5>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mt-1">
-                        {s.desc}
-                      </p>
-                    </div>
-                  </div>
-                </ScrollReveal>
-              ))}
+                  </ScrollReveal>
+                ))}
+              </div>
             </div>
           </div>
         </ScrollReveal>
