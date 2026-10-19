@@ -180,7 +180,8 @@ html {
   .animate-slide-right,
   .animate-slide-left,
   .animate-shake,
-  .animate-float {
+  .animate-float,
+  .animate-marquee {
     animation: none !important;
   }
   .shimmer-bg::after {
@@ -313,5 +314,35 @@ html.high-contrast button {
 
 .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: rgba(148, 163, 184, 0.6);
+}
+
+/* Continuous Smooth Left-Moving Marquee for Team Preview */
+@keyframes marqueeLeft {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marqueeLeft 32s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Hide scrollbar for smooth scrollable containers */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 

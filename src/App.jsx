@@ -81,7 +81,11 @@ function MainContent() {
         )}
 
         {currentTab === 'about-us' && (
-          <AboutUsPage />
+          <AboutUsPage
+            onNavigateBack={() =>
+              setActiveTab(role === 'admin' ? 'admin-dashboard' : 'student-dashboard')
+            }
+          />
         )}
 
         {currentTab === 'privacy-terms' && (
