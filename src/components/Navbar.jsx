@@ -25,6 +25,9 @@ export default function Navbar({ activeTab, setActiveTab }) {
   const [isNotifModalOpen, setIsNotifModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [alertsTrigger, setAlertsTrigger] = useState('desktop');
+  const desktopAlertsBtnRef = useRef(null);
+  const mobileAlertsBtnRef = useRef(null);
 
   // Active section for navigation: 'home' | 'inventory' | 'about-us'
   const [activeNav, setActiveNav] = useState(() => (activeTab === 'about-us' ? 'about-us' : 'home'));
@@ -85,14 +88,16 @@ export default function Navbar({ activeTab, setActiveTab }) {
   useEffect(() => {
     if (activeTab === 'about-us') {
       setActiveNav('about-us');
-    } else if (activeNav === 'about-us') {
+    } else if (activeTab === 'privacy-terms') {
+      setActiveNav('privacy-terms');
+    } else if (activeNav === 'about-us' || activeNav === 'privacy-terms') {
       setActiveNav('home');
     }
   }, [activeTab]);
 
   // Scroll spy: smoothly update activeNav between 'home' and 'inventory' as user scrolls
   useEffect(() => {
-    if (activeTab === 'about-us') return;
+    if (activeTab === 'about-us' || activeTab === 'privacy-terms') return;
 
     const handleScroll = () => {
       const inventoryEl = document.getElementById('inventory-feed');
@@ -135,6 +140,22 @@ export default function Navbar({ activeTab, setActiveTab }) {
   const handleAboutUsClick = () => {
     setActiveNav('about-us');
     setActiveTab('about-us');
+  };
+
+  const handleViewNotificationItem = (referenceId) => {
+    setIsNotifModalOpen(false);
+    fetchUnreadCount();
+    if (activeTab !== 'student-dashboard' && role !== 'admin') {
+      setActiveTab('student-dashboard');
+    }
+    setTimeout(() => {
+      const el = document.getElementById(`item-${referenceId}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('ring-2', 'ring-theme');
+        setTimeout(() => el.classList.remove('ring-2', 'ring-theme'), 2000);
+      }
+    }, 200);
   };
 
   return (
@@ -251,15 +272,26 @@ export default function Navbar({ activeTab, setActiveTab }) {
                 <span className="hidden lg:inline">Accessibility</span>
               </button>
 
-              {/* Alerts / Notifications Modal Opener (next to profile beside accessibility) */}
+              {/* Alerts / Notifications Trigger (next to profile beside accessibility) */}
               <button
+                ref={desktopAlertsBtnRef}
                 type="button"
-                onClick={() => setIsNotifModalOpen(true)}
-                className="relative flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition cursor-pointer shadow-2xs group"
+                onClick={() => {
+                  setAlertsTrigger('desktop');
+                  setIsNotifModalOpen((prev) => !prev);
+                }}
+                className={`relative flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border transition-all cursor-pointer shadow-2xs group active:scale-95 ${
+                  isNotifModalOpen && alertsTrigger === 'desktop'
+                    ? 'border-theme bg-theme/[0.08] text-theme ring-2 ring-theme/20'
+                    : 'border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200'
+                }`}
                 title="View Match Alerts & Notifications"
                 aria-label="Open appearance and alerts"
+                aria-expanded={isNotifModalOpen && alertsTrigger === 'desktop'}
               >
-                <Bell className="w-3.5 h-3.5 text-amber-500 group-hover:scale-110 transition-transform" />
+                <Bell className={`w-3.5 h-3.5 transition-transform group-hover:scale-110 ${
+                  isNotifModalOpen && alertsTrigger === 'desktop' ? 'text-theme' : 'text-amber-500'
+                }`} />
                 <span className="hidden lg:inline">Alerts</span>
                 {unreadCount > 0 && (
                   <span className="px-1.5 py-0.2 text-[10px] font-bold rounded-full bg-amber-500 text-white leading-tight">
@@ -287,14 +319,29 @@ export default function Navbar({ activeTab, setActiveTab }) {
                 </div>
               </div>
 
-              {/* Sign Out */}
-              <button
-                onClick={logout}
-                className="p-2 text-slate-500 dark:text-slate-400 hover:text-black dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition cursor-pointer"
-                title="Sign Out"
-              >
-                <LogOut className="w-4 h-4" />
-              </button>
+              {/* Sign Out with Cloud Reminder Tooltip */}
+              <div className="relative group">
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="w-8 h-8 flex items-center justify-center rounded-full border border-slate-200/90 dark:border-slate-700/80 bg-slate-100/90 dark:bg-slate-800/90 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/80 dark:hover:bg-slate-700/80 hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-200 cursor-pointer shadow-2xs active:scale-95"
+                  aria-label="Sign out of your account"
+                >
+                  <LogOut className="w-3.5 h-3.5 transition-transform group-hover:scale-105" />
+                </button>
+
+                {/* Cloud Text Bubble (Quiet hover reminder, adapts to light/dark mode) */}
+                <div
+                  role="tooltip"
+                  className="absolute top-full right-0 mt-2.5 z-50 pointer-events-none opacity-0 invisible translate-y-1 scale-95 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100 transition-all duration-200 ease-out delay-75"
+                >
+                  <div className="relative px-3.5 py-1.5 bg-white/95 dark:bg-slate-800/95 text-slate-800 dark:text-slate-100 backdrop-blur-md rounded-2xl shadow-lg shadow-slate-900/10 dark:shadow-black/50 border border-slate-200/90 dark:border-slate-700/80 text-[11px] font-medium whitespace-nowrap tracking-tight">
+                    {/* Cloud Bubble Arrow Notch */}
+                    <div className="absolute -top-1 right-3.5 w-2 h-2 rotate-45 bg-white/95 dark:bg-slate-800/95 border-t border-l border-slate-200/90 dark:border-slate-700/80" />
+                    <span>Sign out of your account?</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Mobile Actions: Dark Mode + Theme + Alerts + Hamburger */}
@@ -320,13 +367,22 @@ export default function Navbar({ activeTab, setActiveTab }) {
               </button>
 
               <button
+                ref={mobileAlertsBtnRef}
                 type="button"
-                onClick={() => setIsNotifModalOpen(true)}
-                className="relative p-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                onClick={() => {
+                  setAlertsTrigger('mobile');
+                  setIsNotifModalOpen((prev) => !prev);
+                }}
+                className={`relative p-2 rounded-lg cursor-pointer transition-all active:scale-95 ${
+                  isNotifModalOpen && alertsTrigger === 'mobile'
+                    ? 'bg-theme/[0.08] text-theme ring-2 ring-theme/20'
+                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
                 title="Alerts & Notifications"
                 aria-label="Open alerts"
+                aria-expanded={isNotifModalOpen && alertsTrigger === 'mobile'}
               >
-                <Bell className="w-5 h-5 text-amber-500" />
+                <Bell className={`w-5 h-5 transition-transform ${isNotifModalOpen && alertsTrigger === 'mobile' ? 'text-theme' : 'text-amber-500'}`} />
                 {unreadCount > 0 && (
                   <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-amber-500 ring-2 ring-white dark:ring-slate-900" />
                 )}
@@ -419,6 +475,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
             {/* Alerts & Notifications Trigger */}
             <button
               onClick={() => {
+                setAlertsTrigger('mobile');
                 setIsNotifModalOpen(true);
                 setMobileMenuOpen(false);
               }}
@@ -470,13 +527,15 @@ export default function Navbar({ activeTab, setActiveTab }) {
         onClose={() => setIsA11yModalOpen(false)}
       />
 
-      {/* Notifications & Match Alerts Modal */}
+      {/* Notifications & Match Alerts Dropdown Popover */}
       <NotificationsModal
         isOpen={isNotifModalOpen}
+        anchorRef={alertsTrigger === 'mobile' ? mobileAlertsBtnRef : desktopAlertsBtnRef}
         onClose={() => {
           setIsNotifModalOpen(false);
           fetchUnreadCount();
         }}
+        onViewItem={handleViewNotificationItem}
       />
 
       {/* Quick Report Lost Item Modal */}

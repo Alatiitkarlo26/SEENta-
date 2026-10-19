@@ -62,6 +62,15 @@
   }
 }
 
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -77,12 +86,28 @@ html {
   }
 }
 
+@keyframes popoverEnter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .animate-fadeIn {
   animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-modalEnter {
   animation: modalEnter 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-popoverEnter {
+  animation: popoverEnter 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: top right;
 }
 
 .animate-fadeInUp {
@@ -99,6 +124,10 @@ html {
 
 .animate-shake {
   animation: shake 0.35s ease-in-out;
+}
+
+.animate-float {
+  animation: float 3.2s ease-in-out infinite;
 }
 
 /* Apple & Mobbin-Grade Skeleton Shimmer Wave */
@@ -146,10 +175,12 @@ html {
   }
   .animate-fadeIn,
   .animate-modalEnter,
+  .animate-popoverEnter,
   .animate-fadeInUp,
   .animate-slide-right,
   .animate-slide-left,
-  .animate-shake {
+  .animate-shake,
+  .animate-float {
     animation: none !important;
   }
   .shimmer-bg::after {

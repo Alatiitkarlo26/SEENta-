@@ -3,8 +3,21 @@ import TermsPrivacyModal from './TermsPrivacyModal';
 import ScrollReveal from './ScrollReveal';
 import { MapPin, Clock, Mail } from 'lucide-react';
 
-export default function Footer() {
+export default function Footer({ onNavigateToTab }) {
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
+
+  const handleLegalClick = (subTab, sectionId = null) => {
+    if (onNavigateToTab) {
+      onNavigateToTab('privacy-terms', subTab);
+      if (sectionId) {
+        setTimeout(() => {
+          document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+        }, 150);
+      }
+    } else {
+      setIsTermsModalOpen(true);
+    }
+  };
 
   return (
     <>
@@ -124,7 +137,7 @@ export default function Footer() {
             <div className="flex flex-wrap items-center gap-3 sm:gap-4">
               <button
                 type="button"
-                onClick={() => setIsTermsModalOpen(true)}
+                onClick={() => handleLegalClick('privacy')}
                 className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
               >
                 Privacy Policy
@@ -132,13 +145,19 @@ export default function Footer() {
               <span>&bull;</span>
               <button
                 type="button"
-                onClick={() => setIsTermsModalOpen(true)}
+                onClick={() => handleLegalClick('terms')}
                 className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
               >
                 Terms of Use
               </button>
               <span>&bull;</span>
-              <span>Official Handover Protocol</span>
+              <button
+                type="button"
+                onClick={() => handleLegalClick('terms', 'sec-5')}
+                className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+              >
+                Official Handover Protocol
+              </button>
             </div>
           </div>
         </div>
