@@ -61,6 +61,8 @@ export default function AboutUsPage({ onNavigateBack }) {
   const [isDragging, setIsDragging] = useState(false);
   const isDraggingRef = useRef(false);
   const lastPointerX = useRef(0);
+  const posRef = useRef(0);
+  const lastTimeRef = useRef(0);
 
   // Quadruplicate array for seamless infinite wraparound
   const carouselItems = [...TEAM_MEMBERS, ...TEAM_MEMBERS, ...TEAM_MEMBERS, ...TEAM_MEMBERS];
@@ -68,50 +70,77 @@ export default function AboutUsPage({ onNavigateBack }) {
   // Helper to measure exact width of 1 complete set including gaps
   const getLoopWidth = () => {
     const el = carouselRef.current;
-    if (el && el.children && el.children.length > TEAM_MEMBERS.length) {
+    if (!el) return 0;
+    if (el.children && el.children.length >= TEAM_MEMBERS.length * 2) {
       const first = el.children[0];
       const nextSet = el.children[TEAM_MEMBERS.length];
       if (first && nextSet) {
-        return nextSet.offsetLeft - first.offsetLeft;
+        const dist = nextSet.getBoundingClientRect().left - first.getBoundingClientRect().left;
+        if (dist > 100) return dist;
       }
     }
-    return el ? el.scrollWidth / 4 : 0;
+    return el.scrollWidth > 0 ? el.scrollWidth / 4 : 0;
+  };
+
+  // Helper to wrap position seamlessly within the middle sets
+  const wrapPosition = (width) => {
+    if (width <= 0) return;
+    if (posRef.current <= width * 0.5) {
+      posRef.current += width;
+      if (carouselRef.current) carouselRef.current.scrollLeft = posRef.current;
+    } else if (posRef.current >= width * 2.5) {
+      posRef.current -= width;
+      if (carouselRef.current) carouselRef.current.scrollLeft = posRef.current;
+    }
   };
 
   // Initialize scroll position to middle on mount
   useEffect(() => {
     const el = carouselRef.current;
-    if (el) {
-      const timer = setTimeout(() => {
-        const loopWidth = getLoopWidth();
-        if (loopWidth > 0) {
-          el.scrollLeft = loopWidth * 1.5;
-        }
-      }, 50);
+    if (!el) return;
+
+    const initPos = () => {
+      const loopWidth = getLoopWidth();
+      if (loopWidth > 0) {
+        posRef.current = loopWidth * 1.5;
+        el.scrollLeft = posRef.current;
+        return true;
+      }
+      return false;
+    };
+
+    if (!initPos()) {
+      const timer = setTimeout(initPos, 60);
       return () => clearTimeout(timer);
     }
   }, []);
 
   // Constantly move in a loop without stopping using requestAnimationFrame
   useEffect(() => {
-    const el = carouselRef.current;
-    if (!el) return;
-
     let animId;
-    const speed = 0.38; // Slower, gentle continuous drift to the right
+    // Gentle continuous glide speed (pixels per second)
+    const speed = 28;
+    lastTimeRef.current = performance.now();
 
-    const step = () => {
+    const step = (now) => {
+      const el = carouselRef.current;
       if (el) {
-        // Constantly move without stopping
-        el.scrollLeft -= speed;
+        const delta = Math.min((now - lastTimeRef.current) / 1000, 0.05);
+        lastTimeRef.current = now;
 
-        const loopWidth = getLoopWidth();
-        if (loopWidth > 0) {
-          if (el.scrollLeft <= loopWidth * 0.5) {
-            el.scrollLeft += loopWidth;
-          } else if (el.scrollLeft >= loopWidth * 2.5) {
-            el.scrollLeft -= loopWidth;
+        // If user is NOT dragging, continuously move smoothly
+        if (!isDraggingRef.current) {
+          // If the user scrolled natively (trackpad / mousewheel), sync position
+          if (Math.abs(el.scrollLeft - posRef.current) > 2) {
+            posRef.current = el.scrollLeft;
           }
+
+          // Smooth continuous drift towards the right
+          posRef.current -= speed * delta;
+          el.scrollLeft = posRef.current;
+
+          const loopWidth = getLoopWidth();
+          wrapPosition(loopWidth);
         }
       }
       animId = requestAnimationFrame(step);
@@ -130,6 +159,7 @@ export default function AboutUsPage({ onNavigateBack }) {
     isDraggingRef.current = true;
     setIsDragging(true);
     lastPointerX.current = e.pageX;
+    posRef.current = el.scrollLeft;
     try {
       e.currentTarget.setPointerCapture?.(e.pointerId);
     } catch {}
@@ -144,22 +174,18 @@ export default function AboutUsPage({ onNavigateBack }) {
     lastPointerX.current = currentX;
 
     // Directly move it around with the user's cursor / touch
-    el.scrollLeft -= deltaX;
+    posRef.current -= deltaX;
+    el.scrollLeft = posRef.current;
 
     const loopWidth = getLoopWidth();
-    if (loopWidth > 0) {
-      if (el.scrollLeft <= loopWidth * 0.5) {
-        el.scrollLeft += loopWidth;
-      } else if (el.scrollLeft >= loopWidth * 2.5) {
-        el.scrollLeft -= loopWidth;
-      }
-    }
+    wrapPosition(loopWidth);
   };
 
   const handlePointerUpOrCancel = (e) => {
     if (isDraggingRef.current) {
       isDraggingRef.current = false;
       setIsDragging(false);
+      lastTimeRef.current = performance.now();
       try {
         e.currentTarget.releasePointerCapture?.(e.pointerId);
       } catch {}
@@ -265,7 +291,7 @@ export default function AboutUsPage({ onNavigateBack }) {
               About Project SEENta
             </h1>
             <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">
-              A decentralized, modern lost-and-found clearinghouse built for the Polytechnic University of the Philippines – Biñan Campus, connecting finders and rightful owners directly with speed, honesty, and accountability.
+              A decentralized, modern lost-and-found peer-to-peer platform built for the Polytechnic University of the Philippines – Biñan Campus, connecting finders and rightful owners directly with speed, honesty, and accountability.
             </p>
           </div>
         </ScrollReveal>
@@ -274,10 +300,7 @@ export default function AboutUsPage({ onNavigateBack }) {
         <section className="space-y-8">
           <ScrollReveal threshold={0.05} yOffset={16}>
             <div className="border-b border-slate-200/80 dark:border-slate-800 pb-5">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-red-600 dark:text-red-400">
-                Foundational Purpose
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight mt-1">
+              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
                 Mission & Vision Statements
               </h2>
             </div>
@@ -340,10 +363,7 @@ export default function AboutUsPage({ onNavigateBack }) {
         <section className="space-y-8">
           <ScrollReveal threshold={0.05} yOffset={16}>
             <div className="border-b border-slate-200/80 dark:border-slate-800 pb-5">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-red-600 dark:text-red-400">
-                Guiding Principles
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight mt-1">
+              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
                 Core Pillars
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-xl">
@@ -408,10 +428,7 @@ export default function AboutUsPage({ onNavigateBack }) {
           <ScrollReveal threshold={0.05} yOffset={16}>
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200/80 dark:border-slate-800 pb-5">
               <div>
-                <span className="text-xs font-mono font-bold uppercase tracking-wider text-red-600 dark:text-red-400">
-                  Our Builders
-                </span>
-                <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight mt-1">
+                <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
                   Meet the team behind Project SEENta
                 </h2>
               </div>
@@ -441,6 +458,7 @@ export default function AboutUsPage({ onNavigateBack }) {
               onPointerMove={handlePointerMove}
               onPointerUp={handlePointerUpOrCancel}
               onPointerLeave={handlePointerUpOrCancel}
+              onPointerCancel={handlePointerUpOrCancel}
               className={`flex gap-6 overflow-x-auto no-scrollbar scroll-auto px-4 sm:px-6 lg:px-12 select-none touch-pan-x ${
                 isDragging ? 'cursor-grabbing' : 'cursor-grab'
               }`}

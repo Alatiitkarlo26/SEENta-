@@ -49,7 +49,7 @@ export default function NotFoundPage({ onNavigateHome, onNavigateToTab }) {
           </h1>
 
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto leading-relaxed pt-1">
-            The page you are looking for may have been moved, renamed, or already claimed and archived from the campus clearinghouse.
+            The page you are looking for may have been moved, renamed, or already reunited with its owner.
           </p>
         </div>
 

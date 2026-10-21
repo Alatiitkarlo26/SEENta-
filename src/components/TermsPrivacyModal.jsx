@@ -82,7 +82,7 @@ export default function TermsPrivacyModal({
 
               <div>
                 <strong className="text-neutral-900 dark:text-white font-semibold">3. Safe Handover Protocol:</strong>
-                <p>Physical turnover of recovered property must be conducted at designated campus safe exchange zones (Campus Security Office, Ground Floor Main Building or OSAS) during operating hours (Mon–Sat: 8:00 AM – 3:00 PM).</p>
+                <p>Physical turnover of recovered property must be conducted at designated campus Safe-Exchange Zones (Main Campus Lobby, University Library Entrance, Campus Security Guard Post, or Student Center Plaza) during active campus operating hours.</p>
               </div>
 
               <div>

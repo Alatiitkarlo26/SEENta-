@@ -630,15 +630,15 @@ export default function StudentDashboardPage() {
               <div>
                 <h3 className="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4 text-theme" />
-                  Property Recovery Protocol
+                  Peer Property Recovery Protocol
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                  Three steps to recover your belongings at the Campus Security Office.
+                  Three steps to recover your belongings directly via Campus Safe-Exchange Zones.
                 </p>
               </div>
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-50 dark:bg-slate-800 text-xs text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 shrink-0">
-                <Clock className="w-3.5 h-3.5" />
-                Mon–Sat, 8 AM – 3 PM
+                <MapPin className="w-3.5 h-3.5 text-theme" />
+                Campus Safe Zones · Mon–Sat, 8 AM – 5 PM
               </span>
             </div>
 
@@ -666,20 +666,20 @@ export default function StudentDashboardPage() {
                   {
                     step: '1',
                     stage: 'STEP 01',
-                    title: 'Verify Ownership',
-                    desc: 'Confirm identifiers like serial numbers, scratches, stickers, or lock screens to prove legitimate ownership.'
+                    title: 'Submit Ownership Proof',
+                    desc: 'Supply distinctive proof (serial numbers, hidden marks, receipts, or lock screen details) in the claim form directly to the finder.'
                   },
                   {
                     step: '2',
                     stage: 'STEP 02',
-                    title: 'Coordinate Claim',
-                    desc: 'Submit an inquiry through SEENta to arrange safe turnover with the finder or campus custodian.'
+                    title: 'Finder Review & Chat',
+                    desc: 'Once the finder approves your claim, coordinate a safe in-person handover schedule via direct in-app messaging.'
                   },
                   {
                     step: '3',
                     stage: 'STEP 03',
-                    title: 'Present Your ID',
-                    desc: 'Complete recovery in person at the Security Office by presenting your official PUP university ID.'
+                    title: 'Safe-Zone Turnover',
+                    desc: 'Meet at a campus Safe-Exchange Zone (Main Lobby, Library, Guard Post), inspect the item, verify PUP IDs, and confirm mutual return.'
                   }
                 ].map((s, i) => (
                   <ScrollReveal key={s.step} threshold={0.05} delay={i * 80} yOffset={12}>

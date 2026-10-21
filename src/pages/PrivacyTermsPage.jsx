@@ -225,7 +225,7 @@ export default function PrivacyTermsPage({ initialTab = 'terms', onNavigateBack 
                 <ul className="space-y-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
                   <li>
                     <strong className="text-slate-900 dark:text-white font-semibold">Designated Campus Safe Zones:</strong>{' '}
-                    For personal safety and transparency, all physical handovers must occur strictly within designated, monitored areas of the PUP Biñan Campus (e.g., Campus Main Lobby, Campus Security Guardhouse Desk) during active campus operating hours (8:00 AM – 5:00 PM).
+                    For personal safety and transparency, all physical handovers must occur strictly within designated, monitored areas of the PUP Biñan Campus (Main Campus Lobby, University Library Entrance, Campus Security Guard Post, or Student Center Plaza) during active campus operating hours (8:00 AM – 5:00 PM).
                   </li>
                   <li>
                     <strong className="text-slate-900 dark:text-white font-semibold">Dual-Sided Handover Confirmation:</strong>{' '}

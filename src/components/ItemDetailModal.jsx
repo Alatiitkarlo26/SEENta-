@@ -182,7 +182,7 @@ export default function ItemDetailModal({ isOpen, onClose, item, onInitiateClaim
             <div className="text-xs text-amber-900 dark:text-amber-200 space-y-1">
               <p className="font-bold">Peer-to-Peer Ownership Verification Process</p>
               <p className="leading-relaxed">
-                To claim this item, click &quot;Submit Ownership Claim&quot; below. You will be prompted to supply distinct identifying proofs (passcodes, scratches, receipts, or contents). Upon Finder approval, you will coordinate mutual handover at the Ground Floor Security Desk.
+                To claim this item, click &quot;Submit Ownership Claim&quot; below. You will be prompted to supply distinct identifying proofs (passcodes, scratches, receipts, or contents). Upon Finder approval, you will coordinate mutual handover at an authorized campus Safe-Exchange Zone (Main Lobby, Library, Guard Post, or Student Plaza).
               </p>
             </div>
           </div>

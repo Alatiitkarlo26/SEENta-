@@ -27,10 +27,10 @@ export default function Footer({ onNavigateToTab }) {
             {/* Apple-style Footnote Disclosures */}
             <div className="pb-4 space-y-1 text-[11px] text-slate-500 dark:text-slate-500 leading-normal border-b border-slate-300/70 dark:border-slate-800/80">
             <p>
-              * All surrendered items logged in the SEENta clearinghouse remain under verified finder custody or designated campus storage until legitimate ownership authentication is finalized.
+              * All found items reported on Project SEENta remain under verified finder custody until in-person ownership authentication and mutual turnover are completed at an authorized campus Safe-Exchange Zone.
             </p>
             <p>
-              * Physical property release requires presenting your official PUP Student or Faculty ID at the Ground Floor Security Office (Monday–Saturday, 8:00 AM – 3:00 PM). Unclaimed belongings after statutory holding periods are processed under institutional university guidelines.
+              * In-person recovery requires presenting your official PUP Student or Faculty ID at designated campus Safe-Exchange Zones (Main Campus Lobby, Library Entrance, Security Guard Post, or Student Center Plaza). Unclaimed belongings after statutory holding periods are surrendered to Campus Security under institutional guidelines.
             </p>
           </div>
 
@@ -53,14 +53,14 @@ export default function Footer({ onNavigateToTab }) {
                 </span>
               </div>
               <p className="text-xs text-slate-600 dark:text-slate-400 leading-snug pr-2">
-                Decentralized lost and found clearinghouse engineered for the students and faculty of PUP Biñan Campus.
+                Peer-to-peer lost and found recovery platform engineered for the students and faculty of PUP Biñan Campus.
               </p>
             </div>
 
             {/* Col 2: Platform Links */}
             <div className="space-y-2">
               <h4 className="text-[11px] font-semibold text-slate-900 dark:text-white uppercase tracking-wider">
-                Clearinghouse
+                Platform
               </h4>
               <ul className="space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
                 <li>
@@ -75,7 +75,7 @@ export default function Footer({ onNavigateToTab }) {
                 </li>
                 <li>
                   <a href="#post" className="hover:text-slate-900 dark:hover:text-white transition-colors">
-                    Post Surrendered Item
+                    Post Found Item
                   </a>
                 </li>
                 <li>
@@ -86,23 +86,23 @@ export default function Footer({ onNavigateToTab }) {
               </ul>
             </div>
 
-            {/* Col 3: Campus Custody */}
+            {/* Col 3: Safe-Exchange Zones */}
             <div className="space-y-2">
               <h4 className="text-[11px] font-semibold text-slate-900 dark:text-white uppercase tracking-wider">
-                Campus Custody
+                Safe-Exchange Zones
               </h4>
               <ul className="space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
                 <li className="flex items-start gap-1.5">
                   <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
-                  <span>Main Building Ground Flr, PUP Biñan</span>
+                  <span>Main Campus Lobby &amp; Plaza</span>
                 </li>
                 <li className="flex items-start gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
-                  <span>Mon – Sat: 8:00 AM – 3:00 PM</span>
+                  <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
+                  <span>University Library Entrance</span>
                 </li>
-                <li className="flex items-start gap-1.5 font-mono text-[11px]">
-                  <Mail className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
-                  <span>security.binan@pup.edu.ph</span>
+                <li className="flex items-start gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
+                  <span>Campus Security Guard Post</span>
                 </li>
               </ul>
             </div>

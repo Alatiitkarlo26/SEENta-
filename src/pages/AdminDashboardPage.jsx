@@ -32,10 +32,10 @@ export default function AdminDashboardPage() {
 
   // Sample seed statistics and audit logs for Phase 1 view
   const stats = [
-    { label: 'Surrendered Items in Vault', count: 18, color: 'text-amber-700', bg: 'bg-amber-50' },
+    { label: 'Active Found Items (Finder Custody)', count: 18, color: 'text-amber-700', bg: 'bg-amber-50' },
     { label: 'Active Lost Reports', count: 12, color: 'text-rose-700', bg: 'bg-rose-50' },
-    { label: 'Pending Claim Audits', count: 5, color: 'text-blue-700', bg: 'bg-blue-50' },
-    { label: 'Returned to Owners', count: 42, color: 'text-emerald-700', bg: 'bg-emerald-50' }
+    { label: 'Claims Under Direct Review', count: 5, color: 'text-blue-700', bg: 'bg-blue-50' },
+    { label: 'Reunited at Safe Zones', count: 42, color: 'text-emerald-700', bg: 'bg-emerald-50' }
   ];
 
   const sampleAuditLogs = [
@@ -50,7 +50,7 @@ export default function AdminDashboardPage() {
     },
     {
       id: 'log_02',
-      action: 'Claim Approved for Office Pickup',
+      action: 'Proof of Ownership Claim Approved',
       officer: user.fullName,
       item: 'PUP Student ID (2022-01452-BN-0)',
       location: 'Main Security Desk',
@@ -62,7 +62,7 @@ export default function AdminDashboardPage() {
       action: 'Physical Handover Completed',
       officer: user.fullName,
       item: 'Blue Hydro Flask Tumbler 32oz',
-      location: 'Security Office',
+      location: 'Main Campus Lobby (Safe Zone)',
       timestamp: 'Yesterday, 04:45 PM',
       hash: 'sha256-c92d1...'
     }
@@ -183,7 +183,7 @@ export default function AdminDashboardPage() {
           <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 transition-colors">
             <h3 className="font-bold text-slate-900 dark:text-white text-sm flex items-center gap-2">
               <Lock className="w-4 h-4 text-theme" />
-              Staff Verification Protocol
+              Security &amp; OSAS Arbitration Protocol
             </h3>
             <div className="space-y-3 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
               <div className="flex items-start gap-2.5">
@@ -207,7 +207,7 @@ export default function AdminDashboardPage() {
                   3
                 </span>
                 <span>
-                  Perform physical handoff and confirm the status update in SEENta to commit the audit record.
+                  In disputed false claims, utilize the immutable ledger audit trail and verified PUP webmail identities to arbitrate physical recovery.
                 </span>
               </div>
             </div>
