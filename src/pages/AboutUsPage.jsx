@@ -5,13 +5,13 @@ import {
   Building2,
   Users,
   ShieldCheck,
-  Lock,
+  HeartHandshake,
   Copy,
-  Check,
-  ChevronLeft,
-  ChevronRight
+  Check
 } from 'lucide-react';
 import roderickImg from '../assets/RODERICK.jpg';
+import karloImg from '../assets/karlo.jpg';
+import neilvenImg from '../assets/neilven.jpg';
 
 const TEAM_MEMBERS = [
   {
@@ -19,7 +19,7 @@ const TEAM_MEMBERS = [
     name: 'Alatiit, Jian Karlo',
     role: 'Full-Stack Developer',
     initials: 'JA',
-    image: null
+    image: karloImg
   },
   {
     id: 'aviles',
@@ -47,7 +47,7 @@ const TEAM_MEMBERS = [
     name: 'Ubaldo, Neilven Ryan',
     role: 'Full-Stack Developer',
     initials: 'NU',
-    image: null
+    image: neilvenImg
   }
 ];
 
@@ -59,44 +59,58 @@ export default function AboutUsPage({ onNavigateBack }) {
   // References and states for interactive smooth scrolling
   const carouselRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
-  const isInteracting = useRef(false);
-  const resumeTimer = useRef(null);
-  const dragStartX = useRef(0);
-  const dragStartScroll = useRef(0);
+  const isDraggingRef = useRef(false);
+  const lastPointerX = useRef(0);
 
-  // Triplicate array for seamless infinite wraparound
-  const carouselItems = [...TEAM_MEMBERS, ...TEAM_MEMBERS, ...TEAM_MEMBERS];
+  // Quadruplicate array for seamless infinite wraparound
+  const carouselItems = [...TEAM_MEMBERS, ...TEAM_MEMBERS, ...TEAM_MEMBERS, ...TEAM_MEMBERS];
 
-  // Initialize scroll position to the middle third on mount
+  // Helper to measure exact width of 1 complete set including gaps
+  const getLoopWidth = () => {
+    const el = carouselRef.current;
+    if (el && el.children && el.children.length > TEAM_MEMBERS.length) {
+      const first = el.children[0];
+      const nextSet = el.children[TEAM_MEMBERS.length];
+      if (first && nextSet) {
+        return nextSet.offsetLeft - first.offsetLeft;
+      }
+    }
+    return el ? el.scrollWidth / 4 : 0;
+  };
+
+  // Initialize scroll position to middle on mount
   useEffect(() => {
     const el = carouselRef.current;
     if (el) {
       const timer = setTimeout(() => {
-        if (el) el.scrollLeft = (el.scrollWidth / 3) * 1.5;
+        const loopWidth = getLoopWidth();
+        if (loopWidth > 0) {
+          el.scrollLeft = loopWidth * 1.5;
+        }
       }, 50);
       return () => clearTimeout(timer);
     }
   }, []);
 
-  // Smooth continuous drift to the right using requestAnimationFrame
+  // Constantly move in a loop without stopping using requestAnimationFrame
   useEffect(() => {
     const el = carouselRef.current;
     if (!el) return;
 
     let animId;
-    const speed = 0.65; // Pixels per frame drift to the right
+    const speed = 0.38; // Slower, gentle continuous drift to the right
 
     const step = () => {
-      if (!isInteracting.current && el) {
-        // Decrease scrollLeft so elements smoothly glide towards the right
+      if (el) {
+        // Constantly move without stopping
         el.scrollLeft -= speed;
 
-        const singleSetWidth = el.scrollWidth / 3;
-        if (singleSetWidth > 0) {
-          if (el.scrollLeft <= singleSetWidth) {
-            el.scrollLeft += singleSetWidth;
-          } else if (el.scrollLeft >= singleSetWidth * 2) {
-            el.scrollLeft -= singleSetWidth;
+        const loopWidth = getLoopWidth();
+        if (loopWidth > 0) {
+          if (el.scrollLeft <= loopWidth * 0.5) {
+            el.scrollLeft += loopWidth;
+          } else if (el.scrollLeft >= loopWidth * 2.5) {
+            el.scrollLeft -= loopWidth;
           }
         }
       }
@@ -105,73 +119,51 @@ export default function AboutUsPage({ onNavigateBack }) {
 
     animId = requestAnimationFrame(step);
 
-    const onWheel = () => {
-      isInteracting.current = true;
-      clearTimeout(resumeTimer.current);
-      resumeTimer.current = setTimeout(() => {
-        isInteracting.current = false;
-      }, 1500);
-    };
-
-    el.addEventListener('wheel', onWheel, { passive: true });
-
     return () => {
       cancelAnimationFrame(animId);
-      el.removeEventListener('wheel', onWheel);
-      clearTimeout(resumeTimer.current);
     };
   }, []);
 
   const handlePointerDown = (e) => {
     const el = carouselRef.current;
     if (!el) return;
+    isDraggingRef.current = true;
     setIsDragging(true);
-    isInteracting.current = true;
-    clearTimeout(resumeTimer.current);
-    dragStartX.current = e.pageX - el.offsetLeft;
-    dragStartScroll.current = el.scrollLeft;
+    lastPointerX.current = e.pageX;
+    try {
+      e.currentTarget.setPointerCapture?.(e.pointerId);
+    } catch {}
   };
 
   const handlePointerMove = (e) => {
-    if (!isDragging || !carouselRef.current) return;
+    if (!isDraggingRef.current || !carouselRef.current) return;
     e.preventDefault();
     const el = carouselRef.current;
-    const currentX = e.pageX - el.offsetLeft;
-    const walk = (currentX - dragStartX.current) * 1.35;
-    el.scrollLeft = dragStartScroll.current - walk;
+    const currentX = e.pageX;
+    const deltaX = currentX - lastPointerX.current;
+    lastPointerX.current = currentX;
 
-    const singleSetWidth = el.scrollWidth / 3;
-    if (singleSetWidth > 0) {
-      if (el.scrollLeft <= singleSetWidth) {
-        el.scrollLeft += singleSetWidth;
-        dragStartScroll.current += singleSetWidth;
-      } else if (el.scrollLeft >= singleSetWidth * 2) {
-        el.scrollLeft -= singleSetWidth;
-        dragStartScroll.current -= singleSetWidth;
+    // Directly move it around with the user's cursor / touch
+    el.scrollLeft -= deltaX;
+
+    const loopWidth = getLoopWidth();
+    if (loopWidth > 0) {
+      if (el.scrollLeft <= loopWidth * 0.5) {
+        el.scrollLeft += loopWidth;
+      } else if (el.scrollLeft >= loopWidth * 2.5) {
+        el.scrollLeft -= loopWidth;
       }
     }
   };
 
-  const handlePointerUpOrCancel = () => {
-    if (isDragging) {
+  const handlePointerUpOrCancel = (e) => {
+    if (isDraggingRef.current) {
+      isDraggingRef.current = false;
       setIsDragging(false);
-      clearTimeout(resumeTimer.current);
-      resumeTimer.current = setTimeout(() => {
-        isInteracting.current = false;
-      }, 1500);
+      try {
+        e.currentTarget.releasePointerCapture?.(e.pointerId);
+      } catch {}
     }
-  };
-
-  const handleManualScroll = (direction) => {
-    const el = carouselRef.current;
-    if (!el) return;
-    isInteracting.current = true;
-    clearTimeout(resumeTimer.current);
-    const offset = direction === 'left' ? -310 : 310;
-    el.scrollBy({ left: offset, behavior: 'smooth' });
-    resumeTimer.current = setTimeout(() => {
-      isInteracting.current = false;
-    }, 2000);
   };
 
   // Auto-scroll to top on mount
@@ -281,47 +273,63 @@ export default function AboutUsPage({ onNavigateBack }) {
         {/* 1. Mission and Vision Statements */}
         <section className="space-y-8">
           <ScrollReveal threshold={0.05} yOffset={16}>
-            <div className="border-b border-slate-200/80 dark:border-slate-800 pb-4">
+            <div className="border-b border-slate-200/80 dark:border-slate-800 pb-5">
               <span className="text-xs font-mono font-bold uppercase tracking-wider text-red-600 dark:text-red-400">
                 Foundational Purpose
               </span>
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight mt-1">
+              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight mt-1">
                 Mission & Vision Statements
               </h2>
             </div>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-start">
             {/* Mission */}
             <ScrollReveal threshold={0.05} delay={60} yOffset={16}>
-              <div className="group relative flex flex-col justify-between h-full cursor-default">
+              <div className="group relative pl-5 sm:pl-6 border-l-2 border-red-500/30 dark:border-red-500/40 hover:border-red-500 dark:hover:border-red-400 transition-colors duration-300 h-full flex flex-col justify-between cursor-default">
                 <div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="w-2 h-2 rounded-full bg-red-600 dark:bg-red-400" />
+                  {/* Tag */}
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-600 dark:bg-red-400 shrink-0" />
                     <span className="text-xs font-mono font-bold uppercase tracking-wider text-red-600 dark:text-red-400">
-                      Mission
+                      Mission Statement
                     </span>
                   </div>
-                  <blockquote className="text-base sm:text-lg font-medium text-slate-800 dark:text-slate-200 leading-relaxed border-l-2 border-red-500/30 dark:border-red-500/40 pl-4 sm:pl-5 group-hover:border-red-500 transition-colors duration-300">
+
+                  {/* Title */}
+                  <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight mb-3 group-hover:text-theme transition-colors">
+                    Our Mission
+                  </h3>
+
+                  {/* Statement Quote */}
+                  <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
                     &ldquo;To provide the PUP Biñan community with a fast, transparent, and decentralized lost-and-found platform that connects finders and owners directly, eliminating administrative delays while upholding honesty, safety, and accountability across campus.&rdquo;
-                  </blockquote>
+                  </p>
                 </div>
               </div>
             </ScrollReveal>
 
             {/* Vision */}
             <ScrollReveal threshold={0.05} delay={120} yOffset={16}>
-              <div className="group relative flex flex-col justify-between h-full cursor-default">
+              <div className="group relative pl-5 sm:pl-6 border-l-2 border-red-500/30 dark:border-red-500/40 hover:border-red-500 dark:hover:border-red-400 transition-colors duration-300 h-full flex flex-col justify-between cursor-default">
                 <div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="w-2 h-2 rounded-full bg-red-600 dark:bg-red-400" />
+                  {/* Tag */}
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-600 dark:bg-red-400 shrink-0" />
                     <span className="text-xs font-mono font-bold uppercase tracking-wider text-red-600 dark:text-red-400">
-                      Vision
+                      Vision Statement
                     </span>
                   </div>
-                  <blockquote className="text-base sm:text-lg font-medium text-slate-800 dark:text-slate-200 leading-relaxed border-l-2 border-red-500/30 dark:border-red-500/40 pl-4 sm:pl-5 group-hover:border-red-500 transition-colors duration-300">
+
+                  {/* Title */}
+                  <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight mb-3 group-hover:text-theme transition-colors">
+                    Our Vision
+                  </h3>
+
+                  {/* Statement Quote */}
+                  <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
                     &ldquo;To foster an honest, secure, and digitally empowered university environment where misplaced belongings are swiftly reunited with their rightful owners, ensuring no student or faculty member is left behind.&rdquo;
-                  </blockquote>
+                  </p>
                 </div>
               </div>
             </ScrollReveal>
@@ -331,11 +339,11 @@ export default function AboutUsPage({ onNavigateBack }) {
         {/* 2. Core Pillars */}
         <section className="space-y-8">
           <ScrollReveal threshold={0.05} yOffset={16}>
-            <div className="border-b border-slate-200/80 dark:border-slate-800 pb-4">
+            <div className="border-b border-slate-200/80 dark:border-slate-800 pb-5">
               <span className="text-xs font-mono font-bold uppercase tracking-wider text-red-600 dark:text-red-400">
                 Guiding Principles
               </span>
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight mt-1">
+              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight mt-1">
                 Core Pillars
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-xl">
@@ -360,9 +368,9 @@ export default function AboutUsPage({ onNavigateBack }) {
               },
               {
                 step: '03',
-                title: 'Safety & Security',
-                icon: Lock,
-                desc: 'Promoting safe handovers at designated, CCTV-monitored campus Safe-Exchange Zones.'
+                title: 'Accessibility & Inclusion',
+                icon: HeartHandshake,
+                desc: 'Built for the entire PUP Biñan community with responsive access and inclusive assistive tools, ensuring no student or faculty member is left behind.'
               }
             ].map((pillar, i) => {
               const Icon = pillar.icon;
@@ -407,35 +415,13 @@ export default function AboutUsPage({ onNavigateBack }) {
                   Meet the team behind Project SEENta
                 </h2>
               </div>
-              <div className="flex items-center gap-3">
-                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed max-w-sm hidden sm:block">
-                  The Group 12 developers and researchers from PUP Biñan Campus, dedicated to student-centered property recovery.
-                </p>
-                <div className="flex items-center gap-1.5 shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => handleManualScroll('left')}
-                    className="p-2 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer active:scale-90 shadow-2xs"
-                    title="Previous member"
-                    aria-label="Previous member"
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleManualScroll('right')}
-                    className="p-2 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer active:scale-90 shadow-2xs"
-                    title="Next member"
-                    aria-label="Next member"
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed max-w-sm">
+                The Group 12 developers and researchers from PUP Biñan Campus, dedicated to student-centered property recovery.
+              </p>
             </div>
           </ScrollReveal>
 
-          {/* Continuous Left-Moving Marquee Preview (Scrollable & Draggable) */}
+          {/* Continuous Right-Moving Carousel Preview (Scrollable & Draggable) */}
           <div className="relative -mx-4 sm:-mx-6 lg:-mx-12 overflow-hidden py-3">
             {/* Left Edge Gradient Fade */}
             <div
@@ -455,16 +441,7 @@ export default function AboutUsPage({ onNavigateBack }) {
               onPointerMove={handlePointerMove}
               onPointerUp={handlePointerUpOrCancel}
               onPointerLeave={handlePointerUpOrCancel}
-              onMouseEnter={() => { isInteracting.current = true; }}
-              onMouseLeave={() => {
-                if (!isDragging) {
-                  clearTimeout(resumeTimer.current);
-                  resumeTimer.current = setTimeout(() => {
-                    isInteracting.current = false;
-                  }, 800);
-                }
-              }}
-              className={`flex gap-6 overflow-x-auto no-scrollbar scroll-smooth px-4 sm:px-6 lg:px-12 select-none touch-pan-x ${
+              className={`flex gap-6 overflow-x-auto no-scrollbar scroll-auto px-4 sm:px-6 lg:px-12 select-none touch-pan-x ${
                 isDragging ? 'cursor-grabbing' : 'cursor-grab'
               }`}
             >

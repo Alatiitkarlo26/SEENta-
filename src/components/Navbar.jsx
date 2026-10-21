@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import SeentaLogo from './SeentaLogo';
+import pupLogoImg from '../assets/PUP-Logo.png';
 import AccessibilityModal from './AccessibilityModal';
 import NotificationsModal from './NotificationsModal';
 import ReportLostItemModal from './ReportLostItemModal';
@@ -168,9 +169,16 @@ export default function Navbar({ activeTab, setActiveTab }) {
             {/* SEENta Brand */}
             <div
               onClick={handleHomeClick}
-              className="flex flex-col cursor-pointer select-none group"
+              className="flex items-center gap-2.5 sm:gap-3 cursor-pointer select-none group shrink-0"
             >
-              <SeentaLogo size="md" showSubtitle={true} />
+              <img
+                src={pupLogoImg}
+                alt="PUP Logo"
+                className="w-8 h-8 sm:w-9 sm:h-9 object-contain shrink-0 transition-transform duration-200 group-hover:scale-105"
+              />
+              <div className="flex flex-col">
+                <SeentaLogo size="md" showSubtitle={true} />
+              </div>
             </div>
 
             {/* Frameless Navigation with Smoothly Transferring Red Shade */}

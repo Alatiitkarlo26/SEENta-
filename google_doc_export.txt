@@ -1,0 +1,2108 @@
+﻿High Level Tech Spec - SMARTRENT DOCUMENTS .pdf
+High Level BRD - SMARTRENT DOCUMENTS .pdf 
+Detailed Tech Spec - SMARTRENT DOCUMENTS .pdf
+Detailed BRD - SMARTRENT DOCUMENTS .pdf
+
+
+
+
+Group 12 - GanttChart
+WBS-GanttChart
+GROUP 12 SEENta
+
+
+
+
+TO DO (OCTOBER 24 DEADLINE):
+
+
+* Deployment of the Demo System
+* Lost and Found Features
+* Finalize the login and registration (privacy policy, agree on terms and conditions) 
+
+
+
+
+
+
+Project SEENta: Lost and Found Management System 
+
+
+Project Rationale & Background
+In any academic university, the daily loss of personal belongings—such as student identification cards, wallets, mobile devices, and academic materials—is a persistent challenge. Currently, many campuses rely on legacy methods to manage recovered items, such as physical paper logbooks or scattered posts in social media group chats. These fragmented approaches introduce severe operational inefficiencies:
+* Information Fragmentation and Loss: Paper logs are prone to damage, misplacement, and incomplete data entry, while social media threads quickly become cluttered, unorganized, and easily buried under unrelated conversations.
+* No Central Place to Look: Found items are scattered across logbooks, offices, and group chats, so owners and finders have no single place to find each other.
+* Wasted Academic Time: Students and faculty are forced to make repeated, unproductive physical visits to the security office just to check if their items have been recovered, disrupting their academic schedules.
+* Verification and Accountability Risks: Relying on informal chats creates vulnerability to false claims, where individuals can fraudulently acquire items that do not belong to them. Because no record is kept, it is impossible to trace who took an item once it has been handed over.
+
+
+
+
+
+
+
+
+The Proposed Solution
+To eliminate these inefficiencies, Project SEENta: Lost and Found Management System is proposed as a secure, centralized web application tailored specifically for the Polytechnic University of the Philippines: Biñan Campus.
+Instead of relying on a staff office, SEENta lets students and faculty help one another directly. Finders post the items they found, owners claim them, and both meet in person on campus to complete the return. Project SEENta delivers critical advantages to the university community:
+1. Institutional Authenticity: The platform enforces strict registration through official university email domains (@iskolarngbayan.pup.edu.ph for students and @pup.edu.ph for faculty), ensuring that only members of the campus community can access the system.
+
+2. Automated Efficiency: Instead of manual cross-checking, the system features automated matching that instantly cross-references newly posted found items against active lost item reports based on category and location.
+
+3. Proof of Ownership: To reduce false claims, a claimant must fill out a Proof of Ownership Claim Form with their own information and details about the item. The finder reviews the form before approving the claim.
+
+4. Transparency and Accountability: Every returned item is recorded in the Transaction History of both the finder and the claimant, showing who handed over and who received the item. This record discourages false claims.
+
+5. Recovery From False Claims: If an item is claimed by the wrong person, the original owner can use the Report Falsely Claimed Item feature. The item is marked as disputed and the owner can see who claimed it, so they can still get their item back.
+
+6. Convenience Coupled with Security: Users receive notifications regarding claim updates and potential matches, minimizing unnecessary physical trips while still requiring an in-person handover on campus.
+
+
+
+
+Direct Benefits to the User 
+Reclaiming time and protecting personal property within the university community. By shifting away from chaotic social media group chats and error-prone paper logbooks, the system directly addresses the daily frustrations experienced by both owners and finders.
+   * Eliminating Wasted Time and Effort: Instead of making repeated, unproductive physical trips to the security office just to ask if a lost ID, wallet, or phone has been turned in, users can check listings remotely from anywhere with an internet connection.
+
+   * Real-Time Transparency and Instant Alerts: Through automated matching and notifications, users receive immediate updates when a posted item matches their lost report, drastically cutting down recovery time.
+
+   * Trust and Safety: Because the platform requires official institutional email registration (@iskolarngbayan.pup.edu.ph for students and @pup.edu.ph for faculty), users interact within a verified community of peers. Each user's transaction history makes their activity visible, which helps reduce the risk of malicious actors and external spam.
+
+   * A Second Chance to Recover Lost Items: If an item is claimed by someone else, the original owner can report it and trace who received it, instead of losing the item for good.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Project SEENta: Lost and Found Management System
+
+
+Members:
+‎‎1. Alatiit, Jian Karlo
+‎2. Aviles, Armi Jhon
+‎3. Igloso, Mark Jacob
+‎4. Orfella Jr., Roderick
+5. Ubaldo, Neilven Ryan
+
+
+
+
+Introduction
+
+
+The Lost and Found Management System is a centralized digital web application designed to help students and faculty of the Polytechnic University of the Philippines: Biñan Campus recover lost and misplaced items directly from one another.
+Campus lost-and-found management typically relies on fragmented, inefficient methods such as physical paper logbooks and unorganized social media group chat posts. This forces students to repeatedly visit the security office to check on items, and it leaves the process open to false ownership claims with no record of who took an item.
+This problem needs a unified, transparent, and secure digital platform where users can post found items, submit proof of ownership, keep a record of every transaction, and report falsely claimed items so that the original owner can still recover their belongings.
+
+
+
+
+
+
+High-level Features
+This section covers high-level features and functionality of CareerLaunch:
+
+
+Functional
+	Details
+	Registration 
+	Restricted to official university email addresses (e.g., @iskolarngbayan.pup.edu.ph / @pup.edu.ph) to confirm the user is a legitimate member of the campus community and reduce fake accounts. Users also provide their full name, student/employee ID, and contact number. 
+	Lost Item Report and Found Item Posting 
+	Users can report an item they lost or post an item they found, including the category, description, photos, date, and location. 
+	Search and Filter Feature
+	Allows users to search for items and narrow down results using filters such as color, size, and category, making it easier to find a specific item without scrolling through the entire list. 
+
+
+	Proof of Ownership Claim Form 
+	A form where the claimant provides their own information and details about the item (such as identifying marks, serial number, or photos) as proof that it belongs to them. The finder reviews the form before approving the claim. 
+
+
+	Transaction History 
+	Each user has a record of the items they found, claimed, and returned, including the date, location, and the other user's name and ID, for transparency. 
+
+
+	Report Falsely Claimed Item 
+	Allows the original owner to report an item that was claimed by the wrong person. The item is marked as disputed and the owner can see who claimed it, so they can still recover the item. 
+
+
+	Notifications & Alerts 
+	Sends automated emails or app updates when a claim is submitted, approved, or rejected, and when an item is reported as falsely claimed. (SMS notifications may be integrated for urgent updates, subject to feasibility due to cost considerations) 
+
+
+	Accessibility Support 
+	UI features tailored to the campus demographic, ensuring clear readability, high-contrast options, and mobile-responsive design so users can file reports seamlessly on their smartphones while walking across campus. 
+
+
+	Feedback/Rating After Claim 
+	Optional short feedback from the users after an item is returned, to help build trust within the campus community over time. 
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+User Characteristics
+This section provides details of the target users of the system in relation to the functionalities:
+
+
+  
+
+
+
+SEENTA  has three (2) target users:
+      * Students of PUP Biñan Campus: Users registered with an @iskolarngbayan.pup.edu.ph email. They are legitimate members of the campus community.
+      * Faculty / Professors: Users registered with an @pup.edu.ph email. They are legitimate members of the campus community.
+Both types of users have the same access to the system. Depending on the situation, a user can act as a Finder (posts a found item), a Claimant (submits a claim for an item), or an Original Owner (reports a falsely claimed item). The system has no admin. 
+Strategy Overview
+Technical        
+      * Front-end: JavaScript, CSS, TailwindCSS, React
+      * Back-end: PHP
+      * Database: TBD/Supabase
+      * Hosting: Vercel/Netlify/GitHub
+      * Source Code control: GitHub
+Project Execution
+  
+
+
+
+
+
+Roadmap
+Feature and functionality delivery will come at least in two (3) phases. 
+
+
+Phase 1
+	
+
+	Registration 
+	Implement sign-up restrictions tied to official university email addresses (e.g., @iskolarngbayan.pup.edu.ph / @pup.edu.ph) to verify community members and prevent fake accounts. 
+	Lost Item Report and Found Item Posting 
+	Build the forms for reporting lost items and posting found items, including photo upload. 
+	Accessibility Support 
+	Build a mobile-responsive UI featuring clear readability and high-contrast options so users can easily file reports on their smartphones. 
+	
+
+Phase 2
+	
+
+	Search and Filter Feature 
+	Implement text search and filters (such as color, size, and category) to help users quickly locate specific items without endless scrolling. 
+	Proof of Ownership Claim Form 
+	Add the claim form where claimants provide their own information and item details, and finders can approve or reject the claim. 
+	Handover Confirmation 
+	Add in-app contact between the finder and claimant, and a confirmation step once the item has been returned in person. 
+	
+
+
+
+
+
+
+
+
+
+Phase 3
+	
+
+	Transaction History  
+	Record each returned item in the profile of both the finder and the claimant for transparency. 
+	Report Falsely Claimed Item 
+	Add the report feature that lets the original owner dispute a false claim and see who claimed the item. 
+	Notifications & Alerts 
+	Deploy automated email or app updates triggered by claim and report activity (with SMS reserved for future feasibility). 
+	Feedback/Rating After Claim 
+	Add a short, optional feedback mechanism for users to rate and comment after an item is returned. 
+	
+
+  
+
+GROUP 12 SEENta
+Project SEENta: Lost and Found Management System 
+
+
+
+
+      1. Description
+
+
+Project SEENta is a centralized, peer-to-peer (P2P) digital web application designed to connect students, faculty, and campus staff directly to recover lost and misplaced belongings at the Polytechnic University of the Philippines: Biñan Campus. 
+
+
+Rather than relying on administrative gatekeepers or physical office bottlenecks, SEENta operates on a community-driven, peer-to-peer model: 
+
+
+      * A student or faculty member who finds a misplaced item posts it directly to the platform with details and photos. 
+      * A user who has lost an item browses listings or submits a lost item report. 
+      * A claimant submits a Proof of Ownership Claim Form directly to the finder detailing proof of ownership and verified identity. 
+      * Both users coordinate an in-person campus handover, and upon completion, the exchange is permanently recorded into each user's public Transaction History. 
+      * If an item is mistakenly or dishonestly handed over to the wrong person, the true original owner can trigger the Falsely Claimed Item Dispute Report, allowing them to trace who claimed the item and 
+
+
+
+
+      2. Statement of the Problem 
+
+
+Campus lost-and-found management typically relies on fragmented, inefficient methods such as physical paper logbooks at guard desks or unorganized social media group chat posts. These methods present severe flaws: 
+
+
+      1. Inefficiencies & Bottlenecks: Students must repeatedly visit campus security offices between classes just to check if an item has been surrendered.
+      2. False Claims & Identity Ambiguity: Social media group chats allow unidentified users to claim items without accountability or records. Once an item is handed over to the wrong person in informal settings, it is impossible to trace who took it.
+      3. Lack of Transparency & Transaction Records: There is no record of who found what, who claimed what, or when the handover happened, leading to mistrust and disputes.
+
+
+The Solution: SEENta establishes a verified, peer-to-peer campus platform where every user is tied to their institutional university ID, every exchange is preserved in an immutable Transaction History, and true owners are empowered to contest fraudulent claims through direct Dispute & Recovery
+Reporting.
+
+
+
+
+Potential Clients
+      * Student Users: Registered students of PUP Biñan Campus holding verified (@iskolarngbayan.pup.edu.ph) email addresses. 
+      * Faculty & Academic Staff: University professors, instructors, and personnel holding verified (@pup.edu.ph) email addresses. 
+
+
+
+
+      3. Benefits
+
+
+      1. Direct Peer-to-Peer Resolution: Eliminates administrative delays by allowing students and faculty to coordinate returns directly. 
+      2. Standardized Proof of Ownership: Replaces guesswork with a formal claim form where claimants must supply item-specific evidence, serial numbers, descriptions, or purchase/photo proof. 
+      3. Transparent User Transaction History: Both finders and claimants maintain a verifiable activity log of all items posted, claimed, and handed over, creating community accountability. 
+      4. Falsely Claimed Item Recovery: True owners can dispute false claims, immediately revealing the verified institutional identity of the person who claimed the item to facilitate recovery. 
+      5. Campus Safe-Exchange Zones: Encourages students to complete handovers at designated, hightraffic, CCTV-monitored campus locations. 
+
+
+
+
+      4. Scope and Delimitation
+
+
+In-Scope Features 
+      1. Institutional Domain Authentication: Restricts registration strictly to official PUP email addresses bound to student/employee IDs. 
+      2. Lost Item Reporting: Standardized self-service submission form for misplaced belongings. 
+      3. Found Item Posting with Photos: Easy posting interface allowing finders to upload pictures, descriptions, and discovery locations. 
+      4. Automated Cross-Referencing: Algorithmic matching between active lost reports and newly logged found items based on category, date, and campus location. 
+      5. Search & Multi-Attribute Filtering: Comprehensive search by category, color, item size, campus sector, and date. 
+      6. Proof of Ownership Claim Submission: Structured form capturing claimant identification, specific item marks, and proof attachments. 
+      7. Direct In-App Contact & Coordination: Private messaging channel between finder and approved claimant to schedule a campus meetup. 
+      8. Digital Turnover Confirmation: One-click mutual handoff confirmation button updating item status to REUNITED . 
+      9. Transparent User Transaction History: Dedicated profile ledger recording all surrendered and claimed belongings with counterparty identities. 
+      10. Falsely Claimed Item Dispute Reporting: Dispute filing mechanism allowing the true owner to contest false claims and trace the claimant's identity. 
+      11. Post-Return Feedback & Ratings: Mutual rating system (1 to 5 stars) building community trust. 
+
+
+Delimitations (System Boundaries)
+      1. No Admin / Staff Intermediaries: The system is completely decentralized; all claim approvals, messaging, handoffs, and dispute communications are handled directly between users.
+      2. Mandatory In-Person Handover: Items cannot be shipped or delivered digitally; physical inspection and handover on university grounds are mandatory.
+      3. Campus Premise Limitation: Strictly restricted to items lost or found within PUP Biñan Campus boundaries.
+      4. Internet Dependency: Requires active internet access; offline caching and standalone SMS fallback are out of scope.
+      5. Civil & Disciplinary Recourse: The system provides transparent identity logs and dispute reports;actual disciplinary actions or physical item recovery involving uncooperative false claimants rely on university student affairs or campus security using the platform's audit trail.
+
+
+Functional Requirements
+(This will serve as your Requirements Traceability Matrix)
+
+
+Requirement ID
+	Requirement
+	Priority (Must-Have / Nice-To-Have)
+	Source
+	FR-SEEN-0001
+	The system shall restrict user registration strictly to institutional university emails ( @iskolarngbayan.pup.edu.ph and @pup.edu.ph ) and mandate full name, student/employee ID, and contact number. 
+	Must-Have
+	Team
+	FR-SEEN-0002
+	The system shall allow authenticated users to post a Lost Item Report detailing description, category, date, and last known location. 
+	Must-Have
+	Team
+	FR-SEEN-0003
+	The system shall allow authenticated users to post a Found Item Listing including item photos, description, date found, and campus discovery location. 
+	Must-Have
+	Team
+	FR-SEEN-0004
+	The system shall provide search and filter capabilities enabling users to query listings by color, size, category, and campus building 
+	Must-Have
+	Team
+	FR-SEEN-0005
+	The system shall provide a Proof of Ownership Claim Form allowing potential owners to submit unique identifying marks, serial numbers, and proof attachments to the finder. .
+	Must-Have
+	Team
+	FR-SEEN-0006
+	The system shall enable direct in-app messaging between the Finder and Claimant once the Finder accepts the Proof of Ownership form. 
+	Must-Have
+	Team
+	FR-SEEN-0007
+	The system shall provide a Handover Confirmation Mechanism allowing both parties to digitally acknowledge the completed physical return 
+	Must-Have
+	Team
+	FR-SEEN-0008
+	The system shall maintain an immutable User Transaction History on each user profile recording all items found, claimed, and returned with counterparty verified identities 
+	Must-Have
+	Team
+	FR-SEEN-0009
+	The system shall allow an original owner to submit a Falsely Claimed Item Dispute Report, flagging the listing as disputed and displaying the verified identity of the person who claimed it. 
+	Nice-To-Have
+	Team
+	FR-SEEN-0010
+	The system shall collect optional post-return feedback and ratings from both parties to promote community trust. 
+	Nice-To-Have
+	Team
+	
+
+
+
+
+
+
+
+Non-Functional Requirements
+
+
+Requirement ID
+	Requirement
+	Category
+	Priority (Must-Have / Nice-To-Have)
+	Source
+	NFR-SEEN-0001
+	The interface shall be mobile-responsive, feature high-contrast modes for outdoor campus readability, and provide clean touch navigation. 
+	Usability / Accessibility
+	Must-Have
+	Team
+	NFR-SEEN-0002
+	All handoffs and claim transactions shall be permanently linked to verified student/employee IDs to prevent anonymous fraud. 
+	Transparency & Accountability 
+	Must-Have
+	Team
+	NFR-SEEN-0003
+	The application shall restrict item postings and safe-exchange zones strictly to PUP Biñan Campus grounds. 
+	Operational Scope 
+	Must-Have
+	Team
+	NFR-SEEN-0004
+	Transaction history logs and dispute submissions shall be noneditable once confirmed, ensuring a tamper-proof audit trail. 
+	Security / Data Integrity
+	Must-Have
+	Team
+	
+
+System Requirements:
+
+
+Requirement ID
+	Requirement
+	Priority (Must-Have / Nice-To-Have)
+	Source
+	SYS-SEEN-0001
+	The authentication module shall validate university domain suffixes via regex pattern matching prior to account activation. 
+	Must-Have
+	
+
+	SYS-SEEN-0002
+	The cross-referencing engine shall compare newly submitted found items against active lost reports based on category, date, and location keywords. 
+	Must-Have
+	
+
+	SYS-SEEN-0003
+	The notification engine shall dispatch real-time alerts (in-app banner and email) for claim submissions, approvals, messages, and dispute filings. 
+	Must-Have
+	
+
+	SYS-SEEN-0004
+	The database ledger shall automatically generate dual-sided transaction records referencing both the finder UUID and claimant UUID upon turnover confirmation 
+	Must-Have
+	
+
+	SYS-SEEN-0005
+	The dispute engine shall automatically update ticket status to DISPUTED and surface counterparty contact details upon submission of a valid false-claim report. 
+	Must-Have
+	
+
+	
+
+
+
+Features and Functionalities Beyond the Scope
+Mandatory In-Person Handover
+While the system handles posting, searching, and claim requests, the final return of the item cannot be completed online. The finder and the claimant must meet in person on campus to hand over the item.
+Campus-Only Coverage
+The system is restricted exclusively to items that are lost or found within PUP Biñan Campus grounds. Reporting items misplaced outside the campus is not supported.
+Internet Dependency
+The web application requires active internet access (Wi-Fi or mobile data). It does not support offline use or SMS-only access for users without internet connectivity.
+Honesty-Based Verification
+The system relies on user-submitted information and the finder's judgment. It cannot automatically confirm that a claimant is the true owner. The Proof of Ownership form and the Transaction History only help reduce false claims.
+No Admin Intervention
+The system has no admin or staff to settle disputes or remove false posts. A reported false claim only reveals the claimant's identity to the true owner. Returning the item depends on the cooperation of the people involved.
+Email-Only Notifications
+Alerts are sent by email and in-app notifications only. SMS notifications are not included because of cost and feasibility.
+Limited Resources
+The project is built by a small student team using free hosting and database plans. Storage, bandwidth, and email limits may restrict the number of photos and users the system can handle.
+
+
+
+
+
+
+
+
+Entity-Relationship Diagram (ERD)
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+1. Use Case: User Registration and Authentication 
+	
+
+	Use Case ID 
+	UC-001 
+	Related Requirements 
+	FR-SEEN-0001, SYS-SEEN-0001
+	Description 
+	A student or professor registers for an account using their official university email address. 
+	Preconditions 
+	The user is on the registration portal. 
+	Success Condition 
+	The user account is successfully created after validating the official university email domain. 
+	Failed Condition 
+	Registration fails due to an invalid email domain. 
+	Actors 
+	Student / Professor / Faculty 
+	Flow of Activities 
+	      1.  The user navigates to the registration page.
+      2. The user inputs their full name, student/employee ID, contact number, and university email (@iskolarngbayan.pup.edu.ph for students or @pup.edu.ph for professors/faculty).
+      3. The user submits the registration form.
+      4. 4.The system automatically validates the email input against official university domains.
+      5. The system saves the valid user account profile.
+      6. A success confirmation is displayed. 
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2. Use Case: Report a Lost Item 
+	
+
+	Use Case ID 
+	UC-002 
+	Related Requirements 
+	FR-SEEN-0002, SYS-SEEN-0002  
+	Description 
+	A student or faculty member files a lost item report detailing its description, category, date, and last known location.  
+	Preconditions 
+	The user is logged into an authenticated account.  
+	Success Condition 
+	The lost item report is successfully registered in the system. . 
+	Failed Condition 
+	Submission fails due to incomplete description fields. 
+	Actors 
+	Student / Professor / Faculty 
+	Flow of Activities 
+	      1. The user accesses the "Report Lost Item" page.
+      2. The user provides the item's description, category, date lost, and last known location.
+      3. The user submits the report.
+      4. The system verifies and records the entry.
+      5. The system checks the report against existing found item posts for possible matches.
+      6. A confirmation message is displayed. 
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3. Use Case: Post a Found Item 
+	
+
+	Use Case ID 
+	UC-003
+	Related Requirements 
+	FR-SEEN-0003, SYS-SEEN-0002
+	Description 
+	A student or faculty member posts an item they found on campus so the owner can claim it. 
+	Preconditions 
+	The user is logged into an authenticated account and has found an item within the campus. 
+	Success Condition 
+	The found item is posted and visible to other users. 
+	Failed Condition 
+	Submission fails due to incomplete required fields.  
+	Actors 
+	Student / Professor / Faculty (Finder) 
+	Flow of Activities 
+	      1. The finder opens the "Post Found Item" page.
+      2. The finder uploads item photos and enters the category, description, condition, date/time found, and location found.
+      3. The finder submits the post.
+      4. The system saves the post and sets its status to "Available for Claim".
+      5. The system checks the post against active lost item reports and notifies users with possible matches.
+      6. A success confirmation is displayed. 
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4. Use Case: Search and Filter Items 
+	
+
+	Use Case ID 
+	UC-004 
+	Related Requirements 
+	FR-SEEN-0004, NFR-SEEN-0001 
+	Description 
+	Users search and filter posted items by color, size, and category. 
+	Preconditions 
+	Users have active internet access to view listings. 
+	Success Condition 
+	Matching items are filtered and displayed.  
+	Failed Condition 
+	Network failure prevents data fetching. 
+	Actors 
+	User / Student / Faculty  
+	Flow of Activities 
+	      1. The user navigates to the item listings page.
+      2. The user enters a keyword and/or selects filters: color, size, and category.
+      3. The system queries the database.
+      4. The system displays the matching items. 
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5. Use Case: Submit Proof of Ownership Claim Form  
+	
+
+	Use Case ID 
+	UC-005 
+	Related Requirements 
+	FR-SEEN-0005, SYS-SEEN-0003 
+	Description 
+	A user who believes a posted item is theirs submits a claim form containing their own information as proof of ownership. 
+	Preconditions 
+	The user is logged in and has found a listing that matches their lost item. .  
+	Success Condition 
+	The claim form is submitted and the finder is notified.  
+	Failed Condition 
+	Submission fails due to incomplete required fields or an unchecked honesty statement.   
+	Actors 
+	Student / Professor / Faculty (Claimant) 
+	Flow of Activities 
+	      1. The claimant opens the item post and clicks "Claim Item".
+      2. The system displays the Proof of Ownership Claim Form.
+      3. The claimant enters the item's identifying details (marks, serial number, contents, etc.) and may attach photos or receipts.
+      4. The claimant checks the honesty statement and submits the form.
+      5. The system saves the claim and notifies the finder.
+      6. The finder reviews the form and approves or rejects the claim.
+      7. The system notifies the claimant of the decision. 
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6. Use Case: Handover and Transaction Recording  
+	
+
+	Use Case ID 
+	UC-006  
+	Related Requirements 
+	FR-SEEN-0006, FR-SEEN-0007, FR-SEEN-0008, FR-SEEN-0010, SYS-SEEN-0004 
+	Description 
+	After a claim is approved, the finder and claimant arrange a meetup and confirm the item return, which is then recorded in both users' transaction history. 
+	Preconditions 
+	The finder has approved the claimant's Proof of Ownership Claim Form. 
+	Success Condition 
+	The item is returned and the transaction is recorded in both users' transaction history. 
+	Failed Condition 
+	The handover is not completed and the post remains open for claiming.  
+	Actors 
+	Finder / Claimant 
+	Flow of Activities 
+	      1. The finder and claimant contact each other through the in-app chat.
+      2. They agree on a meetup time and place within the campus.
+      3. They meet in person and the claimant inspects the item.
+      4. Both users click "Confirm Turnover" in the system.
+      5. The system updates the item status to "Returned".
+      6. The system records the transaction (item, date, location, and both users' names and IDs) in each user's transaction history.
+      7. The system offers an optional feedback form to both users. 
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+7. Use Case: View Transaction History 
+	
+
+	Use Case ID 
+	UC-007 
+	Related Requirements 
+	FR-SEEN-0008, NFR-SEEN-0002 
+	Description 
+	Users view their record of items they found, claimed, and returned for transparency.  
+	Preconditions 
+	The user is logged into an authenticated account. 
+	Success Condition 
+	The user's transaction history is displayed. 
+	Failed Condition 
+	The history fails to load due to a network error. 
+	Actors 
+	Student / Professor / Faculty 
+	Flow of Activities 
+	      1. The user opens their profile page.
+      2. The user selects "Transaction History".
+      3. The system retrieves the user's records.
+      4. The system displays each transaction with the item, date, location, role (finder or claimant), and the other party's name and ID. .
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+8. Use Case: Report a Falsely Claimed Item 
+	
+
+	Use Case ID 
+	UC-008 
+	Related Requirements 
+	FR-SEEN-0009, SYS-SEEN-0003, SYS-SEEN-0005 
+	Description 
+	The original owner reports an item that was falsely claimed so they can still recover it. 
+	Preconditions 
+	The item is marked "Returned" and the reporter is logged in.     
+	Success Condition 
+	The report is submitted and the item is marked "Disputed". 
+	Failed Condition 
+	Submission fails due to incomplete required fields.   
+	Actors 
+	Original Owner / Finder / Claimant 
+	Flow of Activities 
+	      1. The original owner opens the returned item post and clicks "Report False Claim".
+      2. The owner fills out the report form with their proof of ownership (photos, serial number, receipt, etc.).
+      3. The owner submits the report.
+      4. The system marks the item as "Disputed".
+      5. The system shows the owner the claimant's name, ID, and contact details from the transaction record.
+      6. The system notifies the finder and the claimant of the report.
+      7. The original owner contacts the claimant to recover the item. 
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+PURPOSE AND SCOPE
+The purpose of this document is to identify, analyze, and document the business and user requirements of Project SEENta, a centralized, peer-to-peer (P2P) web-based lost and found management system developed specifically for the Polytechnic University of the Philippines: Biñan Campus. This document provides a high-level overview of the system’s business needs, objectives, operational scope, and major functionalities to establish a unified understanding among project stakeholders and serve as the baseline for system architecture, design, and implementation.
+Unlike traditional lost-and-found processes that depend on a central security office or disorganized social media group chats, SEENta operates on a community-driven model where campus members interact directly. The system covers three primary situational user roles: Finder, Claimant, and Original Owner, all operating under verified institutional identities (@iskolarngbayan.pup.edu.ph for students and @pup.edu.ph for faculty/staff).
+________________
+
+
+HIGH-LEVEL FEATURES
+Platform Core & Discovery
+      1. Institutional User Authentication
+ Restricts account registration and access strictly to verified PUP Biñan institutional webmail domains (@iskolarngbayan.pup.edu.ph and @pup.edu.ph), requiring legal full name, student/faculty ID number, and active mobile contact number to eliminate anonymous fraudulent accounts.
+      2. Lost Item Reporting
+ Provides a self-service submission form allowing users who misplaced personal belongings to file an active lost report containing detailed physical descriptions, item category, date/time lost, and last known campus location.
+      3. Found Item Posting with Photo Upload
+ Allows campus finders to publish discovered items with high-resolution photographic evidence, category tagging, physical condition notes, date/time discovered, and specific campus discovery spot.
+      4. Automated Cross-Referencing Engine
+ Asynchronously cross-references newly posted found items against active lost reports based on matching categories, dates, and campus location keywords, dispatching automated match alerts to potential owners.
+      5. Multi-Attribute Search and Filtering
+ Enables users to quickly query campus listings using keywords and granular filters such as color, item size, category, discovery date, and specific campus building/zone.
+Claim & Handover Management
+         6. Proof of Ownership Claim Workflow
+ Replaces administrative gatekeepers with a structured, challenge-response form where claimants submit identifying marks, serial numbers, concealed contents, and proof attachments (receipts or past photos) along with a mandatory honesty declaration.
+         7. Claim Review and Verification
+ Provides the finder with a private review dashboard to evaluate claimant submissions, allowing them to approve or reject claims based on the accuracy of provided evidence.
+         8. Direct In-App Coordination Channel
+ Opens a private, secure communication channel between the finder and approved claimant once a claim is accepted, enabling them to safely schedule an in-person campus handover.
+         9. Mutual Digital Turnover Confirmation
+ Requires both the finder and claimant to click a mutual turnover acknowledgment button during the physical exchange, updating the item state to REUNITED / RETURNED and preventing unilateral status manipulation.
+Accountability & Trust
+            10. Immutable User Transaction History
+ Automatically records every surrendered, claimed, and returned item into a permanent ledger displayed on each user's profile, showing item details, date, location, and the counterparty's verified institutional identity.
+            11. Falsely Claimed Item Dispute Reporting
+ Empowers an original owner to contest a completed handover by submitting proof of true ownership. Upon validation, the item is flagged as DISPUTED and reveals the verified institutional identity and contact info of the false claimant for recovery purposes.
+            12. Post-Return Feedback and Rating System
+ Collects optional post-handover star ratings (1 to 5 stars) and brief feedback from both participants to foster peer-to-peer accountability and community trust across the campus.
+            13. Real-Time Notification Engine
+ Dispatches automated in-app alerts and institutional SMTP email notifications for claim submissions, approvals, rejections, coordination updates, potential matches, and dispute filings.
+            14. Campus Accessibility and High-Contrast Mode
+ Features a mobile-first, responsive interface equipped with high-contrast display profiles and scalable typography to ensure legibility under harsh, direct outdoor sunlight on campus.
+________________
+
+
+LIMITATIONS
+               * No Administrative or Staff Gatekeepers: The system operates strictly peer-to-peer; the platform does not provide staff custodians to store items or approve claims.
+               * Mandatory In-Person Handover: Items cannot be shipped, couriered, or digitally transferred. Physical inspection and return within designated campus safe-exchange zones are strictly mandatory.
+               * PUP Biñan Campus Boundary: The system is exclusively bounded to items lost or found within the official grounds of PUP Biñan Campus.
+               * No Offline or Standalone SMS Access: An active internet connection (campus Wi-Fi or mobile data) is required; SMS fallback is excluded due to recurring gateway costs.
+               * No Direct Online Payment or Monetary Rewards: The platform does not support monetary bounties, tipping, or finder fees; returns are strictly community-driven.
+               * Civil and Disciplinary Recourse: While the platform generates a tamper-proof audit trail and unmasks false claimants, physical retrieval from uncooperative claimants relies on university student affairs (OSA) and campus security outside the software.
+________________
+
+
+STAKEHOLDERS
+               * PUP Biñan Students: Primary users reporting lost belongings, posting found items, submitting proof of ownership, and completing handovers.
+               * PUP Biñan Faculty and Academic Staff: Campus personnel utilizing the platform under verified employee credentials.
+               * Campus Security Office & Office of Student Affairs (OSA): External administrative consumers who utilize SEENta’s immutable audit trail and dispute packages to arbitrate contested property.
+               * Project SEENta Development Team (Group 12): System architects, developers, and QA engineers responsible for system delivery and maintenance.
+________________
+
+
+USER REQUIREMENTS
+FUNCTIONAL REQUIREMENTS
+Requirements
+	Priority
+	Source
+	Status
+	The system shall restrict user registration strictly to institutional university emails (@iskolarngbayan.pup.edu.ph and @pup.edu.ph) validated via regex pattern matching.
+	Must have
+	Team
+	Done
+	The system shall mandate the entry of full legal name, official student/employee ID, and an active 11-digit mobile contact number during registration.
+	Must have
+	Client
+	Done
+	The system shall allow authenticated users to submit a Lost Item Report detailing title, description, category, date lost, and last known campus location.
+	Must have
+	Team
+	In progress
+	The system shall allow authenticated users to post a Found Item Listing with photo uploads, category, physical condition, date found, and discovery location.
+	Must have
+	Client
+	In progress
+	The system shall automatically cross-reference newly posted found items against active lost reports based on category, date, and location keywords.
+	Must have
+	Team
+	In progress
+	The system shall allow users to search and filter listings by category, color, item size, campus building, and date range.
+	Must have
+	Client
+	In progress
+	The system shall provide a Proof of Ownership Claim Form capturing unique identifying marks, serial numbers, proof attachments, and a mandatory honesty statement.
+	Must have
+	Client
+	In progress
+	The system shall lock a listing to prevent concurrent conflicting claims while a claim is under active review.
+	Must have
+	Team
+	In progress
+	The system shall allow the finder to evaluate submitted proof and approve or reject the claim with feedback.
+	Must have
+	Team
+	In progress
+	The system shall open an isolated in-app coordination chat between the finder and claimant only after claim approval.
+	Must have
+	Client
+	In progress
+	The system shall enforce a dual-sided confirmation mechanism requiring both parties to digitally confirm turnover before an item is marked as Reunited/Returned.
+	Must have
+	Team
+	In progress
+	The system shall automatically write an immutable transaction record to both users' profiles containing timestamps, meetup location, and verified institutional IDs.
+	Must have
+	Team
+	In progress
+	The system shall allow an original owner to file a Falsely Claimed Item Dispute Report against a returned item.
+	Must have
+	Client
+	In progress
+	The system shall automatically update an item's status to Disputed and reveal the verified identity and contact details of the recipient upon submission of a valid dispute report.
+	Must have
+	Team
+	In progress
+	The system shall allow users to submit optional 1-to-5 star ratings and feedback following a completed handover.
+	Good to have
+	Client
+	In progress
+	The system shall dispatch automated real-time in-app alerts and institutional SMTP email notifications for claim updates, matches, and disputes.
+	Must have
+	Team
+	In progress
+	The system shall provide visual accessibility toggles including high-contrast mode, dark mode, and typography scaling (85% to 115%).
+	Good to have
+	Team
+	Done
+	The system shall allow users to export their personal transaction history and dispute audit records in CSV or PDF format.
+	Good to have
+	Client
+	In progress
+	________________
+
+
+CUSTOMER / USER STORIES
+User Story
+	Priority
+	As a student who lost an item, I want to submit a detailed lost item report so that the system can automatically match it when someone turns it in.
+	MUST HAVE
+	As a campus finder, I want to post a found item with photos and discovery details so that the rightful owner can locate and claim it.
+	MUST HAVE
+	As an owner browsing listings, I want to filter items by category, color, and location so that I can quickly spot my missing belongings without scrolling endlessly.
+	MUST HAVE
+	As a claimant, I want to submit private identifying details and purchase receipts through a secure form so that I can prove ownership without publicly leaking private information.
+	MUST HAVE
+	As a finder, I want to review submitted proof before approving a claim so that I do not accidentally hand over property to a fraudulent claimant.
+	MUST HAVE
+	As an approved claimant, I want to chat directly with the finder inside the app so that we can safely agree on a campus meetup time and place.
+	MUST HAVE
+	As both finder and claimant, I want to mutually confirm turnover in the app during our meetup so that neither party can manipulate the transaction record.
+	MUST HAVE
+	As a campus member, I want to view my immutable transaction history so that my surrenders and recoveries are transparently recorded under my student ID.
+	MUST HAVE
+	As a true owner, I want to dispute a falsely claimed item so that the system flags the fraud and reveals who wrongfully received my belongings.
+	MUST HAVE
+	As a user completing a handover, I want to leave feedback and a rating so that we can cultivate a culture of honesty and reliability on campus.
+	GOOD TO HAVE
+	As an outdoor user, I want to toggle high-contrast mode and increase font size so that I can easily read listings under bright sunlight.
+	GOOD TO HAVE
+	________________
+
+
+NON-FUNCTIONAL REQUIREMENTS
+Requirements
+	Priority
+	Category
+	Status
+	The system shall load major listings, feeds, and forms within 3 seconds under standard 4G/campus Wi-Fi connections.
+	Must Have
+	Performance
+	In progress
+	The system shall support at least 200 concurrent active campus users without noticeable latency degradation.
+	Must Have
+	Performance
+	In progress
+	Users shall access only functions and records permitted by their verified authentication state and transaction role (ownership-based access control).
+	Must Have
+	Security
+	In progress
+	Sensitive claimant proof (concealed item marks, serial numbers, contact info) shall remain strictly masked until formal claim approval.
+	Must Have
+	Security / Privacy
+	In progress
+	The system shall comply with the Philippine Data Privacy Act of 2012 (RA 10173), capturing explicit user consent upon sign-in.
+	Must Have
+	Security / Compliance
+	In progress
+	All transaction records and dispute filings shall be insert-only and non-editable, guaranteeing a tamper-proof audit trail.
+	Must Have
+	Data Integrity
+	In progress
+	The interface shall be fully responsive across mobile phones, tablets, and desktop viewports (minimum width: 360px).
+	Should Have
+	Compatibility
+	In progress
+	The high-contrast theme shall meet WCAG 2.1 AA standards (minimum 4.5:1 contrast ratio) for sunlight readability.
+	Good to have
+	Usability / Accessibility
+	In progress
+	The database shall maintain relational integrity with cascading foreign keys linked directly to verified student/faculty UUIDs.
+	Must Have
+	Scalability / Architecture
+	In progress
+	Image uploads shall be automatically compressed on client-side upload to under 2MB to optimize storage and bandwidth.
+	Must Have
+	Performance / Storage
+	In progress
+	________________
+
+
+OPEN QUESTIONS
+Questions
+	Owner
+	1. How does the system handle an unresponsive finder after a claim is submitted?
+	BA / Team
+	2. What prevents a dishonest claimant from deleting their account after fraudulently collecting an item?
+	BA / Team
+	3. What campus locations qualify as official Safe-Exchange Zones for physical handover?
+	BA / Team
+	4. How long should an item listing remain active before being automatically marked as unclaimed/archived?
+	BA / Team
+	Open-Ended Answers:
+               1. Unresponsive Finder SLA: If a finder does not approve or reject a submitted claim within 72 hours, the claim automatically expires, unlocking the post so other claimants can apply, while the original claimant receives an alert.
+               2. Account Retention & Audit Freeze: Accounts with active handovers, pending claims, or open dispute records cannot be deactivated or deleted. Furthermore, the transaction history permanently retains the user's student/faculty ID and legal name in an insert-only table even if an account is restricted.
+               3. Safe-Exchange Zones: Handovers are formally restricted to high-traffic, CCTV-monitored campus sectors: the Main Campus Lobby, University Library Entrance, Campus Security Guard Post, and the Student Center Plaza.
+               4. Listing Retention Window: Found items remain in the active feed for 30 calendar days. After 30 days without an approved claim, the status transitions to UNCLAIMED_ARCHIVE, prompting the finder to surrender the physical item to the Campus Security Office.
+________________
+
+
+GLOSSARY
+               * Automated Cross-Referencing Engine: A background matching algorithm that cross-checks active lost reports against new found posts based on category, date, and location keywords.
+               * Claimant: A verified student or faculty member who asserts ownership of a posted found item by submitting formal evidence through the system.
+               * Dispute Report: A formal contested case filed by the original owner asserting that an item was fraudulently claimed and handed over to an unauthorized party.
+               * Finder: A verified student or faculty member who discovers unattended property on campus, retains temporary custody, and lists it on the platform.
+               * Handover / Turnover: The physical meeting between finder and claimant on campus to inspect the item and execute simultaneous digital confirmation.
+               * High-Contrast Mode: An accessibility display setting that amplifies text weight, border outlines, and color contrast to ensure readability under direct sunlight.
+               * Immutable Transaction History: A permanent, insert-only audit ledger recording every completed turnover with timestamps, location, and verified student IDs.
+               * Institutional Domain Validation: Server-side authentication restricting account creation strictly to official PUP webmail suffixes (@iskolarngbayan.pup.edu.ph and @pup.edu.ph).
+               * Original Owner: The legitimate owner of personal property who lost the item and retains the right to submit a lost report or dispute a fraudulent claim.
+               * Peer-to-Peer (P2P) Model: A decentralized operational architecture where community members report, verify, coordinate, and return items directly without staff intermediaries.
+               * Proof of Ownership Claim Form: A structured challenge-response form capturing non-public item details (serial numbers, hidden marks, receipts) used by finders to verify ownership.
+               * Safe-Exchange Zone: Designated, high-visibility, CCTV-monitored physical locations on PUP Biñan grounds recommended for item handovers.
+
+
+
+
+Revision History
+
+
+Version 
+	Date
+	Author/s
+	Description Change
+	A
+	October 3, 2026
+	Armi Jhon Aviles
+	               * Revised the whole document structure and updated core system features.
+	B
+	October 3, 2026
+	Roderick Orfella
+	               * Removed the admin feature to the system
+	C
+	October 4, 2026
+	Neil Ubaldo
+	               * Changed the whole system into peer-to-peer digital web application
+	
+
+
+
+High-Level System Architecture
+
+
+SEENta is a web application built in layers. Students and faculty use a mobile-responsive web app, the web app talks to a Node.js REST API, and the API is the only component that touches the database, file storage, and email service. There is no admin layer; users handle claims, chat, and handover directly.
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Layer 
+	Role
+	Users
+
+
+	Students (@iskolarngbayan.pup.edu.ph) and faculty (@pup.edu.ph). Both have the same access and act as finder, claimant, or original owner. 
+	Client / Presentation
+
+
+	React + Vite + TailwindCSS web app: forms, search, claims, chat, history. Mobile-responsive with a high-contrast mode. 
+	Application / Business
+
+
+	Node.js REST API: email-domain and OTP validation, matching, claim and handover processing, disputes, notifications. 
+	Data
+
+
+	PostgreSQL on Supabase for records; Supabase Storage for photos and proof attachments. 
+	Cloud services
+
+
+	SMTP email for alerts; Supabase Realtime for live chat and in-app notifications.
+	
+
+Detailed (Low-Level)  System Architecture  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Module
+	Description
+	Pages
+	Auth page, student dashboard, and the item, claim, and dispute screens.
+	Components
+	Reusable parts such as navbar, footer, OTP modal, forms, and cards.
+	Auth Context
+	Holds login session and user state shared across pages.
+	Services
+	authService and otpService call the backend API.
+	UI Shell
+	Responsive layout, notification banner, high-contrast mode.
+	API & Security
+	Versioned REST router (/api/v1), CORS, rate limiting, input sanitizer, session checks.
+	Core Processing
+	Controllers for authentication, items, claims, transactions, and disputes. Each owns the business rules of its entity.
+	Engine & Tasks
+	Matching engine (category, date, location), notification engine, and an insert-only transaction ledger.
+	Utilities
+	Email-domain validator, OTP generator, image upload handler, form validators.
+	Data Access
+	Database client (db.js) running parameterized SQL queries against the schema in schema.sql.
+	PostgreSQL (Supabase)
+	Tables: users, found_items, lost_reports, claims, transactions, disputes, messages, notifications, feedback. Foreign keys link every record to verified users.
+	File Storage
+	Item photos and claim attachments. The database keeps only the URLs.
+	Mail & Realtime
+	SMTP email for OTP codes and alerts; live chat and in-app notifications.
+	 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Technical Approach
+1. Architecture & Methodology
+•      Decoupled client-server: the React app and Node.js API are separate codebases that communicate only over HTTPS using versioned JSON endpoints.
+•      Modular backend: routes and controllers are grouped by entity (auth, items, claims, transactions, disputes); repositories handle all queries.
+•      Agile delivery: seven two-week sprints in three phases: posting and identity, claiming and handover, then transparency and notifications.
+2. Configuration & Security
+•      Secrets: kept in git-ignored .env files, loaded through one central config, with separate keys per environment.
+•      Registration: only @iskolarngbayan.pup.edu.ph and @pup.edu.ph emails, validated by regex on both client and server, then confirmed with a one-time password (OTP) sent by email.
+•      Authentication: hashed passwords and expiring session tokens.
+•      Ownership-based access: only the finder can approve a claim, only the approved claimant can chat, only the original owner can file a dispute. Supabase Row-Level Security enforces this in the database.
+•      Input protection: parameterized queries against SQL injection, sanitization against XSS, upload type and size limits.
+•      Transport: HTTPS only, CORS limited to the SEENta origin, rate limiting on login, posting, and claim routes.
+•      Integrity and privacy: transaction and dispute records are insert-only. Consent to the Data Privacy Act (RA 10173) is captured at sign-in, and contact details appear only after claim approval.
+3. Performance
+•      Paginated item feed and database indexes on category, date, location, and status.
+•      Browser-side caching of static lists such as categories and campus locations.
+•      Photos compressed before upload to fit free storage and bandwidth limits.
+•      Matching runs once per new post, only against active lost reports.
+4. Version Control & Workflow
+Code lives on GitHub in two branches: dev for active work and main for the protected, production-ready version. A Pull Request from dev to main needs three approvals:
+Gate
+	Reviewer
+	Check
+	1
+	Peer developer
+	Code quality and architecture compliance.
+	2
+	QA
+	Feature works against its acceptance criteria.
+	3
+	Project Manager
+	Story accepted, then merged into main.
+	 
+5. Testing & Documentation
+•      API testing: Postman collections for status codes, payloads, and token behavior, including failure cases such as invalid email domains and duplicate claims.
+•      Functional testing: test cases per feature, from registration to dispute.
+•      Usability testing: responsive layout and high-contrast mode on phones and desktops.
+•      Security checks: XSS, SQL injection, and unauthorized access to claim, chat, and dispute data.
+•      Documentation: API endpoints, database schema, and key decisions recorded as they are built.
+6. Deployment & Environments
+Hosting uses free or student plans: Vercel or Netlify for the Vite frontend, and a Node.js host for the API.
+Environment
+	Purpose
+	Development
+	Local machines and the dev branch, with a development database.
+	Staging
+	Pre-production copy with a separate Supabase project, used by QA and the PM for testing and sign-off.
+	Production
+	Live system tied to main. Changes arrive only after passing all gates in Staging.
+	 
+7. Tech Stack Summary
+Area
+	Technology
+	Frontend
+	JavaScript, React, Vite, TailwindCSS
+	Backend
+	Node.js REST API
+	Database & storage
+	PostgreSQL, Supabase Storage, Supabase Realtime
+	Notifications
+	SMTP email (OTP and alerts), in-app alerts
+	Security
+	HTTPS, hashed passwords, OTP email verification, session tokens, Row-Level Security
+	Testing
+	Postman, manual functional and usability testing
+	Source control & hosting
+	GitHub; Vercel / Netlify; Node.js backend host
+	 
+
+
+Conceptual Architecture Diagram 
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+The Conceptual Architecture Diagram illustrates the high-level architecture of SEENta, a web-based Lost and Found Management System for PUP Biñan Campus. The system follows a client-server architecture composed of a Presentation Layer, Business/API Layer, Data Layer, and External Services. These layers work together to allow students and faculty to report lost or found items, search listings, submit ownership claims, communicate with other users, and confirm the return of belongings.
+External Users include students and faculty who access SEENta through the web application. They can create lost-item reports, publish found-item posts, search for items, submit proof of ownership, exchange messages, and confirm completed handovers.
+Presentation Layer — Frontend provides the user interface and displays the system's features. The proposed frontend uses React, Vite, and Tailwind CSS. It allows users to navigate listings, manage claims, communicate with other users, receive notifications, and view transaction history.
+Business/API Layer — Backend handles the application's main processing through a Node.js REST API. It manages authentication, input validation, access control, lost-and-found records, ownership claims, messaging, and handover processing. The frontend communicates with the backend through HTTPS requests and responses.
+Data Layer stores the application's persistent information using PostgreSQL through Supabase. It includes user records, lost-item reports, found-item posts, ownership claims, messages, and transaction records. Database operations are handled by the backend to support consistent processing and controlled access.
+External Services support additional system functions. Supabase Storage stores item photos and attachments, Supabase Realtime supports live updates, and an SMTP email service delivers verification messages and system notifications.
+Together, these components provide the main structure of SEENta and show how users, application processing, data storage, and supporting services interact within the system.
+
+
+Entity-Relationship Diagram (ERD)
+The Entity-Relationship Diagram details how data flows and interconnects across Project SEENta to support student-driven item recovery at PUP Biñan. At the core of the system, the users entity authenticates campus members via verified student credentials, linking each account to their submitted inquiries in lost_item_reports and timely operational updates in notifications. The discovery pipeline begins when a finder logs an unattended item into found_item_posts, attaching visual proof through child records in post_photos. Interested owners initiate the retrieval process by submitting proof_of_ownership_claims, which bundles proprietary descriptions and uploaded documentation from claim_attachments while provisioning an isolated communication channel in messages for direct claimant-finder coordination. Once ownership is validated and the physical item is handed over at an authorized campus safe zone, the resolution is finalized as a permanent turnover logged in transaction_records. Should a handover be contested or wrongly disbursed, the case escalates into dispute_reports alongside supplementary evidentiary files in dispute_attachments. By combining relational foreign keys with strict unique constraints, this architecture preserves end-to-end auditability, prevents duplicated claim resolutions, and maintains reliable accountability across the entire campus recovery workflow.  
+
+
+SOLUTION ASSUMPTIONS, CONSTRAINTS, AND DEPENDENCIES 
+
+
+Solution Assumptions
+               * Verified University Membership: It is assumed that users have access to valid PUP institutional email accounts under the approved domains, such as iskolarngbayan.pup.edu.ph for students and pup.edu.ph for faculty. These accounts are used to limit system access to legitimate members of the PUP Biñan Campus community.
+               * Internet and Device Availability: Students and faculty are assumed to have access to an internet-connected device such as a smartphone, laptop, tablet, or desktop computer. Since SEENta is a web-based application, an active internet connection is required to report items, submit claims, receive updates, and access transaction records.
+               * Accurate and Honest User Information: The system assumes that users provide truthful and accurate information when creating accounts, posting lost or found items, and completing Proof of Ownership Claim Forms. The system assists in verifying ownership, but the final decision to approve a claim remains with the finder. 
+               * User Cooperation During Handover: It is assumed that the finder and approved claimant are willing to communicate and meet physically within the PUP Biñan Campus to complete the return of an item. Both parties are expected to confirm the completed turnover through the system.
+               * Availability of Supporting Services: It is assumed that the selected database, hosting platform, email service, and other supporting online services remain available during normal system operation. The project is expected to use free or student-accessible service plans where possible.
+
+
+System Constraints
+               * Campus-Only Operation: Project SEENta is limited to lost and found items within the PUP Biñan Campus. Items lost or found outside the campus are not covered by the system. 
+               * Mandatory Physical Handover: The system cannot physically return or deliver an item. After a claim is approved, the finder and claimant must meet in person on campus to inspect and hand over the item.
+               * No Administrative Intermediary: The system does not include an administrator or staff member who approves claims, handles items, or resolves disputes. Claim approval, communication, handover, and dispute coordination are performed directly between users.
+               * Limited Ownership Verification: SEENta cannot automatically determine whether a claimant is the real owner of an item. The Proof of Ownership Claim Form provides supporting evidence, but the finder is still responsible for reviewing the submitted information and deciding whether to approve or reject the claim.
+               * Internet Dependency: The application requires Wi-Fi or mobile data to function. Offline operation and SMS-only access are outside the current scope of the system.
+               * Email and In-App Notifications Only: Notifications are limited to email and in-app alerts. SMS notifications are excluded from the current implementation because of cost and feasibility limitations.
+               * Limited Hosting and Storage Resources: Because the project is being developed by a student team using free or limited service plans, storage capacity, bandwidth, uploaded image sizes, email limits, and the total number of supported users may be restricted.
+               * No Guaranteed Recovery After a False Claim: SEENta can identify the user who received a disputed item and preserve the transaction record, but it cannot physically force that person to return the item. Actual recovery depends on user cooperation or assistance from appropriate university authorities outside the system.
+System Dependencies
+               * Internal System Dependencies:
+               * The Web Application / Frontend depends on the backend to process registration, item reports, searches, claims, handover confirmations, transaction history, and dispute requests.
+               * The Claim Processing feature depends on existing found item posts and authenticated user accounts.
+               * The Handover and Transaction History features depend on an approved Proof of Ownership Claim before a turnover can be confirmed.
+               * The False Claim Dispute feature depends on an existing completed transaction record so the system can identify the user who previously received the item. 
+
+
+               * Database Dependency: The system requires a persistent database to store user accounts, lost and found item records, claims, transaction histories, dispute reports, and related system information. The current technical strategy identifies Supabase as a possible database solution, although the final database platform is still subject to confirmation. 
+               * Email / Notification Service: SEENta depends on a notification service to deliver important updates such as possible item matches, claim submissions, approvals, rejections, and dispute notifications. If the email service becomes unavailable, email notifications may be delayed even though the rest of the application remains operational. 
+               * Hosting Service: The web application depends on a hosting or deployment platform to make SEENta accessible online. The current project strategy identifies services such as Vercel, Netlify, or GitHub as possible hosting options.
+               * Institutional Email Availability: User registration depends on the availability of valid PUP institutional email accounts. Users without an approved university email domain cannot create an authorized SEENta account.
+               * Network Connectivity: Communication between users, the web application, database, and notification services depends on reliable internet connectivity. A network outage may temporarily prevent users from submitting reports, viewing listings, receiving notifications, or confirming transactions.
+
+
+001: Decision to Use React and Vite
+Status: Accepted
+Context:
+SEENta requires a responsive web interface where students and faculty can report lost or found items, browse reports, submit ownership claims, and coordinate the return of belongings.
+Decision:
+Use React for the frontend user interface and Vite as the development and build tool.
+Consequences:
+Positive: Supports reusable interface components and a responsive, maintainable frontend. Vite provides a streamlined development and production build process.
+Limitation: The frontend depends on the backend API for retrieving and updating system data.
+________________
+
+
+002: Decision to Use Node.js and a REST API
+Status: Accepted
+Context:
+SEENta needs centralized backend processing for authentication, item reports, ownership claims, messaging, notifications, transaction records, and dispute reports.
+Decision:
+Use Node.js to implement a REST API that handles business logic and communication between the frontend and database services.
+Consequences:
+Positive: Separates frontend presentation from backend processing and provides a structured interface for system operations.
+Limitation: API endpoints, validation, error handling, and access permissions must be consistently implemented and maintained.
+________________
+
+
+003: Decision to Use PostgreSQL Through Supabase
+Status: Accepted
+Context:
+SEENta manages related records, including users, lost-item reports, found-item posts, ownership claims, messages, notifications, transactions, and disputes. These records require consistent relationships and data integrity.
+Decision:
+Use PostgreSQL through Supabase as the primary relational database infrastructure.
+Consequences:
+Positive: Supports relational data, foreign-key constraints, structured queries, and transactional operations. Supabase provides managed database infrastructure.
+Limitation: Database relationships, constraints, access policies, and migrations must be properly designed and maintained.
+________________
+
+
+004: Decision to Use Supabase Storage for Item Photos and Attachments
+Status: Proposed
+Context:
+Users need to upload photographs of lost or found items and supporting evidence for ownership claims and dispute reports. Storing image files directly in database records would mix file storage with structured application data.
+Decision:
+Use Supabase Storage for uploaded images and attachments, while storing their references and related metadata in PostgreSQL.
+Consequences:
+Positive: Separates media files from structured database records and provides a dedicated storage service.
+Limitation: File access permissions, upload restrictions, file validation, storage limits, and protection of private evidence must be configured properly.
+________________
+
+
+005: Decision to Implement Institutional Email Verification
+Status: Accepted
+Context:
+SEENta is intended for students and faculty of PUP Biñan Campus. The system needs to restrict participation to eligible campus users and support account verification.
+Decision:
+Use institutional email verification with one-time passwords (OTPs) or verification links before granting access to protected system features.
+Consequences:
+Positive: Helps restrict participation to users with access to an eligible institutional email account and reduces unauthorized account registration.
+Limitation: Email verification alone does not prove a person's current student or faculty status. Verification expiry, resend limits, and secure handling of verification tokens must be implemented.
+________________
+
+
+006: Decision to Implement Role-Based Access Control
+Status: Accepted
+Context:
+SEENta has different user responsibilities, including reporting items, reviewing ownership claims, communicating about handovers, confirming transactions, and reporting disputes. These actions require appropriate access restrictions.
+Decision:
+Implement role-based and ownership-based authorization in the backend API. Enforce permissions so users can access only the functions and records appropriate to their roles and participation in a transaction.
+Consequences:
+Positive: Helps prevent unauthorized actions, such as modifying another user's report, accessing private claim evidence, or confirming a transaction on behalf of another participant.
+Limitation: Every protected endpoint and relevant database operation must enforce the correct permissions. Any additional campus-authority or administrator role must be explicitly defined if included in the final scope.
+________________
+
+
+007: Decision to Implement an Ownership Claim Workflow
+Status: Accepted
+Context:
+SEENta needs a controlled process for returning found items to their rightful owners. A user must provide evidence before a claim can be accepted or rejected.
+Decision:
+Implement a claim workflow that allows users to submit proof of ownership and enables the finder to review the claim and approve or reject it. Record claim status changes and preserve the associated evidence and decision history.
+Consequences:
+Positive: Establishes a consistent process for evaluating claims and reduces the likelihood of items being handed over without a review.
+Limitation: Claim criteria, evidence requirements, rejection reasons, and procedures for disputed decisions must be clearly defined. The platform cannot independently guarantee that submitted evidence is genuine.
+________________
+
+
+008: Decision to Implement Transaction Confirmation by Both Parties
+Status: Accepted
+Context:
+SEENta coordinates the return of items but does not physically store or deliver them. The system needs a way to record whether the finder and claimant confirm that a handover has occurred.
+Decision:
+Require both the finder and the claimant to confirm the handover before marking a transaction as completed. Record the confirmation events and relevant timestamps in the transaction history.
+Consequences:
+Positive: Provides a clearer record of completed handovers and reduces the risk of one party unilaterally marking a transaction as finished.
+Limitation: The system relies on user confirmations and cannot independently verify the physical exchange. Incomplete or conflicting confirmations require a defined resolution process.
+________________
+
+
+009: Decision to Implement In-App Messaging and Notifications
+Status: Accepted
+Context:
+Finders and claimants need to communicate about ownership claims and coordinate the physical return of items. Users also need updates when claims or transaction statuses change.
+Decision:
+Implement in-app messaging for communication related to item reports and claims, together with notifications for relevant claim, handover, and transaction events. Use Supabase Realtime if real-time message and status updates are required by the final implementation.
+Consequences:
+Positive: Keeps relevant communication and workflow updates within the platform and can reduce delays in coordinating item returns.
+Limitation: Message access must be restricted to authorized participants. Notification delivery, real-time subscriptions, and handling of missed updates must be configured and tested.
+________________
+
+
+010: Decision to Maintain Transaction History and Audit Records
+Status: Proposed
+Context:
+SEENta needs a reliable record of claim decisions, handover confirmations, status changes, and dispute-related actions. Historical records may be needed to clarify disagreements between users.
+Decision:
+Maintain transaction records and an audit trail of significant workflow events. Preserve historical events rather than silently overwriting them when a claim or transaction changes status.
+Consequences:
+Positive: Improves traceability and provides a history of important actions and decisions.
+Limitation: Audit records require appropriate access controls, retention rules, and protection against unauthorized modification. An immutable or cryptographically verifiable ledger should not be claimed unless it is specifically designed and implemented.
+________________
+
+
+011: Decision to Implement a Dispute Reporting Process
+Status: Proposed
+Context:
+Disagreements may occur when a claim is rejected, ownership evidence is contested, or the parties disagree about a handover. SEENta's documentation includes dispute reporting and references to campus-authority review, but the exact resolution responsibilities need clarification.
+Decision:
+Allow users to submit dispute reports and supporting evidence associated with the relevant item, claim, or transaction. Define who is authorized to review and resolve disputes before implementing an authority-based resolution workflow.
+Consequences:
+Positive: Provides a structured way to document disagreements and preserve relevant evidence.
+Limitation: The system cannot provide a complete resolution process until the responsible reviewer, decision authority, permitted actions, and appeal or escalation procedures are defined.
+________________
+
+
+012: Decision to Apply Database-Level Access Policies and Secure API Validation
+Status: Accepted
+Context:
+SEENta processes institutional account information, private messages, ownership evidence, and transaction records. Authentication alone is insufficient if users can access records or files they are not authorized to view.
+Decision:
+Apply server-side authentication and authorization, input validation, parameterized database queries, and appropriate Supabase Row Level Security (RLS) policies where applicable. Restrict file access and protect credentials and secret keys.
+Consequences:
+Positive: Reduces the risk of unauthorized data access, injection attacks, and exposure of private information.
+Limitation: Security depends on correct configuration across the frontend, backend, database, and file storage. Security controls must be tested rather than assumed to be effective.
+________________
+
+
+013: Decision to Use Email Notifications Through SMTP
+Status: Accepted
+Context:
+SEENta may need to send account verification messages, OTPs, and notifications about important account or claim events.
+Decision:
+Use an SMTP-compatible email service to deliver system emails. Configure the provider, sender identity, credentials, and delivery handling according to the selected deployment environment.
+Consequences:
+Positive: Provides a centralized method for delivering verification and system notification emails.
+Limitation: Email delivery depends on provider availability, configuration, rate limits, and recipient mail systems. The final SMTP provider must be confirmed before deployment.
+________________
+
+
+014: Decision to Use Git and GitHub for Version Control
+Status: Accepted
+Context:
+SEENta contains frontend and backend components, database changes, and configuration that may be developed and tested by multiple team members.
+Decision:
+Use Git for source control and GitHub for repository hosting, change tracking, and collaboration. Keep secrets and environment-specific credentials out of the repository.
+Consequences:
+Positive: Supports collaboration, change history, code review, and recovery of earlier versions.
+Limitation: The team must establish branching, commit, review, and environment configuration practices to prevent conflicts and accidental exposure of sensitive information.
+________________
+
+
+015: Decision to Deploy the System as a Web Application
+Status: Accepted
+Context:
+SEENta is intended to provide campus users with browser-based access to lost-and-found reporting, searching, claims, and handover coordination.
+Decision:
+Deploy the frontend and backend using compatible hosting services, with PostgreSQL and media storage managed through Supabase. Confirm the final hosting providers and production configuration before release.
+Consequences:
+Positive: Allows authorized users to access the system through a web browser without installing a dedicated desktop application.
+Limitation: Availability, performance, HTTPS, environment variables, backups, monitoring, and deployment configuration depend on the selected hosting services and operational practices.
+
+
+Revision History
+
+
+Version 
+	Date
+	Author/s
+	Description Change
+	A
+	October 3, 2026
+	Armi Jhon Aviles
+	               * Revised the whole document structure and updated core system features.
+	B
+	October 3, 2026
+	Roderick Orfella
+	               * Removed the admin feature to the system
+	C
+	October 4, 2026
+	Neil Ubaldo
+	               * Changed the whole system into peer-to-peer digital web application
+	
+
+
+
+Overview
+
+
+Project SEENta is a centralized, peer-to-peer (P2P) web application designed for the Polytechnic University of the Philippines: Biñan Campus to replace informal verbal inquiries and social media posts. The platform enables verified students and faculty to post found items, file lost reports, verify ownership through structured claim forms, and coordinate direct on-campus handovers. Every exchange is recorded in a tamper-proof Transaction History, establishing community accountability and enabling original owners to dispute false claims without administrative bottlenecks.
+
+
+Scope:
+
+
+               * Official PUP email registration and sign-in (@iskolarngbayan.pup.edu.ph) (@pup.edu.ph)
+               * Lost item reporting
+               * Found item posting with photo upload
+               * Item search and filtering (category, color, size, location)
+               * Automated matching between lost and found items
+               * Proof of ownership claim form submission
+               * Claim approval and rejection by the finder
+               * In-app chat between finder and claimant
+               * Mutual turnover confirmation
+               * User transaction history recording
+               * Report falsely claimed item
+               * Feedback and rating after item return
+               * Email and in-app notifications
+
+
+Out of scope:
+               * Central office or staff physical item storage
+               * Reporting items lost or found outside PUP Biñan Campus
+               * Item delivery or courier shipping services
+               * Public account registration and personal emails
+               * Social media account sign-in (Google, Facebook, Apple)
+               * Monetary rewards, tips, or finder fees
+               * Automatic physical verification of ownership
+               * Disciplinary actions and physical item recovery
+               * SMS notifications
+               * Offline system usage 
+UI MockUp
+
+
+               1. Login Page
+  
+
+Figure 1: Login Interface
+
+
+SEENta login interface displaying standard institutional credential inputs for student and faculty system access.
+
+
+               1. Email Address Field: This field captures the official PUP institutional email (@iskolarngbayan.pup.edu.ph for students or @pup.edu.ph for faculty/staff) for backend account identification and domain validation.
+               2. Password Field: This field captures the user's password, which is masked by default for confidentiality and will be cryptographically hashed and verified against the stored database record.
+               3. Password Visibility Toggle: This icon button toggles the password field between masked characters and plaintext, allowing users to verify their input before submission.
+               4. Terms and Privacy Policy Checkbox: This checkbox captures user consent to SEENta’s Terms and Conditions and Data Privacy Policy (RA 10173) prior to granting system access.
+               5. "Sign In" Button: This primary action button submits the entered credentials to the authentication controller, generates an active user session upon successful validation, and redirects the user to the SEENta dashboard.
+               6. "Create Inquiry" Link: This support link redirects users experiencing authentication or account issues to the campus support and inquiry workflow.
+
+
+
+
+               2. Register  
+
+
+
+
+Figure 1.1: User Registration / Profile Completion Interface
+
+
+Dynamic onboarding form presented to first-time users or newly registering accounts to capture mandatory institutional identity details before finalizing account creation.
+
+
+                  1. "Back" Navigation Link: This link allows the user to cancel the onboarding process and return to the primary login screen.
+                  2. First Name Field: This field captures the user's legal first name to establish their verified public display profile for peer-to-peer interactions.
+                  3. Official PUP Webmail: This field captures the user's official university email address (@iskolarngbayan.pup.edu.ph for students or @pup.edu.ph for faculty/staff), enforcing institutional domain-level validation to restrict system access exclusively to verified members of the PUP Biñan campus community.
+                  4. Last Name Field: This field captures the user's surname, which is bound to their account profile to ensure accountability during item handovers.
+                  5. Student Number / Institutional ID Field: This field captures the official university identification number, ensuring that all subsequent posts, claims, and transaction history logs are permanently tied to a verified student or faculty member.
+                  6. Phone Number Field: This field captures an active 11-digit Philippine mobile contact number to facilitate in-person coordination during the physical return of recovered items.
+                  7. Complete Registration Button: This button submits the validated profile payload to the backend API, creates the persistent user record in the database, establishes the authenticated session, and redirects the user to the SEENta dashboard.
+                  8. Sign In Button: This contextual navigation link redirects existing users who already possess an active account back to the primary login interface, preventing duplicate registration attempts and providing a direct path to credential authentication.
+
+
+
+
+                  3. Home Page
+
+
+  
+
+Figure 1.2: SEENta User Homepage and Discovery Feed
+
+
+The SEENta homepage provides students and faculty with a simple, centralized portal to report lost items, post belongings they have found, and search through active campus listings.
+                  1. Global Navigation Bar: Houses the institutional brand header, primary navigation links (Dashboard, Browse Inventory, Report Lost Item, Post Found Item), the Accessibility modal trigger, and the verified user profile badge.
+                  2. Global Search Input: Allows keyword searching across cataloged listings by item description, category, and discovery location.
+                  3. "Report a Lost Item" Action: Opens the report form for misplaced personal belongings to trigger automated match alerts.
+                  4. "Post a Found Item" Action: Initiates the finder workflow to upload photos and details for items discovered on campus.
+                  5. Recent Campus Listings Feed: Displays newly posted belongings with photo previews, category tags, locations, timestamps, and real-time status badges (Available for Claim, Under Review, Returned / Reunited).
+
+
+                  4. Accessibility Settings  
+
+
+Figure 1.3: Accessibility & Appearance Configuration
+
+
+A specialized user preference enabling campus community members to customize the visual contrast, theme, and typographic scale of the SEENta platform to accommodate varied viewing conditions across indoor classrooms and bright outdoor campus environments. 
+                     1. Dismissal Control: top-right close (×) button that allows users to discard uncommitted preference changes and return to the underlying screen.
+                     2. Appearance Mode Selector: A three-way segmented toggle offering Light (Day mode), Dark (Night mode), and System (Auto sync) display profiles to reduce visual fatigue during evening study sessions or align automatically with the client operating system.
+                     3. High-Contrast Mode Toggle: A binary accessibility switch that activates high-contrast borders, bold outlines, and amplified text saturation designed specifically to preserve interface legibility under harsh, direct outdoor sunlight on campus grounds.
+                     4. Text Size Boost Controls: A granular typography scaler allowing users to adjust the platform's root rem scale between 85% (compact), 100% (default standard), and 115% (enlarged) to assist visually impaired individuals and improve mobile legibility.
+                     5. "Reset Defaults" Control: A secondary shortcut action that resets all accessibility toggles and theme selections back to the system's baseline configuration.
+                     6. "Save & Apply" Action Button: A primary action button that persists user preferences to local browser storage, updates the active CSS theme variables in real time, and dismisses the modal.
+
+
+
+
+                     5. Admin Dashboard
+  
+
+
+
+Figure 1.2: Campus Recovery Analytics & Audit Interface
+
+
+The Admin Dashboard allows university staff (Office of Student Affairs) to monitor lost and found activity across campus, view recovery statistics, and check handover records to help resolve disputed items.
+
+
+                     1. Export Action: Export Audit Log (CSV) button, allowing staff to download records for official campus documentation.
+                     2. Key Recovery Metrics:
+                     * Total Cataloged Items (284): The total count of lost reports and found items entered into the system.
+                     * Successfully Reunited (216 / 76.1%): The number of belongings safely returned to their rightful owners at campus Safe Zones.
+                     * Active Disputes (3): The number of contested returns currently flagged for review after an owner reported a false claim.
+                     3. Item Category Breakdown: A color-coded bar displaying the most commonly lost items on campus, highlighting high-frequency belongings like student IDs (38%), electronics (26%), and wallets (18%).
+                     4. Handover Records and Dispute Table: A permanent log of recent item exchanges that lists the item name, category, student IDs of both parties, the meetup location on campus, and the return status (Returned or Disputed).
+
+
+
+
+Entity-Relationship Diagram (ERD)
+  
+
+
+
+The Entity-Relationship Diagram details how data flows and interconnects across Project SEENta to support student-driven item recovery at PUP Biñan. At the core of the system, the users entity authenticates campus members via verified student credentials, linking each account to their submitted inquiries in lost_item_reports and timely operational updates in notifications. The discovery pipeline begins when a finder logs an unattended item into found_item_posts, attaching visual proof through child records in post_photos. Interested owners initiate the retrieval process by submitting proof_of_ownership_claims, which bundles proprietary descriptions and uploaded documentation from claim_attachments while provisioning an isolated communication channel in messages for direct claimant-finder coordination. Once ownership is validated and the physical item is handed over at an authorized campus safe zone, the resolution is finalized as a permanent turnover logged in transaction_records. Should a handover be contested or wrongly disbursed, the case escalates into dispute_reports alongside supplementary evidentiary files in dispute_attachments. By combining relational foreign keys with strict unique constraints, this architecture preserves end-to-end auditability, prevents duplicated claim resolutions, and maintains reliable accountability across the entire campus recovery workflow.
+
+
+
+
+  
+
+The lifecycle of any item handled within Project SEENta is governed by a finite state machine that guarantees strict data consistency, prevents race conditions during claim submission, and preserves a complete audit trail from initial discovery to long-term archiving.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+State Name 
+	Operational Description 
+	Triggers & Guards 
+	Next State 
+	AvailableForClaim 
+	Item is posted by Finder and visible to verified PUP users in the public feed. 
+	submitProofOfOwnership() [Valid ID & non-empty answers] 
+	ClaimUnderReview 
+	ClaimUnderReview 
+	Claimant has submitted a Proof of Ownership Claim Form; post is locked from concurrent submissions. 
+	Reject: rejectClaim() [Inaccurate proof]
+Approve: approveClaim() [Finder accepts evidence] 
+	Reverts to AvailableForClaim
+Advances to CoordinatingHandover 
+	CoordinatingHandover 
+	Direct in-app coordination is opened between Finder and Claimant to arrange campus meetups. 
+	Cancel: cancelCoordination() [No-show / invalid]
+Complete: confirmTurnover() [Dual confirmation] 
+	Reverts to AvailableForClaim
+Advances to Reunited / HandedOver 
+	Reunited / HandedOver 
+	Both parties physically meet, inspect credentials, and tap confirmation in-app. Post is archived. 
+	fileDisputeReport() [Dispute filed within allowable window] 
+	Terminal state / advances to Disputed / UnderReview 
+	Disputed / UnderReview 
+	A third-party owner asserts the item was falsely claimed. The record is locked for review. 
+	resolveDispute() [Audit trail verified with campus authorities] 
+	DisputeResolved 
+	DisputeResolved 
+	Final closure state with formal audit log attached. 
+	Terminal state 
+	[End] 
+	
+
+  
+
+
+
+In this DFD, university stakeholders—specifically verified students and faculty members—are shown connecting to the main registration and authentication interface to submit their institutional credentials. From a technological standpoint, the system processes raw credential data, querying the User accounts data store to validate the @pup.edu.ph domain suffix, enforce single sign-on constraints, and establish an active authenticated session context.
+Once authenticated, the system routes user interactions based on intent: users either log an unattended item they discovered via Post found item or report missing personal property via Submit lost item report. In both ingestion streams, raw user inputs are structured into standardized Item details packages and committed directly to the persistent Item database. Technologically, the ingestion of a found item automatically triggers an asynchronous cross-referencing loop against existing lost property reports. If a potential correlation is identified, the system immediately dispatches a Match notification to the reporting party, prompting them to initiate a claim; otherwise, the listing remains active in the searchable campus feed.
+When a potential owner identifies a candidate article—either through the automated match notification or through the manual Search & Claim interface—they generate a formal claim package by completing the asynchronous Proof of Ownership form. From a technological standpoint, this form serializes granular, non-public identifying details into structured Claim details, which are persisted in the Claim database and concurrently routed to the private dashboard of the Finder (item poster). The finder evaluates the claim; if rejected, the claim is terminated, leaving the listing active for other claimants. If approved, the process updates the post status, sending real-time notifications to both parties and facilitating a secure campus meeting.
+Upon meeting at an official campus safe zone, both users execute mutual physical verification, confirming institutional identity cards and simultaneously triggering turnover acknowledgments in-app. The system captures these synchronized confirmations, immutably committing a finalized record to the Transaction history data store and closing the active custody cycle. In the event of a fraudulent turnover, an Original owner can submit evidence to the Report falsely claimed item process, which queries the Transaction history to retrieve the verified identity and student number of the fraudulent claimant, flags the item as Disputed, and generates an unalterable audit package for formal academic and campus disciplinary recovery.
+
+
+Key Component Roles  
+                     * Claimant (Student/Faculty): Institutional user who submits specific answers (identifying features, serial numbers, wallpapers) through the Proof of Ownership form.
+                     * Finder (Student/Faculty): Institutional user retaining custody of the found item, evaluating submitted proofs, and executing handoff.
+                     * Client Application (Web / Mobile Frontend): Handles client-side input validation, authentication headers, and reactive UI state updates.
+                     * ClaimController: Backend API service handling claim validation, concurrency locking, and status mutations.
+                     * TransactionController: Atomic service handling mutual turnover verification, immutable transaction records, and ledger hashing.
+                     * Database (Supabase / PostgreSQL): Relational store enforcing Row-Level Security (RLS) and referential integrity.
+                     * NotificationService: Publishes real-time push events and alerts to claimant and finder dashboards.
+
+
+  
+
+1. Domain Entities 
+                     * User: Encapsulates verified PUP community identities (@iskolarngbayan.pup.edu.ph / @pup.edu.ph webmail, student/employee numbers, and roles) to restrict system access to institutional members.
+                     * FoundItemPost: Tracks found property metadata (category, photo, campus location) and manages lifecycle states (AvailableForClaim to Reunited).
+                     * ProofOfOwnershipClaim: Replaces administrative gatekeepers with an asynchronous challenge-response form, storing claimants' identifying answers and evidence.
+                     * TransactionRecord: An immutable, dual-sided ledger storing mutual completion signatures, physical location, and a cryptographic hash of both parties' institutional IDs.
+                     * DisputeReport: Handles false-claim escalation by linking the immutable transaction log to campus authorities (Office of Student Affairs) for real-world resolution.
+2. Controllers & Services
+                     * AuthController: Enforces Google SSO domain validation and issues role-based session tokens.
+                     * ItemController: Manages lost/found post creation, category filtering, and campus feed discovery.
+                     * ClaimController: Coordinates proof submissions, prevents concurrent claims, and handles finder approvals/rejections.
+                     * TransactionController: Requires mutual, dual-sided confirmation from both parties before atomically committing the transaction to the ledger.
+                     * DisputeController: Aggregates verified claimant data from the ledger into an unalterable audit trail for campus arbitration.
+                     * NotificationService: Broadcasts real-time push and WebSocket updates for claims, chat scheduling, and turnover receipts.
