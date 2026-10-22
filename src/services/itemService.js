@@ -1,5 +1,5 @@
 /**
- * Item & Notification Service for Project SEENta
+ * Item & Notification Service for SEENta
  * Connects to the Express backend and Supabase Cloud database
  * Manages Found Item Posts (FR-SEEN-0003), Lost Item Reports (FR-SEEN-0002),
  * and Automated Matching Notifications (SYS-SEEN-0002).

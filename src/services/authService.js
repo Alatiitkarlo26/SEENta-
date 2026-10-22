@@ -1,5 +1,5 @@
 /**
- * Authentication Service for Project SEENta
+ * Authentication Service for SEENta
  * Connects directly to the Backend Database (server/data/users.json via API)
  * with robust local fallback for resilience.
  */

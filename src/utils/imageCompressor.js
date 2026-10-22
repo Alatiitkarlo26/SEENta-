@@ -1,5 +1,5 @@
 /**
- * Client-side canvas image compressor for Project SEENta
+ * Client-side canvas image compressor for SEENta
  * Resizes large camera photos to a max dimension and compresses to web-friendly JPEG data URL.
  */
 

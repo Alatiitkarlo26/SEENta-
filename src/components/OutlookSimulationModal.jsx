@@ -74,7 +74,7 @@ export default function OutlookSimulationModal({ emailData, isOpen, onClose, onA
               </div>
               <div>
                 <div className="text-xs font-semibold text-slate-900 flex items-center gap-1.5">
-                  Project SEENta Auth System
+                  SEENta Auth System
                   <span className="text-slate-400 font-normal">&lt;noreply@seenta.pup.edu.ph&gt;</span>
                 </div>
                 <div className="text-[11px] text-slate-500 mt-0.5">

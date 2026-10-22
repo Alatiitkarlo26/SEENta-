@@ -63,11 +63,11 @@ export default function TermsPrivacyModal({
 
             <div className="border border-neutral-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 bg-neutral-50/70 dark:bg-slate-800/40 text-xs sm:text-[13px] leading-relaxed text-neutral-600 dark:text-slate-300 h-48 sm:h-56 overflow-y-auto space-y-2.5 custom-scrollbar">
               <h4 className="font-bold text-neutral-800 dark:text-slate-100 text-xs sm:text-[13px]">
-                Terms and Conditions for Project SEENta
+                Terms and Conditions for SEENta
               </h4>
 
               <p>
-                This Terms and Conditions for Project SEENta (&ldquo;Terms&rdquo;) is an institutional agreement between you and the Polytechnic University of the Philippines – Biñan Campus, governing your use of the SEENta Lost and Found Management System. You agree to comply with all terms and conditions contained herein.
+                This Terms and Conditions for SEENta (&ldquo;Terms&rdquo;) is an institutional agreement between you and the Polytechnic University of the Philippines – Biñan Campus, governing your use of the SEENta Lost and Found Management System. You agree to comply with all terms and conditions contained herein.
               </p>
 
               <div>
@@ -101,7 +101,7 @@ export default function TermsPrivacyModal({
             <div className="border border-neutral-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 bg-neutral-50/70 dark:bg-slate-800/40 text-xs sm:text-[13px] leading-relaxed text-neutral-600 dark:text-slate-300 h-64 sm:h-80 overflow-y-auto space-y-3 custom-scrollbar">
               <div>
                 <h4 className="font-bold text-neutral-800 dark:text-slate-100 text-xs sm:text-[13px]">
-                  Data Privacy Policy for Project SEENta
+                  Data Privacy Policy for SEENta
                 </h4>
                 <div className="mt-1 space-y-0.5 text-[11px] text-neutral-500 dark:text-slate-400">
                   <p><strong className="text-neutral-700 dark:text-slate-300">Effective Date:</strong> October 2026</p>
@@ -115,7 +115,7 @@ export default function TermsPrivacyModal({
                   1. General Privacy Statement
                 </strong>
                 <p>
-                  Project SEENta respects and upholds the data privacy rights of all PUP Biñan students and faculty members. In compliance with Republic Act No. 10173 (Data Privacy Act of 2012) and its Implementing Rules and Regulations (IRR), this policy explains what personal information we collect, why we process it, and how your information is safeguarded.
+                  SEENta respects and upholds the data privacy rights of all PUP Biñan students and faculty members. In compliance with Republic Act No. 10173 (Data Privacy Act of 2012) and its Implementing Rules and Regulations (IRR), this policy explains what personal information we collect, why we process it, and how your information is safeguarded.
                 </p>
               </div>
 
@@ -177,7 +177,7 @@ export default function TermsPrivacyModal({
                 <strong className="text-neutral-900 dark:text-white font-semibold block mb-0.5">
                   6. Rights of the Data Subject (Under RA 10173)
                 </strong>
-                <p>As an authenticated user of Project SEENta, you are entitled to the following statutory rights:</p>
+                <p>As an authenticated user of SEENta, you are entitled to the following statutory rights:</p>
                 <ul className="mt-1 space-y-1 pl-2">
                   <li>• <strong className="text-neutral-900 dark:text-white font-medium">Right to be Informed:</strong> The right to know how your personal data is collected, handled, and stored.</li>
                   <li>• <strong className="text-neutral-900 dark:text-white font-medium">Right to Access:</strong> The right to view your profile information, submitted reports, active claims, and personal transaction history at any time.</li>

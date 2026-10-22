@@ -2,9 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import ScrollReveal from '../components/ScrollReveal';
 import {
   ArrowLeft,
-  Clock,
-  Building2,
-  CheckCircle2,
   Copy,
   Check
 } from 'lucide-react';
@@ -115,30 +112,22 @@ export default function PrivacyTermsPage({ initialTab = 'terms', onNavigateBack 
       <section className="relative overflow-hidden pt-10 pb-8 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
         <ScrollReveal threshold={0.05}>
           <div className="space-y-3.5">
-            {/* Institution Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-semibold bg-theme/10 text-theme border border-theme/20 shadow-2xs">
-              <Building2 className="w-3.5 h-3.5" />
-              <span>Polytechnic University of the Philippines — Biñan Campus</span>
-            </div>
-
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
               Terms of Service &amp; Privacy Policy
             </h1>
 
             <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-2xl leading-relaxed">
-              Official institutional agreements, peer-to-peer property recovery protocols, and statutory data privacy compliance for Project SEENta.
+              Official institutional agreements, peer-to-peer property recovery protocols, and statutory data privacy compliance for SEENta.
             </p>
 
-            {/* Compliance Pills */}
+            {/* Simplified Effective & Compliance Metadata */}
             <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-slate-500 dark:text-slate-400">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800/80 font-mono text-[11px]">
-                <Clock className="w-3.5 h-3.5 text-slate-400" />
-                <span>Effective Date: October 2026</span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span>Effective October 2026</span>
               </span>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/60 font-mono text-[11px]">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                <span>RA 8792 &amp; RA 10173 Compliant</span>
-              </span>
+              <span className="text-slate-300 dark:text-slate-700">•</span>
+              <span>RA 8792 &amp; RA 10173 Compliant</span>
             </div>
           </div>
         </ScrollReveal>
@@ -165,7 +154,7 @@ export default function PrivacyTermsPage({ initialTab = 'terms', onNavigateBack 
                   1. Acceptance of Terms &amp; Electronic Consent
                 </h3>
                 <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-                  By creating an account, accessing, or utilizing the Project SEENta platform, you formally enter into a legally recognized electronic contract under <strong>Republic Act No. 8792 (Electronic Commerce Act of 2000)</strong>. If you do not agree to these terms, you must refrain from registering or using the service.
+                  By creating an account, accessing, or utilizing the SEENta platform, you formally enter into a legally recognized electronic contract under <strong>Republic Act No. 8792 (Electronic Commerce Act of 2000)</strong>. If you do not agree to these terms, you must refrain from registering or using the service.
                 </p>
               </article>
 
@@ -187,7 +176,7 @@ export default function PrivacyTermsPage({ initialTab = 'terms', onNavigateBack 
                 <ul className="space-y-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
                   <li>
                     <strong className="text-slate-900 dark:text-white font-semibold">No Custodial Depository:</strong>{' '}
-                    Project SEENta is a digital communication and matching platform. The system does not hold, store, inspect, or take legal custody of any physical property.
+                    SEENta is a digital communication and matching platform. The system does not hold, store, inspect, or take legal custody of any physical property.
                   </li>
                   <li>
                     <strong className="text-slate-900 dark:text-white font-semibold">Direct Responsibility:</strong>{' '}
@@ -257,7 +246,7 @@ export default function PrivacyTermsPage({ initialTab = 'terms', onNavigateBack 
                   7. Limitation of Liability
                 </h3>
                 <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-                  Project SEENta is provided on an <strong>&ldquo;AS-IS&rdquo;</strong> and <strong>&ldquo;AS-AVAILABLE&rdquo;</strong> basis. The system administrators, student developers, and university faculty are not financially or legally liable for:
+                  SEENta is provided on an <strong>&ldquo;AS-IS&rdquo;</strong> and <strong>&ldquo;AS-AVAILABLE&rdquo;</strong> basis. The system administrators, student developers, and university faculty are not financially or legally liable for:
                 </p>
                 <ul className="space-y-2 text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed pl-5 list-disc">
                   <li>Personal belongings that remain unrecovered or unclaimed.</li>
@@ -285,7 +274,7 @@ export default function PrivacyTermsPage({ initialTab = 'terms', onNavigateBack 
                   1. General Privacy Statement
                 </h3>
                 <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-                  Project SEENta respects and upholds the data privacy rights of all PUP Biñan students and faculty members. In compliance with <strong>Republic Act No. 10173 (Data Privacy Act of 2012)</strong> and its Implementing Rules and Regulations (IRR), this policy explains what personal information we collect, why we process it, and how your information is safeguarded.
+                  SEENta respects and upholds the data privacy rights of all PUP Biñan students and faculty members. In compliance with <strong>Republic Act No. 10173 (Data Privacy Act of 2012)</strong> and its Implementing Rules and Regulations (IRR), this policy explains what personal information we collect, why we process it, and how your information is safeguarded.
                 </p>
               </article>
 
@@ -397,7 +386,7 @@ export default function PrivacyTermsPage({ initialTab = 'terms', onNavigateBack 
                   6. Rights of the Data Subject (Under RA 10173)
                 </h3>
                 <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-                  As an authenticated user of Project SEENta, you are entitled to the following statutory rights under Republic Act No. 10173:
+                  As an authenticated user of SEENta, you are entitled to the following statutory rights under Republic Act No. 10173:
                 </p>
                 <ul className="space-y-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
                   <li>

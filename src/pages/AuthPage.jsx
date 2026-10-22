@@ -235,7 +235,7 @@ export default function AuthPage({ defaultView = 'login', onAuthSuccess }) {
 
         {/* Minimal Bottom Line - positioned at the exact same bottom Y coordinate as the card */}
         <div className="mt-8 pt-5 border-t border-neutral-200/50 dark:border-slate-800/80 flex items-center gap-2.5 text-xs text-neutral-400 dark:text-slate-500 font-sans">
-          <span>&copy; {new Date().getFullYear()} Project SEENta</span>
+          <span>&copy; {new Date().getFullYear()} SEENta</span>
           <span>&bull;</span>
           <span>PUP Biñan Campus</span>
         </div>

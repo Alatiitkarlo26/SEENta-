@@ -1,5 +1,5 @@
 /**
- * OTP Service for Project SEENta
+ * OTP Service for SEENta
  * Dispatches real emails via the backend Nodemailer SMTP service,
  * while maintaining a seamless local fallback.
  */
@@ -116,7 +116,7 @@ export const otpService = {
           </div>
           <p style="font-size: 15px;">Mabuhay, <strong>${recipientName}</strong>!</p>
           <p style="font-size: 14px; line-height: 1.5; color: #334155;">
-            You are registering for an account on the <strong>Project SEENta Lost and Found Management System</strong> using your official PUP Webmail.
+            You are registering for an account on the <strong>SEENta Lost and Found Management System</strong> using your official PUP Webmail.
           </p>
           <div style="text-align: center; margin: 24px 0; background-color: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 18px;">
             <span style="font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: #64748b; font-weight: 600;">Your 6-Digit OTP Code</span>

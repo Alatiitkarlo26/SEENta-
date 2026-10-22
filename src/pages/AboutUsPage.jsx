@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import ScrollReveal from '../components/ScrollReveal';
 import {
   ArrowLeft,
-  Building2,
   Users,
   ShieldCheck,
   HeartHandshake,
@@ -283,12 +282,8 @@ export default function AboutUsPage({ onNavigateBack }) {
         {/* Hero Section */}
         <ScrollReveal threshold={0.05} yOffset={16}>
           <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-semibold bg-theme/10 text-theme border border-theme/20 shadow-2xs">
-              <Building2 className="w-3.5 h-3.5" />
-              <span>Project SEENta • PUP Biñan Campus</span>
-            </div>
             <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-bold tracking-tight text-slate-900 dark:text-white leading-[1.15]">
-              About Project SEENta
+              About SEENta
             </h1>
             <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">
               A decentralized, modern lost-and-found peer-to-peer platform built for the Polytechnic University of the Philippines – Biñan Campus, connecting finders and rightful owners directly with speed, honesty, and accountability.
@@ -429,7 +424,7 @@ export default function AboutUsPage({ onNavigateBack }) {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200/80 dark:border-slate-800 pb-5">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
-                  Meet the team behind Project SEENta
+                  Meet the team behind SEENta
                 </h2>
               </div>
               <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed max-w-sm">

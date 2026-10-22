@@ -27,7 +27,7 @@ export default function Footer({ onNavigateToTab }) {
             {/* Apple-style Footnote Disclosures */}
             <div className="pb-4 space-y-1 text-[11px] text-slate-500 dark:text-slate-500 leading-normal border-b border-slate-300/70 dark:border-slate-800/80">
             <p>
-              * All found items reported on Project SEENta remain under verified finder custody until in-person ownership authentication and mutual turnover are completed at an authorized campus Safe-Exchange Zone.
+              * All found items reported on SEENta remain under verified finder custody until in-person ownership authentication and mutual turnover are completed at an authorized campus Safe-Exchange Zone.
             </p>
             <p>
               * In-person recovery requires presenting your official PUP Student or Faculty ID at designated campus Safe-Exchange Zones (Main Campus Lobby, Library Entrance, Security Guard Post, or Student Center Plaza). Unclaimed belongings after statutory holding periods are surrendered to Campus Security under institutional guidelines.
@@ -131,7 +131,7 @@ export default function Footer({ onNavigateToTab }) {
           {/* Bottom Legal / Apple-style Strip */}
           <div className="border-t border-slate-300/70 dark:border-slate-800/80 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-[11px] text-slate-500 dark:text-slate-500">
             <div>
-              &copy; 2026 Project SEENta. PUP Biñan Campus. All rights reserved.
+              &copy; 2026 SEENta. PUP Biñan Campus. All rights reserved.
             </div>
 
             <div className="flex flex-wrap items-center gap-3 sm:gap-4">

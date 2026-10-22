@@ -1,5 +1,5 @@
 /**
- * Standard Presets for Project SEENta (PUP Biñan Campus)
+ * Standard Presets for SEENta (PUP Biñan Campus)
  */
 
 export const ITEM_CATEGORIES = [
