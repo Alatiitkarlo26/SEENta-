@@ -713,12 +713,16 @@ app.put('/api/notifications/read-all', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`===============================================`);
-  console.log(` SEENta Mailer & DB API listening on port ${PORT}`);
-  console.log(` Database: ${db.isCloud() ? 'Supabase Cloud (PostgreSQL)' : 'server/data/users.json'}`);
-  console.log(` Password Storage: Plain Text (Direct Store & Verify)`);
-  console.log(` OTP Security: Server-side enforced with rate limits`);
-  console.log(` Check status at: http://localhost:${PORT}/api/status`);
-  console.log(`===============================================`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`===============================================`);
+    console.log(` SEENta Mailer & DB API listening on port ${PORT}`);
+    console.log(` Database: ${db.isCloud() ? 'Supabase Cloud (PostgreSQL)' : 'server/data/users.json'}`);
+    console.log(` Password Storage: Plain Text (Direct Store & Verify)`);
+    console.log(` OTP Security: Server-side enforced with rate limits`);
+    console.log(` Check status at: http://localhost:${PORT}/api/status`);
+    console.log(`===============================================`);
+  });
+}
+
+export default app;

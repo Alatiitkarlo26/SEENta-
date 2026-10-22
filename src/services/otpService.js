@@ -6,7 +6,7 @@
 
 const STORAGE_KEY = 'seenta_active_otps';
 const EMAIL_LOG_KEY = 'seenta_sent_emails';
-const API_URL = 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 function getStoredOTPs() {
   try {
