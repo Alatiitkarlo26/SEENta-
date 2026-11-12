@@ -31,7 +31,7 @@ import { ItemCardSkeleton, LostReportCardSkeleton } from '../components/Skeleton
 import { getUserRoleTag } from '../utils/userUtils';
 
 export default function StudentDashboardPage() {
-  const { user } = useAuth();
+  const { user, isNewUser } = useAuth();
   const searchInputRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -157,7 +157,9 @@ export default function StudentDashboardPage() {
 
   const firstName =
     user?.firstName ||
+    user?.first_name ||
     (user?.fullName?.includes(',') ? user.fullName.split(',')[1]?.trim() : user?.fullName?.split(' ')[0]) ||
+    (user?.full_name?.includes(',') ? user.full_name.split(',')[1]?.trim() : user?.full_name?.split(' ')[0]) ||
     'Iskolar';
   const myFoundCount = foundItems.filter((i) => i.finder_id === user?.id).length;
 
@@ -193,7 +195,7 @@ export default function StudentDashboardPage() {
 
             {/* Headline */}
             <h1 className="animate-fadeInUp text-3xl sm:text-[2.85rem] font-bold tracking-tight text-white leading-[1.15]">
-              Welcome back,<br />
+              {isNewUser ? 'Welcome,' : 'Welcome back,'}<br />
               <span className="text-white font-extrabold">{firstName}.</span>
             </h1>
 

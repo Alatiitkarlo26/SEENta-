@@ -5,6 +5,7 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [isNewUser, setIsNewUser] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,23 +16,27 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     const loggedUser = await authService.login(email, password);
+    setIsNewUser(false);
     setUser(loggedUser);
     return loggedUser;
   };
 
   const register = async (userData) => {
     const newUser = await authService.register(userData);
+    setIsNewUser(true);
     setUser(newUser);
     return newUser;
   };
 
   const logout = () => {
     authService.logout();
+    setIsNewUser(false);
     setUser(null);
   };
 
   const switchAccount = (demoUser) => {
     localStorage.setItem('seenta_session', JSON.stringify(demoUser));
+    setIsNewUser(false);
     setUser(demoUser);
   };
 
@@ -39,6 +44,7 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         user,
+        isNewUser,
         role: user?.role || null,
         isAuthenticated: !!user,
         loading,
