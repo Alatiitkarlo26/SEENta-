@@ -3,8 +3,10 @@ import cors from 'cors';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
+import dns from 'dns';
 import { db } from './db.js';
 
+dns.setDefaultResultOrder('ipv4first');
 dotenv.config();
 
 const app = express();
@@ -76,6 +78,7 @@ function createTransporter() {
         host: 'smtp.gmail.com',
         port: 465,
         secure: true,
+        family: 4, // Force IPv4 on Render containers (prevents ENETUNREACH IPv6)
         auth: { user, pass },
         connectionTimeout: 10000,
         greetingTimeout: 10000,
