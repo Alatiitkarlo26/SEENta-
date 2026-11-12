@@ -124,7 +124,6 @@ export default function AdminDashboardPage() {
       {/* Audit Trail & Action Management */}
       <ScrollReveal threshold={0.05} delay={60} yOffset={20}>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column: Immutable Audit Trail Preview (FR-SEEN-0007, SYS-SEEN-0004) */}
         <div className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden transition-colors">
           <div className="p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
             <div className="flex items-center gap-2.5">

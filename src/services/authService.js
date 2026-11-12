@@ -5,7 +5,8 @@
  */
 
 const SESSION_STORAGE_KEY = 'seenta_session';
-const API_URL = import.meta.env.VITE_API_URL || '/api';
+const rawApiUrl = (import.meta.env.VITE_API_URL || '/api').trim().replace(/\/+$/, '');
+const API_URL = rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl}/api`;
 
 export const authService = {
   /**

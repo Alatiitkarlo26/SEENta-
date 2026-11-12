@@ -11,6 +11,7 @@ import {
   CheckCircle,
   AlertCircle,
   ShieldCheck,
+  ShieldAlert,
   Calendar,
   Clock,
   MapPin,
@@ -57,6 +58,18 @@ export default function PostFoundItemModal({ isOpen, onClose, onItemPosted }) {
   const handlePhotoUpload = async (e) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
+
+    const allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    for (const file of files) {
+      const type = (file.type || '').toLowerCase();
+      const name = (file.name || '').toLowerCase();
+      const isValid = allowedMimes.includes(type) && /\.(jpg|jpeg|png|webp)$/i.test(name) && !type.includes('svg') && !name.endsWith('.svg');
+      if (!isValid) {
+        setError('Invalid file format. Only JPG, PNG, and WebP images are allowed for security reasons.');
+        if (fileInputRef.current) fileInputRef.current.value = '';
+        return;
+      }
+    }
 
     if (photos.length + files.length > 3) {
       setError('You can upload a maximum of 3 photos per found item post.');
@@ -208,6 +221,15 @@ export default function PostFoundItemModal({ isOpen, onClose, onItemPosted }) {
               <p className="font-semibold">{successMessage}</p>
             </div>
           )}
+
+          {/* Prevent False Claims Disclaimer */}
+          <div className="p-3.5 sm:p-4 rounded-2xl bg-red-50 dark:bg-red-950/40 border border-red-200/80 dark:border-red-900/60 flex items-start gap-3">
+            <ShieldAlert className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
+            <div className="text-xs text-red-900 dark:text-red-200 leading-relaxed">
+              <strong className="font-semibold block mb-0.5 text-red-950 dark:text-red-100">Don&apos;t reveal too much information</strong>
+              Avoid sharing unique details like stickers, wallpapers, or specific contents in your photos and description. Keep them as proof questions so you can verify the real owner.
+            </div>
+          </div>
 
           {/* Item Name */}
           <div>
@@ -369,7 +391,7 @@ export default function PostFoundItemModal({ isOpen, onClose, onItemPosted }) {
               rows={3}
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="Describe distinguishing marks, stickers, engravings, or any particular features that will help the owner confirm ownership..."
+              placeholder="Don't reveal too much information to avoid fraudulent claims."
               className="w-full px-4 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-theme transition resize-none"
             />
           </div>
@@ -380,7 +402,7 @@ export default function PostFoundItemModal({ isOpen, onClose, onItemPosted }) {
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
                 Item Photos <span className="text-slate-400 font-normal">({photos.length}/3 photos)</span>
               </label>
-              <span className="text-[11px] text-slate-500">Auto-compressed for fast loading</span>
+              <span className="text-[11px] text-slate-500">JPG, PNG, or WebP (max 3)</span>
             </div>
 
             {/* Photo Previews */}
@@ -425,7 +447,7 @@ export default function PostFoundItemModal({ isOpen, onClose, onItemPosted }) {
             <input
               type="file"
               ref={fileInputRef}
-              accept="image/*"
+              accept="image/jpeg,image/png,image/webp"
               multiple
               onChange={handlePhotoUpload}
               className="hidden"

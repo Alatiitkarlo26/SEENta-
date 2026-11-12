@@ -38,14 +38,8 @@ const resilientFetch = (url, options = {}) => {
 
 // Initialize Supabase client if configured
 let supabase = null;
-const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey =
-  process.env.SUPABASE_SECRET_KEY ||
-  process.env.SUPABASE_SERVICE_ROLE_KEY ||
-  process.env.SUPABASE_KEY ||
-  process.env.SUPABASE_PUBLISHABLE_KEY ||
-  process.env.SUPABASE_ANON_KEY ||
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_KEY || process.env.SUPABASE_PUBLISHABLE_KEY;
 
 if (supabaseUrl && supabaseKey) {
   try {
@@ -123,48 +117,83 @@ async function writeLocalJson(filePath, data) {
   await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
 }
 
+// Validate image binary signatures (Magic Bytes)
+function validateImageBufferSignature(buf) {
+  if (!buf || buf.length < 12) return null;
+  // JPEG / JPG: FF D8 FF
+  if (buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff) {
+    return 'jpg';
+  }
+  // PNG: 89 50 4E 47 0D 0A 1A 0A
+  if (buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47) {
+    return 'png';
+  }
+  // WebP: RIFF ... WEBP
+  const riff = buf.subarray(0, 4).toString('ascii');
+  const webp = buf.subarray(8, 12).toString('ascii');
+  if (riff === 'RIFF' && webp === 'WEBP') {
+    return 'webp';
+  }
+  return null;
+}
+
 async function uploadBase64ToStorage(input, folder = 'found', id = Date.now()) {
   if (!input || typeof input !== 'string') {
-    return input;
+    return null;
   }
 
-  // Already stored in our Supabase bucket
+  // Already stored in our trusted Supabase bucket
   if (input.includes('/storage/v1/object/public/item-photos/')) {
     return input;
   }
 
+  // Local static asset paths
+  if (input.startsWith('/assets/') || input.startsWith('/src/assets/')) {
+    return input;
+  }
+
+  // Strictly enforce data URI with permitted MIME types (JPG, PNG, WebP)
+  if (!input.startsWith('data:image/')) {
+    console.warn('[Security] Rejected non-data-URI image upload to prevent SSRF.');
+    return null;
+  }
+
+  const match = input.match(/^data:image\/(jpeg|jpg|png|webp);base64,(.+)$/i);
+  if (!match) {
+    console.warn('[Security] Rejected upload: Disallowed MIME type (only JPEG, PNG, and WebP allowed).');
+    return null;
+  }
+
+  let buffer;
+  try {
+    buffer = Buffer.from(match[2], 'base64');
+  } catch (err) {
+    console.warn('[Security] Invalid base64 image encoding:', err.message);
+    return null;
+  }
+
+  // Max 5MB per image check
+  if (buffer.length > 5 * 1024 * 1024) {
+    console.warn('[Security] Rejected image exceeding 5MB payload limit.');
+    return null;
+  }
+
+  // Validate actual binary Magic Bytes against declared format
+  const detectedFormat = validateImageBufferSignature(buffer);
+  if (!detectedFormat) {
+    console.warn('[Security] Rejected file: Magic byte signature does not match JPG, PNG, or WebP.');
+    return null;
+  }
+
+  const ext = detectedFormat;
+  const contentType = `image/${ext === 'jpg' ? 'jpeg' : ext}`;
+
   if (!supabase) {
-    return input; // In local mode without cloud
+    return `data:${contentType};base64,${match[2]}`;
   }
 
   try {
-    let buffer;
-    let ext = 'jpg';
-    let contentType = 'image/jpeg';
-
-    if (input.startsWith('data:image/')) {
-      const match = input.match(/^data:image\/([a-zA-Z0-9+.-]+);base64,(.+)$/);
-      if (!match) return input;
-      const sub = match[1].toLowerCase().replace('jpeg', 'jpg');
-      ext = sub === 'png' ? 'png' : sub === 'webp' ? 'webp' : 'jpg';
-      contentType = `image/${ext === 'jpg' ? 'jpeg' : ext}`;
-      buffer = Buffer.from(match[2], 'base64');
-    } else if (input.startsWith('http://') || input.startsWith('https://')) {
-      const resp = await fetch(input);
-      if (!resp.ok) return input;
-      const cType = resp.headers.get('content-type') || 'image/jpeg';
-      if (cType.includes('png')) ext = 'png';
-      else if (cType.includes('webp')) ext = 'webp';
-      else ext = 'jpg';
-      contentType = `image/${ext === 'jpg' ? 'jpeg' : ext}`;
-      const ab = await resp.arrayBuffer();
-      buffer = Buffer.from(ab);
-    } else {
-      return input;
-    }
-
     const fileName = `${folder}/${id}_${Math.random().toString(36).substring(2, 7)}.${ext}`;
-
     const { error: uploadErr } = await supabase.storage.from('item-photos').upload(fileName, buffer, {
       contentType,
       upsert: true
@@ -172,15 +201,14 @@ async function uploadBase64ToStorage(input, folder = 'found', id = Date.now()) {
 
     if (uploadErr) {
       console.error('[Supabase Storage] Upload error:', uploadErr.message);
-      return input;
+      return `data:${contentType};base64,${match[2]}`;
     }
 
     const { data: urlData } = supabase.storage.from('item-photos').getPublicUrl(fileName);
-    console.log(`[Supabase Storage] 📁 Image stored in bucket "item-photos"! URL: ${urlData.publicUrl}`);
     return urlData.publicUrl;
   } catch (err) {
     console.error('[Supabase Storage] Error converting image to bucket:', err.message);
-    return input;
+    return `data:${contentType};base64,${match[2]}`;
   }
 }
 
@@ -334,7 +362,7 @@ export const db = {
       contact_number: userData.contactNumber,
       password: userData.password,
       role: userData.role || (cleanEmail.endsWith('@pup.edu.ph') ? (cleanEmail.startsWith('security') ? 'admin' : 'faculty') : 'student'),
-      role_title: userData.roleTitle || (cleanEmail.endsWith('@pup.edu.ph') ? (cleanEmail.startsWith('security') ? 'Campus Security Staff' : 'Faculty / Professor') : 'PUP Student'),
+      role_title: userData.roleTitle || (cleanEmail.endsWith('@pup.edu.ph') ? (cleanEmail.startsWith('security') ? 'Campus Security Staff' : 'Faculty Member') : 'Student'),
       is_verified: true,
       created_at: new Date().toISOString()
     };
@@ -567,7 +595,21 @@ export const db = {
 
     // Local fallback
     const posts = await readLocalJson(FOUND_POSTS_FILE);
-    const postWithPhotos = { ...newPost, photos };
+    const users = await this.getUsers();
+    const finder = users.find((u) => u.id === newPost.finder_id) || null;
+    const postWithPhotos = {
+      ...newPost,
+      finder: finder ? {
+        id: finder.id,
+        full_name: finder.full_name,
+        email: finder.email,
+        role: finder.role,
+        role_title: finder.role_title,
+        student_id: finder.student_id,
+        contact_number: finder.contact_number
+      } : null,
+      photos
+    };
     posts.unshift(postWithPhotos);
     await writeLocalJson(FOUND_POSTS_FILE, posts);
 

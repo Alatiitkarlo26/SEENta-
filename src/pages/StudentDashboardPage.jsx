@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 import { ItemCardSkeleton, LostReportCardSkeleton } from '../components/Skeleton';
+import { getUserRoleTag } from '../utils/userUtils';
 
 export default function StudentDashboardPage() {
   const { user } = useAuth();
@@ -675,8 +676,8 @@ export default function StudentDashboardPage() {
                           </div>
 
                           <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
-                            <span className="text-[11px] text-slate-400 truncate max-w-[120px]">
-                              {item.finder?.full_name ? `${item.finder.full_name}` : 'Campus Custody'}
+                            <span className="text-[11px] text-slate-400 truncate max-w-[140px]">
+                              {getUserRoleTag(item.finder)}
                             </span>
                             <span className="text-xs font-medium text-theme flex items-center gap-0.5 group-hover:gap-1.5 transition-all duration-200">
                               View

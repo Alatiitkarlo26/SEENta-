@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { getUserRoleTag } from '../utils/userUtils';
 import {
   X,
   MapPin,
@@ -160,7 +161,7 @@ export default function ItemDetailModal({ isOpen, onClose, item, onInitiateClaim
             </div>
             <div className="flex items-center gap-2.5 text-slate-700 dark:text-slate-300">
               <User className="w-4 h-4 text-theme shrink-0" />
-              <span>Finder: <strong>{item.finder?.full_name || 'Anonymous Iskolar'}</strong> ({item.finder?.role_title || 'PUP Student'})</span>
+              <span>Finder: <strong className="text-slate-900 dark:text-white">{getUserRoleTag(item.finder)}</strong></span>
             </div>
           </div>
 

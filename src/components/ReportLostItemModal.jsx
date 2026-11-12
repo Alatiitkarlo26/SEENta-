@@ -55,6 +55,16 @@ export default function ReportLostItemModal({ isOpen, onClose, onReportCreated }
     const file = e.target.files?.[0];
     if (!file) return;
 
+    const allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    const type = (file.type || '').toLowerCase();
+    const name = (file.name || '').toLowerCase();
+    const isValid = allowedMimes.includes(type) && /\.(jpg|jpeg|png|webp)$/i.test(name) && !type.includes('svg') && !name.endsWith('.svg');
+    if (!isValid) {
+      setError('Invalid file format. Only JPG, PNG, and WebP images are allowed for security reasons.');
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      return;
+    }
+
     setCompressing(true);
     setError('');
 
@@ -327,7 +337,7 @@ export default function ReportLostItemModal({ isOpen, onClose, onReportCreated }
               Reference Photo (Optional)
             </label>
             <p className="text-xs text-slate-500 mb-2">
-              Upload a past photo of the item, serial receipt, or similar model for visual comparison.
+              Upload a past photo of the item, serial receipt, or similar model for visual comparison (JPG, PNG, or WebP).
             </p>
 
             {photo ? (
@@ -357,7 +367,7 @@ export default function ReportLostItemModal({ isOpen, onClose, onReportCreated }
             <input
               type="file"
               ref={fileInputRef}
-              accept="image/*"
+              accept="image/jpeg,image/png,image/webp"
               onChange={handlePhotoUpload}
               className="hidden"
             />

@@ -11,7 +11,6 @@ import {
   LogOut,
   Menu,
   X,
-  ShieldCheck,
   Sun,
   Moon,
   PersonStanding,
@@ -310,33 +309,14 @@ export default function Navbar({ activeTab, setActiveTab }) {
 
               {/* User Identity Pill */}
               <div className="flex items-center gap-3 pl-3 border-l border-slate-200 dark:border-slate-800">
-                <div className="w-9 h-9 rounded-full bg-theme text-white font-bold flex items-center justify-center text-xs shadow-xs">
+                <div className="w-9 h-9 rounded-full bg-theme text-white font-bold flex items-center justify-center text-xs shadow-xs shrink-0">
                   {user?.fullName?.charAt(0) || 'U'}
                 </div>
-                <div className="text-left">
-                  <div className="text-xs font-bold text-slate-900 dark:text-white leading-tight flex items-center gap-1.5">
-                    <span>{user?.fullName}</span>
-                    <div className="relative group/verified inline-flex items-center">
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/80 cursor-default transition-all duration-200 hover:bg-emerald-100/80 dark:hover:bg-emerald-900/40 select-none">
-                        <ShieldCheck className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                        Verified Iskolar
-                      </span>
-
-                      {/* Cloud Reminder Tooltip: Verified Scholar */}
-                      <div
-                        role="tooltip"
-                        className="absolute top-full left-1/2 -translate-x-1/2 mt-2 z-50 pointer-events-none opacity-0 invisible translate-y-1 scale-95 group-hover/verified:opacity-100 group-hover/verified:visible group-hover/verified:translate-y-0 group-hover/verified:scale-100 transition-all duration-200 ease-out delay-75"
-                      >
-                        <div className="relative px-3 py-1.5 bg-white/95 dark:bg-slate-800/95 text-slate-800 dark:text-slate-100 backdrop-blur-md rounded-2xl shadow-lg shadow-slate-900/10 dark:shadow-black/50 border border-slate-200/90 dark:border-slate-700/80 text-[11px] font-medium whitespace-nowrap tracking-tight flex items-center gap-1.5">
-                          {/* Cloud Bubble Arrow Notch */}
-                          <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 bg-white/95 dark:bg-slate-800/95 border-t border-l border-slate-200/90 dark:border-slate-700/80" />
-                          <ShieldCheck className="w-3 h-3 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                          <span>You are a Verified Scholar!</span>
-                        </div>
-                      </div>
-                    </div>
+                <div className="text-left min-w-0">
+                  <div className="text-xs font-bold text-slate-900 dark:text-white leading-tight truncate">
+                    {user?.fullName}
                   </div>
-                  <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono mt-0.5 truncate">
                     {user?.studentId} • {user?.roleTitle || 'Iskolar'}
                   </div>
                 </div>
@@ -425,26 +405,8 @@ export default function Navbar({ activeTab, setActiveTab }) {
         {mobileMenuOpen && (
           <div className="sm:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 space-y-3 animate-fadeIn">
             <div className="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200/80 dark:border-slate-700">
-              <div className="font-bold text-sm text-slate-900 dark:text-white flex items-center justify-between">
-                <span>{user?.fullName}</span>
-                <div className="relative group/verified inline-flex items-center">
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/80 cursor-default">
-                    <ShieldCheck className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                    Verified Iskolar
-                  </span>
-
-                  {/* Cloud Reminder Tooltip: Verified Scholar (Mobile) */}
-                  <div
-                    role="tooltip"
-                    className="absolute top-full right-0 mt-2 z-50 pointer-events-none opacity-0 invisible translate-y-1 scale-95 group-hover/verified:opacity-100 group-hover/verified:visible group-hover/verified:translate-y-0 group-hover/verified:scale-100 transition-all duration-200 ease-out delay-75"
-                  >
-                    <div className="relative px-3 py-1.5 bg-white/95 dark:bg-slate-800/95 text-slate-800 dark:text-slate-100 backdrop-blur-md rounded-2xl shadow-lg shadow-slate-900/10 dark:shadow-black/50 border border-slate-200/90 dark:border-slate-700/80 text-[11px] font-medium whitespace-nowrap tracking-tight flex items-center gap-1.5">
-                      <div className="absolute -top-1 right-4 w-2 h-2 rotate-45 bg-white/95 dark:bg-slate-800/95 border-t border-l border-slate-200/90 dark:border-slate-700/80" />
-                      <ShieldCheck className="w-3 h-3 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                      <span>You are a Verified Scholar!</span>
-                    </div>
-                  </div>
-                </div>
+              <div className="font-bold text-sm text-slate-900 dark:text-white truncate">
+                {user?.fullName}
               </div>
               <div className="text-xs text-slate-500 dark:text-slate-400 font-mono mt-0.5">{user?.studentId}</div>
               <div className="text-xs text-slate-500 dark:text-slate-400 truncate">{user?.email}</div>

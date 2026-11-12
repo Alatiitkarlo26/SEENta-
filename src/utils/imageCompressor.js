@@ -1,12 +1,33 @@
 /**
  * Client-side canvas image compressor for SEENta
- * Resizes large camera photos to a max dimension and compresses to web-friendly JPEG data URL.
+ * Resizes large camera photos to a max dimension and compresses to web-friendly JPEG/WebP data URL.
+ * Strictly restricts uploads to JPG, PNG, and WebP for security.
  */
+
+const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+const ALLOWED_EXTENSIONS = /\.(jpg|jpeg|png|webp)$/i;
+const MAX_RAW_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
 
 export async function compressImage(file, maxDimension = 800, quality = 0.70) {
   return new Promise((resolve, reject) => {
-    if (!file || !file.type.startsWith('image/')) {
-      return reject(new Error('Selected file is not an image.'));
+    if (!file) {
+      return reject(new Error('No file provided.'));
+    }
+
+    // Strict allowlist: Only JPG, PNG, and WebP are permitted for security
+    const mime = (file.type || '').toLowerCase();
+    const name = (file.name || '').toLowerCase();
+    const isSvg = mime.includes('svg') || name.endsWith('.svg');
+    const hasValidMime = ALLOWED_MIME_TYPES.includes(mime);
+    const hasValidExt = ALLOWED_EXTENSIONS.test(name);
+
+    if (!hasValidMime || !hasValidExt || isSvg) {
+      return reject(new Error('Invalid file format. Only JPG, PNG, and WebP images are allowed for security reasons.'));
+    }
+
+    // Raw file size boundary check
+    if (file.size > MAX_RAW_SIZE_BYTES) {
+      return reject(new Error('File is too large. Maximum allowed size is 10MB per image.'));
     }
 
     const reader = new FileReader();
@@ -43,7 +64,7 @@ export async function compressImage(file, maxDimension = 800, quality = 0.70) {
         }
         resolve(dataUrl);
       };
-      img.onerror = () => reject(new Error('Failed to load image for compression.'));
+      img.onerror = () => reject(new Error('Corrupted or invalid image file.'));
       img.src = readerEvent.target.result;
     };
     reader.onerror = () => reject(new Error('Failed to read image file.'));

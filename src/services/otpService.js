@@ -6,7 +6,8 @@
 
 const STORAGE_KEY = 'seenta_active_otps';
 const EMAIL_LOG_KEY = 'seenta_sent_emails';
-const API_URL = import.meta.env.VITE_API_URL || '/api';
+const rawApiUrl = (import.meta.env.VITE_API_URL || '/api').trim().replace(/\/+$/, '');
+const API_URL = rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl}/api`;
 
 function getStoredOTPs() {
   try {
