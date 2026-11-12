@@ -298,7 +298,9 @@ app.delete('/api/users/:id', async (req, res) => {
 // -------------------------------------------------------------
 
 app.get('/api/status', async (req, res) => {
-  const isConfigured = !!(process.env.SMTP_USER && process.env.SMTP_PASS);
+  const isSmtpConfigured = !!(process.env.SMTP_USER && process.env.SMTP_PASS);
+  const isHttpsMailerConfigured = !!(process.env.GAS_MAILER_URL || process.env.BREVO_API_KEY);
+  const isConfigured = isHttpsMailerConfigured || isSmtpConfigured;
   const isCloud = db.isCloud();
   const users = await db.getUsers();
   res.json({
@@ -307,7 +309,14 @@ app.get('/api/status', async (req, res) => {
     databaseLocation: isCloud ? 'Supabase Cloud (PostgreSQL)' : 'server/data/users.json',
     totalUsers: users.length,
     smtpConfigured: isConfigured,
-    senderEmail: isConfigured ? process.env.SMTP_USER : 'Not configured (Simulated mode active)',
+    mailerMode: process.env.GAS_MAILER_URL
+      ? 'google_apps_script_https'
+      : process.env.BREVO_API_KEY
+        ? 'brevo_https'
+        : isSmtpConfigured
+          ? 'smtp'
+          : 'simulated',
+    senderEmail: isConfigured ? (process.env.SMTP_USER || 'HTTPS Mailer') : 'Not configured (Simulated mode active)',
     host: process.env.SMTP_HOST || 'default'
   });
 });
@@ -336,33 +345,29 @@ app.post('/api/send-otp', async (req, res) => {
     attempts: 0
   });
 
-  const transporter = createTransporter();
+  // Anti-Spam & Deliverability Optimization for Microsoft Outlook / Office 365:
+  // 1. Generic sender name prevents Microsoft Anti-Phishing User Impersonation detection
+  const fromSender = process.env.SMTP_FROM || `"SEENta Verification" <${process.env.SMTP_USER || 'noreply@seenta.app'}>`;
 
-  if (transporter) {
-    try {
-      // Anti-Spam & Deliverability Optimization for Microsoft Outlook / Office 365:
-      // 1. Generic sender name prevents Microsoft Anti-Phishing User Impersonation detection
-      const fromSender = process.env.SMTP_FROM || `"SEENta Verification" <${process.env.SMTP_USER}>`;
+  // 2. Standard transactional subject line avoids Bayesian bulk filters
+  const subject = `Your SEENta verification code is ${otp}`;
 
-      // 2. Standard transactional subject line avoids Bayesian bulk filters
-      const subject = `Your SEENta verification code is ${otp}`;
+  // 3. Complete plain text alternative matching HTML structure
+  const textBody = [
+    `Mabuhay, ${recipientName || 'Iskolar'}!`,
+    '',
+    `Your 6-digit verification code for Project SEENta is: ${otp}`,
+    '',
+    'This code is valid for 5 minutes. Never share this code with anyone.',
+    '',
+    'If you did not request this registration, please disregard this email or report to the Campus Security Office.',
+    '',
+    'Politeknikong Unibersidad ng Pilipinas — Sangay ng Biñan',
+    'Official Peer-to-Peer Lost & Found Clearinghouse'
+  ].join('\n');
 
-      // 3. Complete plain text alternative matching HTML structure
-      const textBody = [
-        `Mabuhay, ${recipientName || 'Iskolar'}!`,
-        '',
-        `Your 6-digit verification code for Project SEENta is: ${otp}`,
-        '',
-        'This code is valid for 5 minutes. Never share this code with anyone.',
-        '',
-        'If you did not request this registration, please disregard this email or report to the Campus Security Office.',
-        '',
-        'Politeknikong Unibersidad ng Pilipinas — Sangay ng Biñan',
-        'Official Peer-to-Peer Lost & Found Clearinghouse'
-      ].join('\n');
-
-      // 4. Outlook Word-rendering engine table-based layout
-      const htmlBody = `
+  // 4. Outlook Word-rendering engine table-based layout
+  const htmlBody = `
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -455,6 +460,85 @@ app.post('/api/send-otp', async (req, res) => {
 </html>
       `;
 
+  // 1. Google Apps Script HTTPS Mailer (Port 443 - Works on Render Free Tier & appears in Gmail Sent)
+  if (process.env.GAS_MAILER_URL) {
+    try {
+      const gasRes = await fetch(process.env.GAS_MAILER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: cleanEmail,
+          subject,
+          text: textBody,
+          html: htmlBody
+        })
+      });
+      const gasData = await gasRes.json().catch(() => ({}));
+      if (!gasRes.ok || gasData.success === false) {
+        throw new Error(gasData.error || `GAS Mailer returned ${gasRes.status}`);
+      }
+      console.log(`[GAS HTTPS Live] Email delivered to: ${cleanEmail}`);
+      return res.json({
+        success: true,
+        delivered: true,
+        mode: 'live_gas_https',
+        message: `Real email successfully sent to your Outlook address (${cleanEmail})!`
+      });
+    } catch (err) {
+      console.error('[GAS HTTPS Error]', err.message);
+      return res.status(500).json({
+        success: false,
+        error: `HTTPS Mailer failed: ${err.message}`
+      });
+    }
+  }
+
+  // 2. Brevo HTTPS Email API (Port 443 - Works on Render Free Tier, 300 free emails/day)
+  if (process.env.BREVO_API_KEY) {
+    try {
+      const brevoRes = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+          'api-key': process.env.BREVO_API_KEY,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          sender: {
+            name: 'Project SEENta PUP Biñan',
+            email: process.env.SMTP_USER || 'karloalatiit0@gmail.com'
+          },
+          to: [{ email: cleanEmail, name: recipientName || 'Iskolar' }],
+          subject,
+          htmlContent: htmlBody,
+          textContent: textBody
+        })
+      });
+      const brevoData = await brevoRes.json().catch(() => ({}));
+      if (!brevoRes.ok) {
+        throw new Error(brevoData.message || `Brevo returned ${brevoRes.status}`);
+      }
+      console.log(`[Brevo HTTPS Live] Email delivered to: ${cleanEmail} (MessageId: ${brevoData.messageId})`);
+      return res.json({
+        success: true,
+        delivered: true,
+        mode: 'live_brevo_https',
+        message: `Real email successfully sent to your Outlook address (${cleanEmail})!`
+      });
+    } catch (err) {
+      console.error('[Brevo HTTPS Error]', err.message);
+      return res.status(500).json({
+        success: false,
+        error: `Brevo delivery failed: ${err.message}`
+      });
+    }
+  }
+
+  // 3. Standard Nodemailer SMTP (For local development or paid servers with open SMTP ports)
+  const transporter = createTransporter();
+
+  if (transporter) {
+    try {
       const info = await transporter.sendMail({
         from: fromSender,
         replyTo: process.env.SMTP_USER,
@@ -483,7 +567,7 @@ app.post('/api/send-otp', async (req, res) => {
       console.error('[SMTP Error]', err.message);
       return res.status(500).json({
         success: false,
-        error: `SMTP delivery failed: ${err.message}. Please verify your SMTP settings in .env.`
+        error: `SMTP delivery failed: ${err.message}. Note: Render Free Tier blocks outbound SMTP ports (465/587). Use GAS_MAILER_URL or BREVO_API_KEY instead.`
       });
     }
   }
