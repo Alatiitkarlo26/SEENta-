@@ -74,12 +74,12 @@ function createTransporter() {
     if ((user && user.endsWith('@gmail.com')) || (host && host.includes('gmail'))) {
       return nodemailer.createTransport({
         host: 'smtp.gmail.com',
-        port: 587,
-        secure: false, // Use STARTTLS on port 587 for cloud resilience
+        port: 465,
+        secure: true,
         auth: { user, pass },
-        tls: {
-          rejectUnauthorized: false
-        }
+        connectionTimeout: 10000,
+        greetingTimeout: 10000,
+        socketTimeout: 15000
       });
     }
 
