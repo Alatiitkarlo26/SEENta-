@@ -50,7 +50,7 @@ const emailRateLimits = new Map(); // email -> [timestamps]
 function checkRateLimit(email) {
   const now = Date.now();
   const windowMs = 5 * 60 * 1000; // 5 minutes
-  const maxAttempts = 4;
+  const maxAttempts = 10; // Relaxed for smoother testing
 
   const timestamps = (emailRateLimits.get(email) || []).filter((t) => now - t < windowMs);
   if (timestamps.length >= maxAttempts) {
@@ -73,8 +73,13 @@ function createTransporter() {
   if (user && pass) {
     if ((user && user.endsWith('@gmail.com')) || (host && host.includes('gmail'))) {
       return nodemailer.createTransport({
-        service: 'gmail',
-        auth: { user, pass }
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false, // Use STARTTLS on port 587 for cloud resilience
+        auth: { user, pass },
+        tls: {
+          rejectUnauthorized: false
+        }
       });
     }
 

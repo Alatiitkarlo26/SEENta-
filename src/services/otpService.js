@@ -85,7 +85,7 @@ export const otpService = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp, recipientName }),
-        signal: AbortSignal.timeout(7000)
+        signal: AbortSignal.timeout(25000)
       });
 
       if (response.ok) {
